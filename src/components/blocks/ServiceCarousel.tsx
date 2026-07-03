@@ -174,10 +174,11 @@ export default function ServiceCarousel({ services, buttonLabel = "Découvrir" }
           </div>
         </div>
 
-        {/* Arrows */}
+        {/* Arrows — desktop: centered on the sides. Hidden on mobile to avoid overlapping the text. */}
         <button
           onClick={prev}
           aria-label="Précédent"
+          className="hidden md:flex"
           style={{
             position: "absolute",
             left: 24,
@@ -185,7 +186,6 @@ export default function ServiceCarousel({ services, buttonLabel = "Découvrir" }
             transform: "translateY(-50%)",
             width: 48,
             height: 48,
-            display: "flex",
             alignItems: "center",
             justifyContent: "center",
             background: "rgba(0,0,0,0.4)",
@@ -201,6 +201,7 @@ export default function ServiceCarousel({ services, buttonLabel = "Découvrir" }
         <button
           onClick={next}
           aria-label="Suivant"
+          className="hidden md:flex"
           style={{
             position: "absolute",
             right: 24,
@@ -208,7 +209,6 @@ export default function ServiceCarousel({ services, buttonLabel = "Découvrir" }
             transform: "translateY(-50%)",
             width: 48,
             height: 48,
-            display: "flex",
             alignItems: "center",
             justifyContent: "center",
             background: "rgba(0,0,0,0.4)",
@@ -222,20 +222,41 @@ export default function ServiceCarousel({ services, buttonLabel = "Découvrir" }
           ›
         </button>
 
-        {/* Dots + service thumbnails */}
+        {/* Bottom bar — dots + counter, with compact arrows added on mobile only */}
         <div
           style={{
             position: "absolute",
-            bottom: 40,
-            left: "8vw",
-            right: "8vw",
+            bottom: 24,
+            left: "6vw",
+            right: "6vw",
             display: "flex",
             alignItems: "center",
-            gap: 12,
+            gap: 10,
           }}
         >
+          <button
+            onClick={prev}
+            aria-label="Précédent"
+            className="flex md:hidden"
+            style={{
+              flexShrink: 0,
+              width: 32,
+              height: 32,
+              alignItems: "center",
+              justifyContent: "center",
+              background: "rgba(0,0,0,0.4)",
+              border: "1px solid rgba(255,255,255,0.2)",
+              color: "#fff",
+              fontSize: "1rem",
+              cursor: "pointer",
+              padding: 0,
+            }}
+          >
+            ‹
+          </button>
+
           {/* Progress bar */}
-          <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
+          <div style={{ display: "flex", gap: 8, alignItems: "center", flex: 1, justifyContent: "center" }}>
             {services.map((_, i) => (
               <button
                 key={i}
@@ -249,15 +270,37 @@ export default function ServiceCarousel({ services, buttonLabel = "Découvrir" }
                   cursor: "pointer",
                   transition: "all 0.3s ease",
                   padding: 0,
+                  flexShrink: 0,
                 }}
               />
             ))}
           </div>
 
           {/* Counter */}
-          <span style={{ color: "rgba(255,255,255,0.5)", fontSize: "0.75rem", marginLeft: 8 }}>
+          <span style={{ color: "rgba(255,255,255,0.5)", fontSize: "0.75rem", flexShrink: 0 }}>
             {String(active + 1).padStart(2, "0")} / {String(services.length).padStart(2, "0")}
           </span>
+
+          <button
+            onClick={next}
+            aria-label="Suivant"
+            className="flex md:hidden"
+            style={{
+              flexShrink: 0,
+              width: 32,
+              height: 32,
+              alignItems: "center",
+              justifyContent: "center",
+              background: "rgba(0,0,0,0.4)",
+              border: "1px solid rgba(255,255,255,0.2)",
+              color: "#fff",
+              fontSize: "1rem",
+              cursor: "pointer",
+              padding: 0,
+            }}
+          >
+            ›
+          </button>
         </div>
       </div>
 
