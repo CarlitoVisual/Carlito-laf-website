@@ -1,7 +1,21 @@
-import type { NextConfig } from "next";
+/** @type {import('next').NextConfig} */
 
-const nextConfig: NextConfig = {
-  /* config options here */
-};
+const nextConfig = {
 
-export default nextConfig;
+images:{
+
+remotePatterns:[
+
+{
+protocol:"https",
+hostname:"cdn.sanity.io"
+}
+
+]
+
+}
+
+}
+
+
+module.exports = nextConfig
