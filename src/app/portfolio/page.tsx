@@ -50,7 +50,7 @@ export default async function PortfolioPage() {
           Collections
         </h1>
         <p className="max-w-xl mx-auto" style={{ color: "var(--color-muted)" }}>
-          Aventure, océan, sports nautiques — chaque collection raconte une histoire.
+          Chaque collection raconte une histoire.
         </p>
       </div>
 
