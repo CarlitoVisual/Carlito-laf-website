@@ -51,6 +51,9 @@ export default async function BoutiquePage() {
     <>
       {/* Header */}
       <div className="pt-32 pb-16 px-6 text-center" style={{ borderBottom: "1px solid var(--color-border)" }}>
+        <h1 className="text-4xl md:text-5xl font-bold mb-4" style={{ color: "var(--color-text)" }}>
+          DE NOUVEAU DISPONIBLE PROCHAINEMENT
+        </h1>
         <p className="text-xs uppercase font-semibold mb-4" style={{ color: "var(--color-accent)", letterSpacing: "0.3em" }}>
           Fine Art
         </p>
