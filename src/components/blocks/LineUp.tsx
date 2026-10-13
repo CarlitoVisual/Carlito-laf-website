@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useRef, useState } from "react"
 import Image from "next/image"
 import Link from "next/link"
 
@@ -26,6 +26,9 @@ type Props = {
  */
 export default function LineUp({ eyebrow, title, panels }: Props) {
   const [active, setActive] = useState(0)
+  // Sur écran tactile, le navigateur émule survol + focus juste avant le clic :
+  // on mémorise donc l'état du panneau au moment où le doigt touche l'écran.
+  const touchedWhileClosed = useRef(false)
 
   return (
     <section className="px-6 pt-24 pb-16">
@@ -55,12 +58,21 @@ export default function LineUp({ eyebrow, title, panels }: Props) {
               <Link
                 key={p.key}
                 href={p.href || "#"}
-                onMouseEnter={() => setActive(i)}
-                onFocus={() => setActive(i)}
+                onPointerEnter={(e) => {
+                  if (e.pointerType === "mouse") setActive(i)
+                }}
+                onPointerDown={(e) => {
+                  touchedWhileClosed.current = e.pointerType !== "mouse" && !open
+                }}
+                onFocus={(e) => {
+                  // Focus clavier (Tab) : ouvrir le panneau. Le focus provoqué par un toucher est ignoré.
+                  if (e.currentTarget.matches(":focus-visible")) setActive(i)
+                }}
                 onClick={(e) => {
-                  // Sur écran tactile : premier appui = ouvrir le panneau, second = naviguer
-                  if (!open) {
+                  // Écran tactile : premier appui = déplier le panneau, second appui = ouvrir la page
+                  if (touchedWhileClosed.current || !open) {
                     e.preventDefault()
+                    touchedWhileClosed.current = false
                     setActive(i)
                   }
                 }}
