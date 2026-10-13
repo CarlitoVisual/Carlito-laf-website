@@ -113,7 +113,7 @@ export default async function PortfolioPage() {
                         </p>
                       )}
                       <span
-                        className="inline-block text-xs uppercase px-4 py-2 border border-white/35 text-white/75 transition-all duration-300 group-hover:bg-white group-hover:text-[var(--color-on-accent)] group-hover:border-white"
+                        className="inline-block text-xs uppercase px-4 py-2 border border-white/35 text-white/75 transition-all duration-300 group-hover:bg-white group-hover:text-[var(--color-on-accent)] group-hover:border-white rounded-full"
                         style={{ letterSpacing: "0.15em" }}
                       >
                         Voir la collection →

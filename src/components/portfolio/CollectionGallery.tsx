@@ -140,6 +140,7 @@ function Lightbox({
             <a
               href={photo.productSlug ? `/boutique/${photo.productSlug}` : "/boutique"}
               style={{
+                borderRadius: 999,
                 padding: "10px 22px", background: "var(--color-accent)", color: "var(--color-on-accent)",
                 fontWeight: 700, fontSize: 12, letterSpacing: "0.15em", textTransform: "uppercase",
                 textDecoration: "none", display: "inline-block",
@@ -264,6 +265,7 @@ function PrintRequestModal({ photo, onClose }: { photo: GalleryPhoto; onClose: (
                 <p style={{ color: "#ef4444", fontSize: 12 }}>Erreur — contactez-moi : charleslaf.photo@gmail.com</p>
               )}
               <button type="submit" disabled={status === "sending"} style={{
+                borderRadius: 999,
                 padding: "14px", background: "var(--color-accent)", color: "var(--color-on-accent)",
                 fontWeight: 700, fontSize: 12, letterSpacing: "0.2em", textTransform: "uppercase",
                 border: "none", cursor: "pointer", opacity: status === "sending" ? 0.6 : 1,
@@ -353,6 +355,7 @@ export default function CollectionGallery({ photos }: { photos: GalleryPhoto[] }
                 <div style={{ alignSelf: "flex-end" }}>
                   <span style={{
                     padding: "4px 8px", fontSize: 10, fontWeight: 700, letterSpacing: "0.1em",
+                    borderRadius: 999,
                     textTransform: "uppercase", background: "var(--color-accent)", color: "var(--color-on-accent)",
                   }}>
                     En boutique

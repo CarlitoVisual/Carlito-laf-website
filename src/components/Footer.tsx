@@ -86,7 +86,7 @@ export default function Footer() {
               <p>France</p>
               <Link
                 href="/devis"
-                className="inline-block mt-2 text-xs uppercase text-center px-4 py-2 border transition-all"
+                className="inline-block mt-2 text-xs uppercase text-center px-4 py-2 border transition-all rounded-full"
                 style={{
                   color: "var(--color-accent)",
                   borderColor: "var(--color-accent)",

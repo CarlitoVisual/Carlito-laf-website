@@ -44,7 +44,7 @@ export default function CTABlock(props: BlockProps<CTABlockData>) {
             <Link
               key={i}
               href={btn.link?.href || btn.url || "#"}
-              className="inline-block text-sm uppercase px-8 py-4 font-semibold transition-all duration-300"
+              className="inline-block text-sm uppercase px-8 py-4 font-semibold transition-all duration-300 rounded-full"
               style={
                 btn.style === "outline"
                   ? {
@@ -53,6 +53,7 @@ export default function CTABlock(props: BlockProps<CTABlockData>) {
                       letterSpacing: "0.2em",
                     }
                   : {
+                      borderRadius: 999,
                       background: "var(--color-accent)",
                       color: "var(--color-on-accent)",
                       letterSpacing: "0.2em",
@@ -66,7 +67,7 @@ export default function CTABlock(props: BlockProps<CTABlockData>) {
           {!props.buttons?.length && (
             <Link
               href="/devis"
-              className="inline-block text-sm uppercase px-8 py-4 font-semibold"
+              className="inline-block text-sm uppercase px-8 py-4 font-semibold rounded-full"
               style={{
                 background: "var(--color-accent)",
                 color: "var(--color-on-accent)",

@@ -17,7 +17,7 @@ export default function ProductViewerTrigger({ product, disabled }: Props) {
       <button
         onClick={() => !disabled && setOpen(true)}
         disabled={disabled}
-        className="text-xs uppercase px-5 py-2.5 font-semibold transition-all duration-200"
+        className="text-xs uppercase px-5 py-2.5 font-semibold transition-all duration-200 rounded-full"
         style={{
           background: disabled ? "var(--color-border)" : "var(--color-accent)",
           color: disabled ? "var(--color-muted)" : "var(--color-on-accent)",

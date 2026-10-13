@@ -77,7 +77,7 @@ export default function Hero(props: BlockProps<HeroBlockData>) {
               <Link
                 key={i}
                 href={btn.link?.href || btn.url || "#"}
-                className="inline-block text-sm uppercase px-8 py-4 transition-all duration-300 font-semibold"
+                className="inline-block text-sm uppercase px-8 py-4 transition-all duration-300 font-semibold rounded-full"
                 style={
                   btn.style === "outline"
                     ? {
@@ -86,6 +86,7 @@ export default function Hero(props: BlockProps<HeroBlockData>) {
                         letterSpacing: "0.2em",
                       }
                     : {
+                        borderRadius: 999,
                         background: "var(--color-accent)",
                         color: "var(--color-on-accent)",
                         letterSpacing: "0.2em",

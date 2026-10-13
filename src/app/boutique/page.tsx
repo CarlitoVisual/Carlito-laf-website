@@ -110,7 +110,7 @@ export default async function BoutiquePage() {
                       {col.name}
                     </h2>
                     <span
-                      className="inline-block text-xs uppercase px-4 py-2 border border-white/30 text-white/70 transition-all duration-300 group-hover:bg-[var(--color-accent)] group-hover:text-[var(--color-on-accent)] group-hover:border-[var(--color-accent)]"
+                      className="inline-block text-xs uppercase px-4 py-2 border border-white/30 text-white/70 transition-all duration-300 group-hover:bg-[var(--color-accent)] group-hover:text-[var(--color-on-accent)] group-hover:border-[var(--color-accent)] rounded-full"
                       style={{ letterSpacing: "0.15em" }}
                     >
                       Voir la collection →

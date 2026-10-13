@@ -21,7 +21,7 @@ export default function NotFound() {
         </p>
         <Link
           href="/"
-          className="inline-block text-sm uppercase px-8 py-3 font-semibold"
+          className="inline-block text-sm uppercase px-8 py-3 font-semibold rounded-full"
           style={{
             background: "var(--color-accent)",
             color: "var(--color-on-accent)",

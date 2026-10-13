@@ -113,7 +113,7 @@ export default function VideoBlock(props: BlockProps<VideoBlockData>) {
           {button?.label && (
             <Link
               href={button.link?.href || button.url || "/contact"}
-              className="text-sm uppercase px-6 py-3 font-semibold flex-shrink-0"
+              className="text-sm uppercase px-6 py-3 font-semibold flex-shrink-0 rounded-full"
               style={{
                 background: button.style === "outline" ? "transparent" : "var(--color-accent)",
                 color: button.style === "outline" ? "var(--color-accent)" : "var(--color-on-accent)",

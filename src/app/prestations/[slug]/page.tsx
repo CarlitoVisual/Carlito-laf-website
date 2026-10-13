@@ -254,6 +254,7 @@ export default async function ServicePage({ params }: Props) {
               style={{
                 display: "block",
                 padding: "14px 20px",
+                borderRadius: 999,
                 background: "var(--color-accent)",
                 color: "var(--color-on-accent)",
                 fontWeight: 700,
@@ -417,6 +418,7 @@ export default async function ServicePage({ params }: Props) {
           style={{
             display: "inline-block",
             padding: "16px 48px",
+            borderRadius: 999,
             background: "var(--color-accent)",
             color: "var(--color-on-accent)",
             fontWeight: 700,

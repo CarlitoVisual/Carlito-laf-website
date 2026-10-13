@@ -245,7 +245,7 @@ export default function ContactBlock(props: BlockProps<ContactBlockData>) {
             <button
               type="submit"
               disabled={status === "sending"}
-              className="text-sm uppercase font-semibold px-10 py-4 self-start transition-opacity"
+              className="text-sm uppercase font-semibold px-10 py-4 self-start transition-opacity rounded-full"
               style={{
                 background: "var(--color-accent)",
                 color: "var(--color-on-accent)",

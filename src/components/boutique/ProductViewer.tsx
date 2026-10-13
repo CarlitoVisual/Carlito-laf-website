@@ -261,6 +261,7 @@ export default function ProductViewer({ product, onClose }: Props) {
                           padding: "10px 16px",
                           fontSize: "0.82rem",
                           border: `1px solid ${selected ? "var(--color-accent)" : avail ? "var(--color-border)" : "var(--color-border)"}`,
+                          borderRadius: 999,
                           background: selected ? "var(--color-accent)" : "transparent",
                           color: selected ? "var(--color-on-accent)" : avail ? "var(--color-text)" : "var(--color-muted)",
                           textDecoration: avail ? "none" : "line-through",
@@ -341,6 +342,7 @@ export default function ProductViewer({ product, onClose }: Props) {
                 style={{
                   width: "100%",
                   padding: "16px",
+                  borderRadius: 999,
                   background: "var(--color-accent)",
                   color: "var(--color-on-accent)",
                   fontWeight: 700,
@@ -418,6 +420,7 @@ export default function ProductViewer({ product, onClose }: Props) {
                     disabled={status === "sending"}
                     style={{
                       flex: 2, padding: "12px",
+                      borderRadius: 999,
                       background: "var(--color-accent)",
                       color: "var(--color-on-accent)",
                       fontWeight: 700,

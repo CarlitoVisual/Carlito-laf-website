@@ -132,6 +132,7 @@ export default function ServiceCarousel({ services, buttonLabel = "Découvrir" }
                 style={{
                   display: "inline-block",
                   padding: "14px 32px",
+                  borderRadius: 999,
                   background: "var(--color-accent)",
                   color: "var(--color-on-accent)",
                   fontWeight: 700,

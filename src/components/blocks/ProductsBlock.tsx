@@ -149,7 +149,7 @@ function ProductCard({ product, showPrice, showDescription, showButton, buttonLa
             </div>
           )}
           {product.edition?.limited && (
-            <div className="absolute top-3 left-3 px-2 py-1 text-xs uppercase" style={{ background: "var(--color-accent)", color: "var(--color-on-accent)", letterSpacing: "0.1em" }}>
+            <div className="absolute top-3 left-3 px-2 py-1 text-xs uppercase rounded-full" style={{ background: "var(--color-accent)", color: "var(--color-on-accent)", letterSpacing: "0.1em" }}>
               Édition limitée
             </div>
           )}
@@ -203,7 +203,7 @@ function ProductCard({ product, showPrice, showDescription, showButton, buttonLa
               href={available ? (product.paymentUrl || "/contact") : undefined}
               target={product.paymentUrl ? "_blank" : undefined}
               rel="noopener noreferrer"
-              className="text-xs uppercase px-4 py-2 transition-opacity"
+              className="text-xs uppercase px-4 py-2 transition-opacity rounded-full"
               style={{
                 background: available ? "var(--color-accent)" : "var(--color-border)",
                 color: available ? "var(--color-on-accent)" : "var(--color-muted)",
@@ -234,7 +234,7 @@ function FeaturedProduct({ product, reverse, showPrice, showButton, buttonLabel 
         <div className="w-full md:w-1/2 relative overflow-hidden" style={{ aspectRatio: "3/4" }}>
           <Image src={urlFor(product.image).width(900).quality(90).url()} alt={product.title} fill className="object-cover" sizes="50vw" />
           {product.edition?.limited && (
-            <div className="absolute top-4 left-4 px-3 py-1 text-xs uppercase" style={{ background: "var(--color-accent)", color: "var(--color-on-accent)", letterSpacing: "0.1em" }}>
+            <div className="absolute top-4 left-4 px-3 py-1 text-xs uppercase rounded-full" style={{ background: "var(--color-accent)", color: "var(--color-on-accent)", letterSpacing: "0.1em" }}>
               Édition limitée
             </div>
           )}
@@ -279,7 +279,7 @@ function FeaturedProduct({ product, reverse, showPrice, showButton, buttonLabel 
           {showButton && (
             <a
               href={available ? (product.paymentUrl || "/contact") : undefined}
-              className="text-sm uppercase px-8 py-3 font-semibold"
+              className="text-sm uppercase px-8 py-3 font-semibold rounded-full"
               style={{ background: available ? "var(--color-accent)" : "var(--color-border)", color: available ? "var(--color-on-accent)" : "var(--color-muted)", letterSpacing: "0.2em" }}
             >
               {buttonLabel}
@@ -319,7 +319,7 @@ function ListProduct({ product, showPrice, showButton, buttonLabel }: ProductDis
         {showButton && (
           <a
             href={available ? (product.paymentUrl || "/contact") : undefined}
-            className="text-xs uppercase px-4 py-2"
+            className="text-xs uppercase px-4 py-2 rounded-full"
             style={{ background: available ? "var(--color-accent)" : "var(--color-border)", color: available ? "var(--color-on-accent)" : "var(--color-muted)", letterSpacing: "0.12em" }}
           >
             {buttonLabel}

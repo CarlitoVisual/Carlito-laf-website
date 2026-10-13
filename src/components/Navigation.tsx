@@ -77,7 +77,7 @@ export default function Navigation() {
           ))}
           <Link
             href="/devis"
-            className="text-xs uppercase px-5 py-2 border transition-all duration-200 hover:bg-[var(--color-accent)] hover:text-[var(--color-on-accent)] hover:border-[var(--color-accent)]"
+            className="text-xs uppercase px-5 py-2 border transition-all duration-200 hover:bg-[var(--color-accent)] hover:text-[var(--color-on-accent)] hover:border-[var(--color-accent)] rounded-full"
             style={{
               color: "var(--color-accent)",
               borderColor: "var(--color-accent)",
@@ -140,7 +140,7 @@ export default function Navigation() {
           ))}
           <Link
             href="/devis"
-            className="text-xs uppercase px-5 py-3 border mt-2 text-center"
+            className="text-xs uppercase px-5 py-3 border mt-2 text-center rounded-full"
             style={{
               color: "var(--color-accent)",
               borderColor: "var(--color-accent)",

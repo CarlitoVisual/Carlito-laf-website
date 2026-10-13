@@ -129,6 +129,7 @@ function Lightbox({ products, index, onClose, onNav, onShowViewer }: {
           disabled={!available}
           style={{
             padding: "12px 28px",
+            borderRadius: 999,
             background: available ? "var(--color-accent)" : "var(--color-border)",
             color: available ? "var(--color-on-accent)" : "var(--color-muted)",
             fontWeight: 700, fontSize: 12, letterSpacing: "0.15em", textTransform: "uppercase",
@@ -212,7 +213,7 @@ export default function BoutiqueCollectionGallery({ products }: { products: Bout
                 )}
 
                 {product.edition?.limited && (
-                  <div style={{ position: "absolute", top: 12, left: 12, padding: "4px 8px", background: "var(--color-accent)", color: "var(--color-on-accent)", fontSize: 10, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.1em" }}>
+                  <div style={{ borderRadius: 999, position: "absolute", top: 12, left: 12, padding: "4px 8px", background: "var(--color-accent)", color: "var(--color-on-accent)", fontSize: 10, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.1em" }}>
                     Édition limitée
                   </div>
                 )}
@@ -277,7 +278,7 @@ export default function BoutiqueCollectionGallery({ products }: { products: Bout
                   <button
                     onClick={() => openViewer(product)}
                     disabled={!available}
-                    className="text-xs uppercase px-5 py-2.5 font-semibold transition-all duration-200"
+                    className="text-xs uppercase px-5 py-2.5 font-semibold transition-all duration-200 rounded-full"
                     style={{
                       background: !available ? "var(--color-border)" : "var(--color-accent)",
                       color: !available ? "var(--color-muted)" : "var(--color-on-accent)",
