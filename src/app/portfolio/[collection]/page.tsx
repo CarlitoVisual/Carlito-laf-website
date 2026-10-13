@@ -3,6 +3,7 @@ import { notFound } from "next/navigation"
 import Link from "next/link"
 import { client } from "@/lib/sanity.client"
 import { urlFor } from "@/lib/image"
+import { sortByManualOrder } from "@/lib/photoOrder"
 import type { SanityImage } from "@/types/sanity"
 import CollectionGallery, { type GalleryPhoto } from "@/components/portfolio/CollectionGallery"
 
@@ -32,16 +33,19 @@ async function getCollectionBySlug(slug: string): Promise<CollectionDoc | undefi
 }
 
 async function getCollectionPhotos(collectionId: string): Promise<GalleryPhoto[]> {
-  const raw = await client.fetch<RawPhoto[]>(
-    `*[_type == "photo" && collection._ref == $id] | order(_createdAt asc) {
-      _id, title, alt, image, location,
-      availableAsPrint,
-      "productSlug": product->slug.current
+  const { order, photos } = await client.fetch<{ order: string[] | null; photos: RawPhoto[] }>(
+    `{
+      "order": *[_id == $id][0].photoOrder[]._ref,
+      "photos": *[_type == "photo" && collection._ref == $id] | order(_createdAt asc) {
+        _id, title, alt, image, location,
+        availableAsPrint,
+        "productSlug": product->slug.current
+      }
     }`,
     { id: collectionId }
   )
 
-  return raw
+  return sortByManualOrder(photos, order)
     .map((p) => {
       const ref: string = p.image?.asset?._ref ?? ""
       const match = ref.match(/-(\d+)x(\d+)-/)

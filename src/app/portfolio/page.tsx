@@ -20,6 +20,7 @@ const COLLECTIONS_QUERY = `
   description,
   "coverImage": coalesce(
     coverPhoto->image,
+    photoOrder[0]->image,
     *[_type == "photo" && collection._ref == ^._id && defined(image)] | order(_createdAt asc) [0].image
   ),
   "count": count(*[_type == "photo" && collection._ref == ^._id])
