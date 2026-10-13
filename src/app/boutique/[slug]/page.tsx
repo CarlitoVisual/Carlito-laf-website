@@ -10,10 +10,10 @@ export const revalidate = 60
 type Props = { params: Promise<{ slug: string }> }
 
 async function getAllCollections(): Promise<string[]> {
-  const products = await client.fetch(
+  const products = await client.fetch<{ collection?: string }[]>(
     `*[_type == "product" && (defined(collection) || defined(photo))]{ "collection": coalesce(collection->title, photo->collection->title) }`
   )
-  return [...new Set<string>(products.map((p: any) => p.collection as string).filter(Boolean))]
+  return [...new Set<string>(products.map((p) => p.collection).filter((c): c is string => Boolean(c)))]
 }
 
 async function getCollectionProducts(collectionName: string) {

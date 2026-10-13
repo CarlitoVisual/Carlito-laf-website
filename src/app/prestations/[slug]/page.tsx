@@ -4,6 +4,7 @@ import Image from "next/image"
 import Link from "next/link"
 import { client } from "@/lib/sanity.client"
 import { urlFor } from "@/lib/image"
+import type { PortableTextBlock, SanityImage, Service } from "@/types/sanity"
 
 export const revalidate = 60
 
@@ -18,7 +19,8 @@ const SERVICE_QUERY = `
   videoExample {
     videoType, url,
     "fileUrl": file.asset->url,
-    poster
+    poster,
+    caption
   },
   projects[]-> {
     _id, title, "slug": slug.current, coverImage, excerpt, location, date, category
@@ -26,16 +28,43 @@ const SERVICE_QUERY = `
 }
 `
 
+type ServiceVideo = {
+  videoType?: string
+  url?: string
+  fileUrl?: string
+  poster?: SanityImage
+  caption?: string
+}
+
+type ServiceProject = {
+  _id: string
+  title?: string
+  slug?: string
+  coverImage?: SanityImage
+  excerpt?: string
+  location?: string
+  date?: string
+  category?: string
+}
+
+type ServiceDetail = Omit<Service, "_id"> & {
+  description?: PortableTextBlock[]
+  gallery?: SanityImage[]
+  process?: { title?: string; description?: string }[]
+  videoExample?: ServiceVideo
+  projects?: ServiceProject[]
+}
+
 const ALL_SLUGS_QUERY = `*[_type == "service" && defined(slug.current)]{ "slug": slug.current }`
 
 export async function generateStaticParams() {
-  const services = await client.fetch(ALL_SLUGS_QUERY)
-  return services.map((s: any) => ({ slug: s.slug }))
+  const services = await client.fetch<{ slug: string }[]>(ALL_SLUGS_QUERY)
+  return services.map((s) => ({ slug: s.slug }))
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params
-  const service = await client.fetch(SERVICE_QUERY, { slug })
+  const service = await client.fetch<ServiceDetail | null>(SERVICE_QUERY, { slug })
   if (!service) return {}
   return {
     title: service.title,
@@ -43,7 +72,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   }
 }
 
-function embedUrl(video: any): string | null {
+function embedUrl(video: ServiceVideo | undefined): string | null {
   if (!video?.url) return null
   const url = video.url
   const vimeo = url.match(/vimeo\.com\/(\d+)/)
@@ -53,7 +82,7 @@ function embedUrl(video: any): string | null {
   return null
 }
 
-function priceLabel(s: any): string | null {
+function priceLabel(s: Pick<Service, "price" | "currency" | "priceType">): string | null {
   if (!s.price) return null
   const curr = s.currency === "EUR" ? "€" : (s.currency ?? "€")
   if (s.priceType === "starting") return `À partir de ${s.price}${curr}`
@@ -72,7 +101,7 @@ const CATEGORY_LABELS: Record<string, string> = {
 
 export default async function ServicePage({ params }: Props) {
   const { slug } = await params
-  const service = await client.fetch(SERVICE_QUERY, { slug })
+  const service = await client.fetch<ServiceDetail | null>(SERVICE_QUERY, { slug })
   if (!service) notFound()
 
   const label = priceLabel(service)
@@ -142,7 +171,7 @@ export default async function ServicePage({ params }: Props) {
             )}
 
             {/* Deliverables */}
-            {service.deliverables?.length > 0 && (
+            {!!service.deliverables?.length && (
               <div style={{ marginBottom: 56 }}>
                 <h2 style={{ color: "var(--color-text)", fontSize: "1.1rem", fontWeight: 700, letterSpacing: "0.05em", textTransform: "uppercase", marginBottom: 24 }}>
                   Ce qui est inclus
@@ -159,13 +188,13 @@ export default async function ServicePage({ params }: Props) {
             )}
 
             {/* Process */}
-            {service.process?.length > 0 && (
+            {!!service.process?.length && (
               <div>
                 <h2 style={{ color: "var(--color-text)", fontSize: "1.1rem", fontWeight: 700, letterSpacing: "0.05em", textTransform: "uppercase", marginBottom: 32 }}>
                   Comment ça se passe
                 </h2>
                 <div style={{ display: "flex", flexDirection: "column", gap: 0 }}>
-                  {service.process.map((step: any, i: number) => (
+                  {service.process.map((step, i) => (
                     <div key={i} style={{ display: "flex", gap: 24, paddingBottom: 32, position: "relative" }}>
                       {/* Step number + vertical line */}
                       <div style={{ display: "flex", flexDirection: "column", alignItems: "center", flexShrink: 0, width: 36 }}>
@@ -177,7 +206,7 @@ export default async function ServicePage({ params }: Props) {
                         }}>
                           {i + 1}
                         </div>
-                        {i < service.process.length - 1 && (
+                        {i < (service.process?.length ?? 0) - 1 && (
                           <div style={{ width: 1, flex: 1, background: "var(--color-border)", marginTop: 8 }} />
                         )}
                       </div>
@@ -259,13 +288,13 @@ export default async function ServicePage({ params }: Props) {
       </div>
 
       {/* ── Gallery ──────────────────────────────────────────────── */}
-      {service.gallery?.length > 0 && (
+      {!!service.gallery?.length && (
         <div style={{ padding: "0 6vw 80px", maxWidth: 1300, margin: "0 auto" }}>
           <h2 style={{ color: "var(--color-text)", fontSize: "1.1rem", fontWeight: 700, letterSpacing: "0.05em", textTransform: "uppercase", marginBottom: 32 }}>
             Galerie
           </h2>
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))", gap: 8 }}>
-            {service.gallery.map((img: any, i: number) => (
+            {service.gallery.map((img, i) => (
               <div key={img._key || i} style={{ position: "relative", aspectRatio: "4/3" }}>
                 <Image
                   src={urlFor(img).width(600).quality(85).url()}
@@ -323,7 +352,7 @@ export default async function ServicePage({ params }: Props) {
       )}
 
       {/* ── Projets associés ─────────────────────────────────────── */}
-      {service.projects?.length > 0 && (
+      {!!service.projects?.length && (
         <div style={{ background: "var(--color-surface)", borderTop: "1px solid var(--color-border)", padding: "80px 6vw" }}>
           <div style={{ maxWidth: 1300, margin: "0 auto" }}>
             <p style={{ color: "var(--color-accent)", fontSize: "0.7rem", letterSpacing: "0.3em", textTransform: "uppercase", marginBottom: 12 }}>
@@ -333,13 +362,13 @@ export default async function ServicePage({ params }: Props) {
               Projets réalisés
             </h2>
             <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(300px, 1fr))", gap: 24 }}>
-              {service.projects.map((project: any) => (
+              {service.projects.map((project) => (
                 <div key={project._id} style={{ overflow: "hidden", background: "var(--color-bg)", border: "1px solid var(--color-border)" }}>
                   <div style={{ position: "relative", aspectRatio: "16/9" }}>
                     {project.coverImage && (
                       <Image
                         src={urlFor(project.coverImage).width(700).quality(85).url()}
-                        alt={project.title}
+                        alt={project.title ?? ""}
                         fill
                         className="object-cover"
                         sizes="(max-width:768px) 100vw, 33vw"
@@ -381,7 +410,7 @@ export default async function ServicePage({ params }: Props) {
           Parlons de votre projet
         </h2>
         <p style={{ color: "var(--color-muted)", maxWidth: 480, margin: "0 auto 40px" }}>
-          Chaque aventure mérite d'être capturée avec soin. Contactez-moi pour un devis personnalisé.
+          Chaque aventure mérite d’être capturée avec soin. Contactez-moi pour un devis personnalisé.
         </p>
         <Link
           href={`/devis?service=${encodeURIComponent(service.title)}`}

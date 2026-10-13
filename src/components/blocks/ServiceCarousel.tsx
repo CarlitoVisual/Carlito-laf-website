@@ -4,18 +4,7 @@ import { useState, useEffect, useRef, useCallback } from "react"
 import Image from "next/image"
 import Link from "next/link"
 import { urlFor } from "@/lib/image"
-
-type Service = {
-  _id: string
-  title: string
-  slug?: string
-  shortDescription?: string
-  coverImage?: any
-  category?: string
-  priceType?: string
-  price?: number
-  currency?: string
-}
+import type { Service } from "@/types/sanity"
 
 type Props = {
   services: Service[]
@@ -36,14 +25,14 @@ export default function ServiceCarousel({ services, buttonLabel = "Découvrir" }
     }, 400)
   }, [animating, active])
 
-  const prev = () => goTo((active - 1 + services.length) % services.length)
-  const next = () => goTo((active + 1) % services.length)
+  const prev = useCallback(() => goTo((active - 1 + services.length) % services.length), [goTo, active, services.length])
+  const next = useCallback(() => goTo((active + 1) % services.length), [goTo, active, services.length])
 
   // Auto-advance
   useEffect(() => {
     timerRef.current = setTimeout(next, 5000)
     return () => clearTimeout(timerRef.current)
-  }, [active])
+  }, [next])
 
   const service = services[active]
 

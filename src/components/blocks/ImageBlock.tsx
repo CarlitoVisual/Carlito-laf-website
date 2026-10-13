@@ -4,6 +4,7 @@ import Image from "next/image"
 import Link from "next/link"
 import { useState } from "react"
 import { urlFor } from "@/lib/image"
+import type { BlockProps, ImageBlock as ImageBlockData } from "@/types/sanity"
 
 const sizeMap: Record<string, string> = {
   small:      "max-w-xl",
@@ -20,7 +21,7 @@ const aspectMap: Record<string, string> = {
   "portrait":"133.33%",
 }
 
-export default function ImageBlock(props: any) {
+export default function ImageBlock(props: BlockProps<ImageBlockData>) {
   const {
     image, caption, credit,
     size = "large", aspectRatio = "auto",

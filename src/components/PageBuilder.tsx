@@ -12,14 +12,15 @@ import TestimonialsBlock from "./blocks/TestimonialsBlock"
 import QuoteBlock from "./blocks/QuoteBlock"
 import ImageBlock from "./blocks/ImageBlock"
 import TimelineBlock from "./blocks/TimelineBlock"
+import type { PageSection } from "@/types/sanity"
 
-type Props = { sections: any[] }
+type Props = { sections?: PageSection[] }
 
 export default function PageBuilder({ sections }: Props) {
   return (
     <>
-      {sections?.map((s) => {
-        const key = s._key || s._id || Math.random().toString()
+      {sections?.map((s, index) => {
+        const key = s._key || s._id || `${s._type}-${index}`
         switch (s._type) {
           case "hero":              return <Hero key={key} {...s} />
           case "skillsBentoBlock":  return <SkillsBentoBlock key={key} {...s} />

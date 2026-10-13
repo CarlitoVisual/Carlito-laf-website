@@ -6,20 +6,9 @@ import Image from "next/image"
 import { urlFor } from "@/lib/image"
 import { formatPrice, startingPrice, isProductAvailable } from "@/lib/shop"
 import ProductViewer from "./ProductViewer"
+import type { Product } from "@/types/sanity"
 
-export type BoutiqueProduct = {
-  _id: string
-  title: string
-  shortDescription?: string
-  image: any
-  price?: number
-  currency?: string
-  formats?: Array<{ name: string; price: number; stock?: number }>
-  edition?: { limited?: boolean; number?: number; certificate?: boolean }
-  collection?: string
-  paymentUrl?: string
-  featured?: boolean
-}
+export type BoutiqueProduct = Product
 
 /* ─────────────────────────────── Lightbox ─────────────────────────────── */
 

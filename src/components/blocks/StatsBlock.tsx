@@ -1,4 +1,6 @@
-export default function StatsBlock(props: any) {
+import type { BlockProps, StatsBlock as StatsBlockData } from "@/types/sanity"
+
+export default function StatsBlock(props: BlockProps<StatsBlockData>) {
   const items = props.items ?? []
 
   return (
@@ -18,7 +20,7 @@ export default function StatsBlock(props: any) {
           </p>
         ) : (
           <div className="grid grid-cols-2 md:grid-cols-4 gap-10 text-center">
-            {items.map((item: any, i: number) => (
+            {items.map((item, i) => (
               <div key={i}>
                 <p className="text-4xl md:text-5xl font-bold mb-2" style={{ color: "var(--color-accent)" }}>
                   {item.value}{item.suffix}

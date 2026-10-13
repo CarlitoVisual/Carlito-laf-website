@@ -2,9 +2,10 @@
 
 import { useState } from "react"
 import ProductViewer from "./ProductViewer"
+import type { Product } from "@/types/sanity"
 
 type Props = {
-  product: any
+  product: Product
   disabled?: boolean
 }
 

@@ -1,10 +1,11 @@
-import { createImageUrlBuilder } from "@sanity/image-url"
+import { createImageUrlBuilder, type ImageUrlBuilder, type SanityImageSource } from "@sanity/image-url"
 import { client } from "./sanity.client"
+import type { SanityImage } from "@/types/sanity"
 
 const builder = createImageUrlBuilder(client)
 
 // Null-object builder: absorbs any chained call and returns "" from .url()
-const nullBuilder: any = new Proxy(
+const nullBuilder: ImageUrlBuilder = new Proxy(
   { url: () => "", toString: () => "" },
   {
     get(target, prop) {
@@ -12,9 +13,9 @@ const nullBuilder: any = new Proxy(
       return () => nullBuilder
     },
   }
-)
+) as unknown as ImageUrlBuilder
 
-export function urlFor(source: any) {
+export function urlFor(source: SanityImage | null | undefined): ImageUrlBuilder {
   if (!source?.asset?._ref) return nullBuilder
-  return builder.image(source)
+  return builder.image(source as SanityImageSource)
 }

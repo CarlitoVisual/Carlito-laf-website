@@ -3,8 +3,9 @@
 import Image from "next/image"
 import { useEffect } from "react"
 import { urlFor } from "@/lib/image"
+import type { GalleryItem } from "@/types/sanity"
 
-export default function Lightbox({ item, onClose }: any) {
+export default function Lightbox({ item, onClose }: { item: GalleryItem; onClose: () => void }) {
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
       if (e.key === "Escape") onClose()

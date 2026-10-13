@@ -1,7 +1,8 @@
 import Image from "next/image"
 import { urlFor } from "@/lib/image"
+import type { BlockProps, TestimonialsBlock as TestimonialsBlockData } from "@/types/sanity"
 
-export default function TestimonialsBlock(props: any) {
+export default function TestimonialsBlock(props: BlockProps<TestimonialsBlockData>) {
   const items = props.items ?? []
 
   return (
@@ -17,7 +18,7 @@ export default function TestimonialsBlock(props: any) {
         )}
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {items.map((t: any, i: number) => (
+          {items.map((t, i) => (
             <div
               key={t._id || i}
               className="flex flex-col p-8"
@@ -48,7 +49,7 @@ export default function TestimonialsBlock(props: any) {
                   <div className="relative w-12 h-12 rounded-full overflow-hidden flex-shrink-0">
                     <Image
                       src={urlFor(t.avatar).width(96).url()}
-                      alt={t.name}
+                      alt={t.name ?? ""}
                       fill
                       className="object-cover"
                     />

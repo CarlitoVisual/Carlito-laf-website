@@ -3,11 +3,22 @@ import { notFound } from "next/navigation"
 import Link from "next/link"
 import { client } from "@/lib/sanity.client"
 import { urlFor } from "@/lib/image"
+import type { SanityImage } from "@/types/sanity"
 import CollectionGallery, { type GalleryPhoto } from "@/components/portfolio/CollectionGallery"
 
 export const revalidate = 60
 
 type Props = { params: Promise<{ collection: string }> }
+
+type RawPhoto = {
+  _id: string
+  title?: string
+  alt?: string
+  image?: SanityImage
+  location?: string
+  availableAsPrint?: boolean
+  productSlug?: string
+}
 
 type CollectionDoc = { _id: string; title: string; slug: string }
 
@@ -21,7 +32,7 @@ async function getCollectionBySlug(slug: string): Promise<CollectionDoc | undefi
 }
 
 async function getCollectionPhotos(collectionId: string): Promise<GalleryPhoto[]> {
-  const raw = await client.fetch(
+  const raw = await client.fetch<RawPhoto[]>(
     `*[_type == "photo" && collection._ref == $id] | order(_createdAt asc) {
       _id, title, alt, image, location,
       availableAsPrint,
@@ -31,7 +42,7 @@ async function getCollectionPhotos(collectionId: string): Promise<GalleryPhoto[]
   )
 
   return raw
-    .map((p: any) => {
+    .map((p) => {
       const ref: string = p.image?.asset?._ref ?? ""
       const match = ref.match(/-(\d+)x(\d+)-/)
       const width = match ? parseInt(match[1]) : 900

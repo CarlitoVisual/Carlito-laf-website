@@ -5,9 +5,10 @@ import { createPortal } from "react-dom"
 import Image from "next/image"
 import { urlFor } from "@/lib/image"
 import { formatPrice, isFormatAvailable } from "@/lib/shop"
+import type { Product, ProductFormat, SanityImage } from "@/types/sanity"
 
 type Props = {
-  product: any
+  product: Product
   onClose: () => void
 }
 
@@ -17,9 +18,9 @@ export default function ProductViewer({ product, onClose }: Props) {
   const formats = product.formats ?? []
   const availableFormats = formats.filter(isFormatAvailable)
 
-  const [selectedFormat, setSelectedFormat] = useState<any>(availableFormats[0] ?? null)
+  const [selectedFormat, setSelectedFormat] = useState<ProductFormat | null>(availableFormats[0] ?? null)
   const [qty, setQty] = useState(1)
-  const [activeImage, setActiveImage] = useState<any>(product.image)
+  const [activeImage, setActiveImage] = useState<SanityImage | undefined>(product.image)
   const [showOrder, setShowOrder] = useState(false)
   const [status, setStatus] = useState<OrderStatus>("idle")
   const [form, setForm] = useState({ name: "", email: "", phone: "", message: "", company: "" })
@@ -39,11 +40,12 @@ export default function ProductViewer({ product, onClose }: Props) {
     }
   }, [onClose])
 
-  useEffect(() => {
+  function selectFormat(f: typeof selectedFormat) {
+    setSelectedFormat(f)
     setQty(1)
     setShowOrder(false)
     setStatus("idle")
-  }, [selectedFormat])
+  }
 
   function changeField(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) {
     setForm(f => ({ ...f, [e.target.name]: e.target.value }))
@@ -57,14 +59,9 @@ export default function ProductViewer({ product, onClose }: Props) {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          product: product.title,
-          collection: product.collection,
+          productId: product._id,
           format: selectedFormat?.name,
           qty,
-          unitPrice,
-          total,
-          currency,
-          paymentUrl: product.paymentUrl,
           ...form,
         }),
       })
@@ -178,7 +175,7 @@ export default function ProductViewer({ product, onClose }: Props) {
                   overflowX: "auto",
                 }}
               >
-                {allImages.map((img: any, i: number) => (
+                {allImages.map((img, i) => (
                   <button
                     key={i}
                     onClick={() => setActiveImage(img)}
@@ -252,14 +249,14 @@ export default function ProductViewer({ product, onClose }: Props) {
                   Format
                 </p>
                 <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
-                  {formats.map((f: any, i: number) => {
+                  {formats.map((f, i) => {
                     const avail = isFormatAvailable(f)
                     const selected = selectedFormat?.name === f.name
                     return (
                       <button
                         key={i}
                         disabled={!avail}
-                        onClick={() => avail && setSelectedFormat(f)}
+                        onClick={() => avail && selectFormat(f)}
                         style={{
                           padding: "10px 16px",
                           fontSize: "0.82rem",

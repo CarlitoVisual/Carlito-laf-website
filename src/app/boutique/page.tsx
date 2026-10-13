@@ -4,6 +4,7 @@ import Link from "next/link"
 import { client } from "@/lib/sanity.client"
 import { urlFor } from "@/lib/image"
 import { slugifyCollection } from "@/lib/shop"
+import type { SanityImage } from "@/types/sanity"
 
 export const revalidate = 60
 
@@ -24,12 +25,12 @@ const QUERY = `
 type CollectionSummary = {
   name: string
   slug: string
-  cover: any
+  cover?: SanityImage
   count: number
 }
 
 export default async function BoutiquePage() {
-  const products = await client.fetch(QUERY)
+  const products = await client.fetch<{ _id: string; collection?: string; image?: SanityImage; title: string }[]>(QUERY)
 
   // Group by collection
   const map = new Map<string, CollectionSummary>()

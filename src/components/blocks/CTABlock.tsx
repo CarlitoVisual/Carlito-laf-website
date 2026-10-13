@@ -1,6 +1,7 @@
 import Link from "next/link"
+import type { BlockProps, CTABlock as CTABlockData } from "@/types/sanity"
 
-export default function CTABlock(props: any) {
+export default function CTABlock(props: BlockProps<CTABlockData>) {
   return (
     <section
       className="py-28 px-6 text-center relative overflow-hidden"
@@ -39,7 +40,7 @@ export default function CTABlock(props: any) {
         )}
 
         <div className="flex flex-wrap gap-4 justify-center">
-          {props.buttons?.map((btn: any, i: number) => (
+          {props.buttons?.map((btn, i) => (
             <Link
               key={i}
               href={btn.link?.href || btn.url || "#"}

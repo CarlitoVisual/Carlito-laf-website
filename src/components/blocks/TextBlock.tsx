@@ -1,19 +1,20 @@
 import Image from "next/image"
-import { PortableText } from "next-sanity"
+import { PortableText, type PortableTextComponents } from "next-sanity"
 import { urlFor } from "@/lib/image"
+import type { BlockProps, TextBlock as TextBlockData } from "@/types/sanity"
 
-const ptComponents = {
+const ptComponents: PortableTextComponents = {
   block: {
-    normal: ({ children }: any) => (
+    normal: ({ children }) => (
       <p className="text-base leading-relaxed mb-5" style={{ color: "var(--color-muted)" }}>{children}</p>
     ),
-    h2: ({ children }: any) => (
+    h2: ({ children }) => (
       <h2 className="text-2xl font-bold mt-10 mb-4" style={{ color: "var(--color-text)" }}>{children}</h2>
     ),
-    h3: ({ children }: any) => (
+    h3: ({ children }) => (
       <h3 className="text-xl font-semibold mt-8 mb-3" style={{ color: "var(--color-text)" }}>{children}</h3>
     ),
-    blockquote: ({ children }: any) => (
+    blockquote: ({ children }) => (
       <blockquote
         className="border-l-2 pl-5 my-6 italic text-lg"
         style={{ borderColor: "var(--color-accent)", color: "var(--color-muted)" }}
@@ -23,16 +24,16 @@ const ptComponents = {
     ),
   },
   marks: {
-    strong: ({ children }: any) => (
+    strong: ({ children }) => (
       <strong style={{ color: "var(--color-text)", fontWeight: 700 }}>{children}</strong>
     ),
-    em: ({ children }: any) => (
+    em: ({ children }) => (
       <em style={{ color: "var(--color-accent)" }}>{children}</em>
     ),
-    underline: ({ children }: any) => (
+    underline: ({ children }) => (
       <span style={{ textDecoration: "underline", textDecorationColor: "var(--color-accent)" }}>{children}</span>
     ),
-    link: ({ children, value }: any) => (
+    link: ({ children, value }) => (
       <a
         href={value?.href}
         target={value?.href?.startsWith("http") ? "_blank" : undefined}
@@ -52,7 +53,7 @@ const maxWidth: Record<string, string> = {
   twoColumns: "80rem",
 }
 
-export default function TextBlock(props: any) {
+export default function TextBlock(props: BlockProps<TextBlockData>) {
   const { title, subtitle, content, layout = "default", alignment = "left", image, imagePosition = "right" } = props
   const isCenter = alignment === "center"
   const isTwoCol = layout === "twoColumns"

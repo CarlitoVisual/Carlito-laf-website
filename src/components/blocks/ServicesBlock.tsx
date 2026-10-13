@@ -3,19 +3,20 @@ import Link from "next/link"
 import { client } from "@/lib/sanity.client"
 import { urlFor } from "@/lib/image"
 import ServiceCarousel from "./ServiceCarousel"
+import type { BlockProps, Service, ServicesBlock as ServicesBlockData } from "@/types/sanity"
 
 const SERVICE_FIELDS = `_id, title, "slug": slug.current, category, shortDescription, coverImage, price, currency, priceType, deliverables, featured`
 
-async function resolveServices(props: any): Promise<any[]> {
+async function resolveServices(props: BlockProps<ServicesBlockData>): Promise<Service[]> {
   const { displayMode, items } = props
   if (items?.length) return items
   if (displayMode === "featured") {
-    return client.fetch(`*[_type == "service" && featured == true] | order(coalesce(order, 9999) asc, title asc) { ${SERVICE_FIELDS} }`)
+    return client.fetch<Service[]>(`*[_type == "service" && featured == true] | order(coalesce(order, 9999) asc, title asc) { ${SERVICE_FIELDS} }`)
   }
-  return client.fetch(`*[_type == "service"] | order(coalesce(order, 9999) asc, title asc) { ${SERVICE_FIELDS} }`)
+  return client.fetch<Service[]>(`*[_type == "service"] | order(coalesce(order, 9999) asc, title asc) { ${SERVICE_FIELDS} }`)
 }
 
-function priceLabel(s: any): string | null {
+function priceLabel(s: Service): string | null {
   if (!s.price) return null
   const curr = s.currency === "EUR" ? "€" : (s.currency ?? "€")
   if (s.priceType === "starting") return `À partir de ${s.price}${curr}`
@@ -23,11 +24,11 @@ function priceLabel(s: any): string | null {
   return null
 }
 
-export default async function ServicesBlock(props: any) {
+export default async function ServicesBlock(props: BlockProps<ServicesBlockData>) {
   const { title, intro, layout = "grid", buttonLabel = "Découvrir" } = props
   const services = await resolveServices(props)
 
-  const Header = () => (title || intro) ? (
+  const header = (title || intro) ? (
     <div className="max-w-7xl mx-auto px-6 py-16 pb-0">
       {title && (
         <h2 className="text-3xl md:text-4xl font-bold mb-4" style={{ color: "var(--color-text)" }}>{title}</h2>
@@ -52,7 +53,7 @@ export default async function ServicesBlock(props: any) {
   if (layout === "carousel") {
     return (
       <section>
-        <Header />
+        {header}
         <ServiceCarousel services={services} buttonLabel={buttonLabel} />
       </section>
     )
@@ -71,7 +72,7 @@ export default async function ServicesBlock(props: any) {
 
         {layout === "list" ? (
           <div className="flex flex-col divide-y" style={{ borderColor: "var(--color-border)" }}>
-            {services.map((s: any) => (
+            {services.map((s) => (
               <div key={s._id} className="flex gap-8 py-10 items-start">
                 {s.coverImage && (
                   <div className="relative flex-shrink-0 hidden md:block" style={{ width: 180, height: 120 }}>
@@ -94,7 +95,7 @@ export default async function ServicesBlock(props: any) {
           </div>
         ) : (
           <div className={`grid grid-cols-1 gap-8 ${layout === "cards" ? "md:grid-cols-2" : "md:grid-cols-2 lg:grid-cols-3"}`}>
-            {services.map((s: any) => (
+            {services.map((s) => (
               <Link
                 key={s._id}
                 href={s.slug ? `/prestations/${s.slug}` : "/devis"}
@@ -123,7 +124,7 @@ export default async function ServicesBlock(props: any) {
                   {s.shortDescription && (
                     <p className="text-sm leading-relaxed flex-1 mb-5" style={{ color: "var(--color-muted)" }}>{s.shortDescription}</p>
                   )}
-                  {s.deliverables?.length > 0 && (
+                  {!!s.deliverables?.length && (
                     <ul className="mb-6 space-y-1.5">
                       {s.deliverables.slice(0, 4).map((d: string, j: number) => (
                         <li key={j} className="text-xs flex items-start gap-2" style={{ color: "var(--color-muted)" }}>

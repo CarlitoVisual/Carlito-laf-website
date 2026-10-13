@@ -1,3 +1,5 @@
+import type { Product } from "@/types/sanity"
+
 /** "Ocean Collection 2022" → "ocean-collection-2022" */
 export function slugifyCollection(name: string): string {
   return name
@@ -21,17 +23,17 @@ export function isFormatAvailable(format: { stock?: number }): boolean {
   return (format.stock ?? 1) > 0
 }
 
-export function startingPrice(product: any): number | null {
+export function startingPrice(product: Pick<Product, "formats" | "price">): number | null {
   if (product.formats?.length) {
     const prices = product.formats
-      .filter((f: any) => isFormatAvailable(f) && f.price)
-      .map((f: any) => f.price as number)
+      .filter((f) => isFormatAvailable(f) && f.price)
+      .map((f) => f.price as number)
     if (prices.length) return Math.min(...prices)
   }
   return product.price ?? null
 }
 
-export function isProductAvailable(product: any): boolean {
+export function isProductAvailable(product: Pick<Product, "formats">): boolean {
   if (!product.formats?.length) return true
-  return product.formats.some((f: any) => isFormatAvailable(f))
+  return product.formats.some((f) => isFormatAvailable(f))
 }

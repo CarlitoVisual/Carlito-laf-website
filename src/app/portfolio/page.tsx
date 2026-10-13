@@ -3,6 +3,7 @@ import Image from "next/image"
 import Link from "next/link"
 import { client } from "@/lib/sanity.client"
 import { urlFor } from "@/lib/image"
+import type { SanityImage } from "@/types/sanity"
 
 export const revalidate = 60
 
@@ -29,7 +30,7 @@ type CollectionCard = {
   title: string
   slug: string
   description?: string
-  coverImage: any
+  coverImage?: SanityImage
   count: number
 }
 

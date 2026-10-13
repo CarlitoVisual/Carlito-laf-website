@@ -1,8 +1,9 @@
 "use client"
 
 import { useState } from "react"
+import type { BlockProps, ContactBlock as ContactBlockData } from "@/types/sanity"
 
-export default function ContactBlock(props: any) {
+export default function ContactBlock(props: BlockProps<ContactBlockData>) {
   const isDevis = props.formType === "devis"
 
   const [form, setForm] = useState({

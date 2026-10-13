@@ -1,6 +1,26 @@
 import { NextResponse } from "next/server"
 import { rateLimit, getClientIp, isValidEmail } from "@/lib/apiSecurity"
 import { sendEmail } from "@/lib/email"
+import { client } from "@/lib/sanity.client"
+import { isFormatAvailable } from "@/lib/shop"
+import type { ProductFormat } from "@/types/sanity"
+
+const MAX_QTY = 5
+
+type OrderProduct = {
+  _id: string
+  title: string
+  price?: number
+  currency?: string
+  paymentUrl?: string
+  collection?: string
+  formats?: ProductFormat[]
+}
+
+const PRODUCT_QUERY = `*[_type == "product" && _id == $id][0]{
+  _id, title, price, currency, paymentUrl, formats[]{ name, price, stock },
+  "collection": coalesce(collection->title, photo->collection->title)
+}`
 
 export async function POST(req: Request) {
   try {
@@ -10,14 +30,14 @@ export async function POST(req: Request) {
     }
 
     const body = await req.json()
-    const { product, collection, format, qty, unitPrice, total, currency, paymentUrl, name, email, phone, message, company } = body
+    const { productId, format, qty: rawQty, name, email, phone, message, company } = body
 
     // Honeypot: real users never fill this hidden field
     if (company) {
       return NextResponse.json({ ok: true })
     }
 
-    if (!name || !email || !product) {
+    if (!name || !email || typeof productId !== "string" || !productId) {
       return NextResponse.json({ error: "Champs requis manquants" }, { status: 400 })
     }
 
@@ -25,15 +45,51 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "Email invalide" }, { status: 400 })
     }
 
+    // Prices, stock and payment link always come from Sanity, never from the browser
+    const product = await client.fetch<OrderProduct | null>(PRODUCT_QUERY, { id: productId })
+    if (!product) {
+      return NextResponse.json({ error: "Produit introuvable" }, { status: 404 })
+    }
+
+    let unitPrice: number | undefined
+    let formatName: string | undefined
+    let stockLimit = MAX_QTY
+
+    if (product.formats?.length) {
+      const selected = product.formats.find((f) => f.name === format)
+      if (!selected) {
+        return NextResponse.json({ error: "Format invalide" }, { status: 400 })
+      }
+      if (!isFormatAvailable(selected)) {
+        return NextResponse.json({ error: "Ce format n’est plus disponible" }, { status: 409 })
+      }
+      unitPrice = selected.price ?? product.price
+      formatName = selected.name
+      stockLimit = Math.min(selected.stock ?? MAX_QTY, MAX_QTY)
+    } else {
+      unitPrice = product.price
+    }
+
+    const qty = Number(rawQty)
+    if (!Number.isInteger(qty) || qty < 1 || qty > stockLimit) {
+      return NextResponse.json({ error: "Quantité invalide" }, { status: 400 })
+    }
+
+    if (typeof unitPrice !== "number") {
+      return NextResponse.json({ error: "Prix non défini pour ce produit" }, { status: 400 })
+    }
+
+    const currency = product.currency || "EUR"
     const curr = currency === "EUR" ? "€" : currency
-    const subject = `[COMMANDE] ${product} — ${format ?? ""} × ${qty}`
+    const total = unitPrice * qty
+    const subject = `[COMMANDE] ${product.title} — ${formatName ?? ""} × ${qty}`
 
     const textBody = [
       `━━━ DEMANDE DE COMMANDE ━━━`,
       ``,
-      `Produit    : ${product}`,
-      `Collection : ${collection ?? "—"}`,
-      `Format     : ${format ?? "—"}`,
+      `Produit    : ${product.title}`,
+      `Collection : ${product.collection ?? "—"}`,
+      `Format     : ${formatName ?? "—"}`,
       `Quantité   : ${qty}`,
       `Prix unit. : ${unitPrice}${curr}`,
       `TOTAL      : ${total}${curr}`,
@@ -45,7 +101,9 @@ export async function POST(req: Request) {
       ``,
       message ? `Message :\n${message}` : "",
       ``,
-      paymentUrl ? `Lien de paiement configuré : ${paymentUrl}` : `⚠️  Aucun lien de paiement configuré — répondre manuellement.`,
+      product.paymentUrl
+        ? `Lien de paiement configuré : ${product.paymentUrl}`
+        : `⚠️  Aucun lien de paiement configuré — répondre manuellement.`,
     ]
       .filter(Boolean)
       .join("\n")

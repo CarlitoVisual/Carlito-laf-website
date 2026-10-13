@@ -1,21 +1,9 @@
 import Image from "next/image"
 import Link from "next/link"
 import { urlFor } from "@/lib/image"
+import type { BlockProps, SkillsBentoBlock as SkillsBentoBlockData } from "@/types/sanity"
 
-type Tile = {
-  _key: string
-  keyword: string
-  image: any
-  href?: string
-  width?: number
-  height?: number
-}
-
-type Props = {
-  eyebrow?: string
-  title?: string
-  tiles?: Tile[]
-}
+type Props = BlockProps<SkillsBentoBlockData>
 
 function clamp(value: number | undefined, fallback: number, min: number, max: number) {
   return Math.min(Math.max(value ?? fallback, min), max)

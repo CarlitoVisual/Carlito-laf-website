@@ -238,7 +238,7 @@ function PrintRequestModal({ photo, onClose }: { photo: GalleryPhoto; onClose: (
               {photo.title ?? "Cette photo"}
             </h3>
             <p style={{ color: "var(--color-muted)", fontSize: 13, marginBottom: 28 }}>
-              Cette image n'est pas encore en boutique. Laissez vos coordonnées — je vous préviendrai quand elle sera disponible.
+              Cette image n’est pas encore en boutique. Laissez vos coordonnées — je vous préviendrai quand elle sera disponible.
             </p>
 
             <form onSubmit={submit} style={{ display: "flex", flexDirection: "column", gap: 12 }}>

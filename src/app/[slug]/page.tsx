@@ -11,10 +11,10 @@ type Props = {
 }
 
 export async function generateStaticParams() {
-  const slugs = await client.fetch(allSlugsQuery)
+  const slugs = await client.fetch<{ slug: string }[]>(allSlugsQuery)
   return slugs
-    .filter((s: any) => s.slug !== "accueil")
-    .map((s: any) => ({ slug: s.slug }))
+    .filter((s) => s.slug !== "accueil")
+    .map((s) => ({ slug: s.slug }))
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {

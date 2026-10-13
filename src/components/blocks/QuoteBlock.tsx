@@ -1,4 +1,6 @@
-export default function QuoteBlock(props: any) {
+import type { BlockProps, QuoteBlock as QuoteBlockData } from "@/types/sanity"
+
+export default function QuoteBlock(props: BlockProps<QuoteBlockData>) {
   return (
     <section className="py-24 px-6">
       <div className="max-w-3xl mx-auto text-center">
@@ -6,7 +8,7 @@ export default function QuoteBlock(props: any) {
           className="text-6xl mb-6 leading-none"
           style={{ color: "var(--color-accent)", fontFamily: "Georgia, serif" }}
         >
-          "
+          “
         </div>
         <blockquote
           className="text-2xl md:text-3xl font-light italic leading-relaxed mb-8"

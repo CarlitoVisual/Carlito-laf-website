@@ -1,6 +1,7 @@
 import Link from "next/link"
+import type { BlockProps, VideoBlock as VideoBlockData } from "@/types/sanity"
 
-function getEmbedUrl(url: string, autoplay = false) {
+function getEmbedUrl(url: string | undefined, autoplay = false) {
   if (!url) return null
   const ytMatch = url.match(/(?:youtube\.com\/(?:watch\?v=|embed\/)|youtu\.be\/)([a-zA-Z0-9_-]{11})/)
   if (ytMatch) {
@@ -17,9 +18,9 @@ function getEmbedUrl(url: string, autoplay = false) {
   return null
 }
 
-export default function VideoBlock(props: any) {
+export default function VideoBlock(props: BlockProps<VideoBlockData>) {
   const {
-    title, url, file, videoType,
+    title, url, file,
     display = "standard",
     autoplay = false, loop = false, muted = true, controls = true,
     overlay = false, overlayTitle, overlayText,

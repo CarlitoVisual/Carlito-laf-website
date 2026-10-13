@@ -25,7 +25,12 @@ export default function Navigation() {
     return () => window.removeEventListener("scroll", onScroll)
   }, [])
 
-  useEffect(() => setOpen(false), [pathname])
+  // Close the mobile menu when the route changes (state adjusted during render, no effect needed)
+  const [lastPathname, setLastPathname] = useState(pathname)
+  if (pathname !== lastPathname) {
+    setLastPathname(pathname)
+    setOpen(false)
+  }
 
   // While intro video is fullscreen, hide the nav entirely
   if (isExpanded) return null

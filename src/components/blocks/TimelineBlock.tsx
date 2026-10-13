@@ -1,4 +1,6 @@
-export default function TimelineBlock(props: any) {
+import type { BlockProps, TimelineBlock as TimelineBlockData } from "@/types/sanity"
+
+export default function TimelineBlock(props: BlockProps<TimelineBlockData>) {
   const items = props.items ?? []
 
   return (
@@ -18,7 +20,7 @@ export default function TimelineBlock(props: any) {
           />
 
           <div className="space-y-12">
-            {items.map((item: any, i: number) => (
+            {items.map((item, i) => (
               <div key={i} className="pl-10 relative">
                 {/* Dot */}
                 <div

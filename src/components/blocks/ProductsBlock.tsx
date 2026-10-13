@@ -1,40 +1,50 @@
 import Image from "next/image"
 import { client } from "@/lib/sanity.client"
 import { urlFor } from "@/lib/image"
+import type { BlockProps, Product, ProductsBlock as ProductsBlockData } from "@/types/sanity"
+
+type ProductDisplayProps = {
+  product: Product
+  reverse?: boolean
+  showPrice?: boolean
+  showDescription?: boolean
+  showButton?: boolean
+  buttonLabel?: string
+}
 
 const PRODUCT_FIELDS = `_id, title, shortDescription, "image": coalesce(image, photo->image), price, currency, formats[]{ name, price, stock }, edition, featured, "collection": coalesce(collection->title, photo->collection->title), paymentUrl`
 
-async function resolveProducts(props: any): Promise<any[]> {
+async function resolveProducts(props: BlockProps<ProductsBlockData>): Promise<Product[]> {
   const { displayMode, collection, products } = props
   if (displayMode === "selected" && products?.length) return products
   if (displayMode === "featured") {
-    return client.fetch(`*[_type == "product" && featured == true] | order(_createdAt desc) { ${PRODUCT_FIELDS} }`)
+    return client.fetch<Product[]>(`*[_type == "product" && featured == true] | order(_createdAt desc) { ${PRODUCT_FIELDS} }`)
   }
   if (displayMode === "collection" && collection) {
-    return client.fetch(
+    return client.fetch<Product[]>(
       `*[_type == "product" && coalesce(collection->title, photo->collection->title) == $col] | order(_createdAt desc) { ${PRODUCT_FIELDS} }`,
       { col: collection }
     )
   }
-  return client.fetch(`*[_type == "product"] | order(_createdAt desc) { ${PRODUCT_FIELDS} }`)
+  return client.fetch<Product[]>(`*[_type == "product"] | order(_createdAt desc) { ${PRODUCT_FIELDS} }`)
 }
 
 // Stock is available if at least one format has stock > 0 (or no formats defined = assume available)
-function isAvailable(product: any): boolean {
+function isAvailable(product: Product): boolean {
   if (!product.formats?.length) return true
-  return product.formats.some((f: any) => (f.stock ?? 1) > 0)
+  return product.formats.some((f) => (f.stock ?? 1) > 0)
 }
 
 // Starting price: lowest price across formats, or root price field
-function startingPrice(product: any): number | null {
+function startingPrice(product: Product): number | null {
   if (product.formats?.length) {
-    const prices = product.formats.map((f: any) => f.price).filter(Boolean)
+    const prices = product.formats.map((f) => f.price).filter((p): p is number => Boolean(p))
     if (prices.length) return Math.min(...prices)
   }
   return product.price ?? null
 }
 
-export default async function ProductsBlock(props: any) {
+export default async function ProductsBlock(props: BlockProps<ProductsBlockData>) {
   const {
     title, intro,
     layout = "grid", columns = 4,
@@ -79,7 +89,7 @@ export default async function ProductsBlock(props: any) {
                 className={layout === "grid" ? `grid ${colClass[columns] || colClass[4]} gap-6` : "flex overflow-x-auto gap-6 pb-4 snap-x snap-mandatory"}
                 style={layout === "carousel" ? { scrollbarWidth: "thin", scrollbarColor: "var(--color-accent) transparent" } : undefined}
               >
-                {items.map((p: any) => (
+                {items.map((p) => (
                   <div key={p._id} className={layout === "carousel" ? "flex-shrink-0 snap-center" : ""} style={layout === "carousel" ? { width: 280 } : undefined}>
                     <ProductCard
                       product={p}
@@ -95,7 +105,7 @@ export default async function ProductsBlock(props: any) {
 
             {layout === "featured" && (
               <div className="space-y-20">
-                {items.map((p: any, i: number) => (
+                {items.map((p, i) => (
                   <FeaturedProduct key={p._id} product={p} reverse={i % 2 === 1} showPrice={showPrice} showButton={showButton} buttonLabel={buttonLabel} />
                 ))}
               </div>
@@ -103,7 +113,7 @@ export default async function ProductsBlock(props: any) {
 
             {layout === "list" && (
               <div className="space-y-4">
-                {items.map((p: any) => (
+                {items.map((p) => (
                   <ListProduct key={p._id} product={p} showPrice={showPrice} showButton={showButton} buttonLabel={buttonLabel} />
                 ))}
               </div>
@@ -116,7 +126,7 @@ export default async function ProductsBlock(props: any) {
 }
 
 // ─── Card grid ────────────────────────────────────────────────────────────────
-function ProductCard({ product, showPrice, showDescription, showButton, buttonLabel }: any) {
+function ProductCard({ product, showPrice, showDescription, showButton, buttonLabel }: ProductDisplayProps) {
   const available = isAvailable(product)
   const price = startingPrice(product)
   const currency = product.currency || "EUR"
@@ -160,7 +170,7 @@ function ProductCard({ product, showPrice, showDescription, showButton, buttonLa
         {/* Formats */}
         {formats.length > 0 && (
           <div className="flex flex-wrap gap-1 mb-4">
-            {formats.map((f: any, i: number) => (
+            {formats.map((f, i) => (
               <span
                 key={i}
                 className="text-xs px-2 py-0.5 border"
@@ -213,7 +223,7 @@ function ProductCard({ product, showPrice, showDescription, showButton, buttonLa
 }
 
 // ─── Featured (alternating) ──────────────────────────────────────────────────
-function FeaturedProduct({ product, reverse, showPrice, showButton, buttonLabel }: any) {
+function FeaturedProduct({ product, reverse, showPrice, showButton, buttonLabel }: ProductDisplayProps) {
   const available = isAvailable(product)
   const price = startingPrice(product)
   const currency = product.currency || "EUR"
@@ -238,11 +248,11 @@ function FeaturedProduct({ product, reverse, showPrice, showButton, buttonLabel 
         {product.shortDescription && (
           <p className="leading-relaxed" style={{ color: "var(--color-muted)" }}>{product.shortDescription}</p>
         )}
-        {product.formats?.length > 0 && (
+        {!!product.formats?.length && (
           <div>
             <p className="text-xs uppercase mb-2" style={{ color: "var(--color-muted)", letterSpacing: "0.15em" }}>Formats disponibles</p>
             <div className="flex flex-wrap gap-2">
-              {product.formats.map((f: any, i: number) => (
+              {product.formats.map((f, i) => (
                 <span key={i} className="text-sm px-3 py-1 border" style={{
                   borderColor: (f.stock ?? 1) > 0 ? "var(--color-border)" : "transparent",
                   color: (f.stock ?? 1) > 0 ? "var(--color-text)" : "var(--color-border)",
@@ -282,7 +292,7 @@ function FeaturedProduct({ product, reverse, showPrice, showButton, buttonLabel 
 }
 
 // ─── List ────────────────────────────────────────────────────────────────────
-function ListProduct({ product, showPrice, showButton, buttonLabel }: any) {
+function ListProduct({ product, showPrice, showButton, buttonLabel }: ProductDisplayProps) {
   const available = isAvailable(product)
   const price = startingPrice(product)
   const currency = product.currency || "EUR"

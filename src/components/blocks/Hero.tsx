@@ -1,8 +1,9 @@
 import Image from "next/image"
 import Link from "next/link"
 import { urlFor } from "@/lib/image"
+import type { BlockProps, HeroBlock as HeroBlockData } from "@/types/sanity"
 
-export default function Hero(props: any) {
+export default function Hero(props: BlockProps<HeroBlockData>) {
   const imageUrl = props.image
     ? urlFor(props.image).width(2400).quality(90).url()
     : null
@@ -70,9 +71,9 @@ export default function Hero(props: any) {
           </p>
         )}
 
-        {props.buttons?.length > 0 && (
+        {!!props.buttons?.length && (
           <div className="flex flex-wrap gap-4 mt-10 justify-center">
-            {props.buttons.map((btn: any, i: number) => (
+            {props.buttons.map((btn, i) => (
               <Link
                 key={i}
                 href={btn.link?.href || btn.url || "#"}

@@ -4,8 +4,29 @@ import Image from "next/image"
 import { useState, useRef, useEffect, useCallback } from "react"
 import { urlFor } from "@/lib/image"
 import Lightbox from "@/components/Lightbox"
+import type { BlockProps, GalleryBlock as GalleryBlockData, GalleryItem, SanityImage } from "@/types/sanity"
 
-export default function Gallery(props: any) {
+type OpenItem = (item: GalleryItem) => void
+
+type LayoutProps = {
+  items: GalleryItem[]
+  columns?: number
+  gap?: number
+  aspectStyle?: React.CSSProperties
+  showCaptions?: boolean
+  animation?: string
+  onOpen: OpenItem
+}
+
+type CardProps = {
+  item: GalleryItem
+  aspectStyle?: React.CSSProperties
+  showCaptions?: boolean
+  animation?: string
+  onClick: () => void
+}
+
+export default function Gallery(props: BlockProps<GalleryBlockData>) {
   const {
     title,
     intro,
@@ -19,7 +40,7 @@ export default function Gallery(props: any) {
     animation = "zoom",
   } = props
 
-  const [selected, setSelected] = useState<any>(null)
+  const [selected, setSelected] = useState<GalleryItem | null>(null)
 
   const aspectStyle = getAspectStyle(aspectRatio)
 
@@ -32,7 +53,7 @@ export default function Gallery(props: any) {
     6: "grid-cols-3 md:grid-cols-6",
   }
 
-  function open(item: any) {
+  function open(item: GalleryItem) {
     if (lightbox) setSelected(item)
   }
 
@@ -56,7 +77,7 @@ export default function Gallery(props: any) {
 
         {layout === "grid" && (
           <div className={`grid ${colClass[columns] || colClass[3]}`} style={{ gap: `${gap}px` }}>
-            {items.map((item: any, i: number) => (
+            {items.map((item, i) => (
               <FilledCard
                 key={item._id || i}
                 item={item}
@@ -74,12 +95,12 @@ export default function Gallery(props: any) {
         )}
 
         {layout === "carousel" && (
-          <CarouselLayout items={items} showCaptions={showCaptions} animation={animation} lightbox={lightbox} onOpen={open} />
+          <CarouselLayout items={items} showCaptions={showCaptions} onOpen={open} />
         )}
 
         {layout === "fullscreen" && (
           <div className="space-y-4">
-            {items.map((item: any, i: number) => (
+            {items.map((item, i) => (
               <FilledCard
                 key={i}
                 item={item}
@@ -99,7 +120,7 @@ export default function Gallery(props: any) {
 }
 
 // ─── Masonry ─────────────────────────────────────────────────────────────────
-function MasonryLayout({ items, columns, gap, showCaptions, animation, onOpen }: any) {
+function MasonryLayout({ items, columns = 3, gap = 16, showCaptions, animation, onOpen }: LayoutProps) {
   const colClass: Record<number, string> = {
     1: "columns-1",
     2: "columns-1 md:columns-2",
@@ -108,7 +129,7 @@ function MasonryLayout({ items, columns, gap, showCaptions, animation, onOpen }:
   }
   return (
     <div className={colClass[columns] || "columns-1 md:columns-2 lg:columns-3"} style={{ columnGap: `${gap}px` }}>
-      {items.map((item: any, i: number) => (
+      {items.map((item, i) => (
         <div key={item._id || i} className="mb-4 break-inside-avoid">
           <NaturalCard item={item} showCaptions={showCaptions} animation={animation} onClick={() => onOpen(item)} />
         </div>
@@ -118,14 +139,14 @@ function MasonryLayout({ items, columns, gap, showCaptions, animation, onOpen }:
 }
 
 // ─── Horizontal scroll ───────────────────────────────────────────────────────
-function HorizontalLayout({ items, gap, aspectStyle, showCaptions, animation, onOpen }: any) {
+function HorizontalLayout({ items, gap = 16, aspectStyle, showCaptions, animation, onOpen }: LayoutProps) {
   const cardAspect = aspectStyle?.aspectRatio ? aspectStyle : { aspectRatio: "4/3" }
   return (
     <div
       className="flex overflow-x-auto pb-4 snap-x snap-mandatory"
       style={{ gap: `${gap}px`, scrollbarWidth: "thin", scrollbarColor: "var(--color-accent) transparent" }}
     >
-      {items.map((item: any, i: number) => (
+      {items.map((item, i) => (
         <div key={item._id || i} className="flex-shrink-0 snap-center" style={{ width: 320 }}>
           <FilledCard
             item={item}
@@ -141,7 +162,7 @@ function HorizontalLayout({ items, gap, aspectStyle, showCaptions, animation, on
 }
 
 // ─── Carousel ────────────────────────────────────────────────────────────────
-function CarouselLayout({ items, showCaptions, animation, lightbox, onOpen }: any) {
+function CarouselLayout({ items, showCaptions, onOpen }: LayoutProps) {
   const [current, setCurrent] = useState(0)
   const [dragging, setDragging] = useState(false)
   const dragStart = useRef(0)
@@ -187,7 +208,7 @@ function CarouselLayout({ items, showCaptions, animation, lightbox, onOpen }: an
         onPointerLeave={() => setDragging(false)}
         onClick={() => { if (!dragging) onOpen(item) }}
       >
-        {items.map((it: any, i: number) => (
+        {items.map((it, i) => (
           <div
             key={it._id || i}
             className="absolute inset-0 transition-opacity duration-500"
@@ -235,7 +256,7 @@ function CarouselLayout({ items, showCaptions, animation, lightbox, onOpen }: an
 
       {/* Dot indicators */}
       <div className="flex justify-center gap-2 mt-4">
-        {items.map((_: any, i: number) => (
+        {items.map((_, i) => (
           <button
             key={i}
             onClick={() => setCurrent(i)}
@@ -253,7 +274,7 @@ function CarouselLayout({ items, showCaptions, animation, lightbox, onOpen }: an
       {/* Thumbnail strip */}
       {total > 1 && (
         <div className="flex gap-2 mt-4 overflow-x-auto pb-1" style={{ scrollbarWidth: "none" }}>
-          {items.map((it: any, i: number) => (
+          {items.map((it, i) => (
             <button
               key={i}
               onClick={() => setCurrent(i)}
@@ -285,7 +306,7 @@ function CarouselLayout({ items, showCaptions, animation, lightbox, onOpen }: an
 
 // ─── Shared card components ──────────────────────────────────────────────────
 
-function NaturalCard({ item, showCaptions, animation, onClick }: any) {
+function NaturalCard({ item, showCaptions, animation, onClick }: CardProps) {
   if (!item?.image) return null
   const { w, h } = getDimensions(item.image)
   return (
@@ -308,7 +329,7 @@ function NaturalCard({ item, showCaptions, animation, onClick }: any) {
   )
 }
 
-function FilledCard({ item, aspectStyle, showCaptions, animation, onClick }: any) {
+function FilledCard({ item, aspectStyle, showCaptions, animation, onClick }: CardProps) {
   if (!item?.image) return null
   return (
     <div
@@ -351,7 +372,7 @@ function getAspectStyle(ratio: string): React.CSSProperties {
   return { aspectRatio: map[ratio] || "4/3" }
 }
 
-function getDimensions(image: any): { w: number; h: number } {
+function getDimensions(image: SanityImage | undefined): { w: number; h: number } {
   const ref: string = image?.asset?._ref ?? ""
   const match = ref.match(/-(\d+)x(\d+)-/)
   if (match) return { w: parseInt(match[1]), h: parseInt(match[2]) }

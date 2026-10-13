@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useRef, useState } from "react"
+import { useCallback, useEffect, useRef, useState } from "react"
 import { useIntro } from "@/context/IntroContext"
 
 type Props = {
@@ -26,6 +26,19 @@ export default function VideoIntro({ videoUrl, posterUrl, title, subtitle }: Pro
     return () => collapse()
   }, [activate, collapse])
 
+  const trigger = useCallback(() => {
+    if (hasTriggered.current || !expanded) return
+    hasTriggered.current = true
+    setTransitioning(true)
+
+    // After transition completes, mark as done and unlock scroll
+    setTimeout(() => {
+      setExpanded(false)
+      setDone(true)
+      collapse()
+    }, 900)
+  }, [expanded, collapse])
+
   // Listen for scroll wheel & touch swipe up
   useEffect(() => {
     if (!expanded) return
@@ -50,20 +63,7 @@ export default function VideoIntro({ videoUrl, posterUrl, title, subtitle }: Pro
       window.removeEventListener("touchstart", onTouchStart)
       window.removeEventListener("touchend", onTouchEnd)
     }
-  }, [expanded])
-
-  function trigger() {
-    if (hasTriggered.current || !expanded) return
-    hasTriggered.current = true
-    setTransitioning(true)
-
-    // After transition completes, mark as done and unlock scroll
-    setTimeout(() => {
-      setExpanded(false)
-      setDone(true)
-      collapse()
-    }, 900)
-  }
+  }, [expanded, trigger])
 
   // Lock body scroll while expanded
   useEffect(() => {
