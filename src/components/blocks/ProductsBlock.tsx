@@ -144,12 +144,12 @@ function ProductCard({ product, showPrice, showDescription, showButton, buttonLa
             sizes="(max-width:640px) 50vw, 25vw"
           />
           {!available && (
-            <div className="absolute inset-0 flex items-center justify-center" style={{ background: "rgba(0,0,0,0.6)" }}>
+            <div className="absolute inset-0 flex items-center justify-center" style={{ background: "rgba(5,27,46,0.6)" }}>
               <span className="text-xs uppercase" style={{ color: "var(--color-muted)", letterSpacing: "0.2em" }}>Épuisé</span>
             </div>
           )}
           {product.edition?.limited && (
-            <div className="absolute top-3 left-3 px-2 py-1 text-xs uppercase" style={{ background: "var(--color-accent)", color: "#000", letterSpacing: "0.1em" }}>
+            <div className="absolute top-3 left-3 px-2 py-1 text-xs uppercase" style={{ background: "var(--color-accent)", color: "var(--color-on-accent)", letterSpacing: "0.1em" }}>
               Édition limitée
             </div>
           )}
@@ -206,7 +206,7 @@ function ProductCard({ product, showPrice, showDescription, showButton, buttonLa
               className="text-xs uppercase px-4 py-2 transition-opacity"
               style={{
                 background: available ? "var(--color-accent)" : "var(--color-border)",
-                color: available ? "#000" : "var(--color-muted)",
+                color: available ? "var(--color-on-accent)" : "var(--color-muted)",
                 letterSpacing: "0.15em",
                 cursor: available ? "pointer" : "not-allowed",
                 opacity: available ? 1 : 0.6,
@@ -234,7 +234,7 @@ function FeaturedProduct({ product, reverse, showPrice, showButton, buttonLabel 
         <div className="w-full md:w-1/2 relative overflow-hidden" style={{ aspectRatio: "3/4" }}>
           <Image src={urlFor(product.image).width(900).quality(90).url()} alt={product.title} fill className="object-cover" sizes="50vw" />
           {product.edition?.limited && (
-            <div className="absolute top-4 left-4 px-3 py-1 text-xs uppercase" style={{ background: "var(--color-accent)", color: "#000", letterSpacing: "0.1em" }}>
+            <div className="absolute top-4 left-4 px-3 py-1 text-xs uppercase" style={{ background: "var(--color-accent)", color: "var(--color-on-accent)", letterSpacing: "0.1em" }}>
               Édition limitée
             </div>
           )}
@@ -280,7 +280,7 @@ function FeaturedProduct({ product, reverse, showPrice, showButton, buttonLabel 
             <a
               href={available ? (product.paymentUrl || "/contact") : undefined}
               className="text-sm uppercase px-8 py-3 font-semibold"
-              style={{ background: available ? "var(--color-accent)" : "var(--color-border)", color: available ? "#000" : "var(--color-muted)", letterSpacing: "0.2em" }}
+              style={{ background: available ? "var(--color-accent)" : "var(--color-border)", color: available ? "var(--color-on-accent)" : "var(--color-muted)", letterSpacing: "0.2em" }}
             >
               {buttonLabel}
             </a>
@@ -320,7 +320,7 @@ function ListProduct({ product, showPrice, showButton, buttonLabel }: ProductDis
           <a
             href={available ? (product.paymentUrl || "/contact") : undefined}
             className="text-xs uppercase px-4 py-2"
-            style={{ background: available ? "var(--color-accent)" : "var(--color-border)", color: available ? "#000" : "var(--color-muted)", letterSpacing: "0.12em" }}
+            style={{ background: available ? "var(--color-accent)" : "var(--color-border)", color: available ? "var(--color-on-accent)" : "var(--color-muted)", letterSpacing: "0.12em" }}
           >
             {buttonLabel}
           </a>

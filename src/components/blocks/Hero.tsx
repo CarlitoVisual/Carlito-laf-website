@@ -28,7 +28,7 @@ export default function Hero(props: BlockProps<HeroBlockData>) {
       <div
         className="absolute inset-0"
         style={{
-          background: `linear-gradient(to bottom, rgba(0,0,0,${overlay * 0.6}) 0%, rgba(0,0,0,${overlay}) 100%)`,
+          background: `linear-gradient(to bottom, rgba(5,27,46,${overlay * 0.6}) 0%, rgba(5,27,46,${overlay}) 100%)`,
         }}
       />
 
@@ -54,7 +54,7 @@ export default function Hero(props: BlockProps<HeroBlockData>) {
 
         <h1
           className="text-5xl md:text-7xl xl:text-8xl font-bold text-white leading-none mb-6"
-          style={{ textShadow: "0 2px 40px rgba(0,0,0,0.5)" }}
+          style={{ textShadow: "0 2px 40px rgba(5,27,46,0.5)" }}
         >
           {props.title}
         </h1>
@@ -63,7 +63,7 @@ export default function Hero(props: BlockProps<HeroBlockData>) {
           <p
             className="text-lg md:text-xl max-w-2xl mt-4 leading-relaxed"
             style={{
-              color: "rgba(240,237,232,0.8)",
+              color: "rgba(244,239,230,0.8)",
               margin: "1rem auto 0",
             }}
           >
@@ -82,12 +82,12 @@ export default function Hero(props: BlockProps<HeroBlockData>) {
                   btn.style === "outline"
                     ? {
                         border: "1px solid rgba(255,255,255,0.5)",
-                        color: "#fff",
+                        color: "var(--color-text)",
                         letterSpacing: "0.2em",
                       }
                     : {
                         background: "var(--color-accent)",
-                        color: "#000",
+                        color: "var(--color-on-accent)",
                         letterSpacing: "0.2em",
                       }
                 }
@@ -110,7 +110,7 @@ export default function Hero(props: BlockProps<HeroBlockData>) {
           className="w-px h-10"
           style={{
             background:
-              "linear-gradient(to bottom, rgba(200,169,110,0.6), transparent)",
+              "linear-gradient(to bottom, rgba(227,199,155,0.6), transparent)",
           }}
         />
       </div>

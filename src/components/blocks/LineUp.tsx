@@ -1,0 +1,139 @@
+"use client"
+
+import { useState } from "react"
+import Image from "next/image"
+import Link from "next/link"
+
+export type LineUpPanel = {
+  key: string
+  title: string
+  href?: string
+  imageUrl?: string
+  meta?: string
+  description?: string
+  cta?: string
+}
+
+type Props = {
+  eyebrow?: string
+  title?: string
+  panels: LineUpPanel[]
+}
+
+/**
+ * « Line-up » : panneaux plein-hauteur, celui survolé (ou touché sur mobile) s'ouvre en grand.
+ * Desktop : rangée horizontale. Mobile : accordéon vertical.
+ */
+export default function LineUp({ eyebrow, title, panels }: Props) {
+  const [active, setActive] = useState(0)
+
+  return (
+    <section className="px-6 pt-24 pb-16">
+      <div className="max-w-7xl mx-auto">
+        {(eyebrow || title) && (
+          <div className="flex flex-wrap items-end justify-between gap-6 mb-10">
+            <div>
+              {eyebrow && (
+                <p className="font-mono-data text-xs uppercase mb-3" style={{ color: "var(--color-data)", letterSpacing: "0.18em" }}>
+                  {eyebrow}
+                </p>
+              )}
+              {title && (
+                <h2 className="text-5xl md:text-7xl" style={{ color: "var(--color-text)" }}>
+                  {title}
+                </h2>
+              )}
+            </div>
+          </div>
+        )}
+
+        <div className="flex flex-col md:flex-row gap-2.5 h-[640px] md:h-[620px]">
+          {panels.map((p, i) => {
+            const open = i === active
+            const num = String(i + 1).padStart(2, "0")
+            return (
+              <Link
+                key={p.key}
+                href={p.href || "#"}
+                onMouseEnter={() => setActive(i)}
+                onFocus={() => setActive(i)}
+                onClick={(e) => {
+                  // Sur écran tactile : premier appui = ouvrir le panneau, second = naviguer
+                  if (!open) {
+                    e.preventDefault()
+                    setActive(i)
+                  }
+                }}
+                aria-expanded={open}
+                className="group relative block overflow-hidden rounded-lg min-w-0 min-h-[64px]"
+                style={{
+                  flex: open ? "5 1 0px" : "1 1 0px",
+                  transition: "flex-grow 500ms ease",
+                  background: "var(--gradient-depth)",
+                }}
+              >
+                {p.imageUrl && (
+                  <Image
+                    src={p.imageUrl}
+                    alt={p.title}
+                    fill
+                    sizes="(max-width:768px) 100vw, 70vw"
+                    className="object-cover transition-transform duration-700 group-hover:scale-[1.03]"
+                    priority={i === 0}
+                  />
+                )}
+                {/* Voile bleu « profondeur » : plus dense sur les panneaux fermés */}
+                <div
+                  className="absolute inset-0 transition-opacity duration-500"
+                  style={{
+                    background: "linear-gradient(180deg, rgba(19,96,147,0.45) 0%, rgba(5,27,46,0.85) 100%)",
+                    opacity: open ? 0 : 1,
+                  }}
+                />
+
+                {open ? (
+                  <div
+                    className="absolute left-0 right-0 bottom-0 p-5 md:p-8 flex flex-wrap items-end justify-between gap-5"
+                    style={{ background: "rgba(5,27,46,0.88)" }}
+                  >
+                    <div className="flex flex-col gap-2 max-w-xl">
+                      <p className="font-mono-data text-xs uppercase" style={{ color: "var(--color-data)", letterSpacing: "0.16em" }}>
+                        {num}{p.meta ? ` · ${p.meta}` : ""}
+                      </p>
+                      <h3 className="text-5xl md:text-7xl uppercase font-black" style={{ color: "var(--color-text)" }}>
+                        {p.title}
+                      </h3>
+                      {p.description && (
+                        <p className="text-sm md:text-base leading-relaxed" style={{ color: "var(--color-muted)" }}>
+                          {p.description}
+                        </p>
+                      )}
+                    </div>
+                    <span
+                      className="inline-flex items-center min-h-12 px-6 rounded-full text-xs font-bold uppercase"
+                      style={{ background: "var(--color-accent)", color: "var(--color-on-accent)", letterSpacing: "0.12em" }}
+                    >
+                      {p.cta || "Découvrir"} →
+                    </span>
+                  </div>
+                ) : (
+                  <div className="absolute inset-0 flex md:flex-col items-center justify-between px-5 md:px-0 md:py-6">
+                    <span
+                      className="font-display uppercase font-extrabold text-2xl md:text-4xl md:[writing-mode:vertical-rl] md:rotate-180 order-1 md:order-2"
+                      style={{ color: "var(--color-text)", letterSpacing: "0.06em" }}
+                    >
+                      {p.title}
+                    </span>
+                    <span className="font-mono-data text-xs order-2 md:order-1" style={{ color: "var(--color-data)" }}>
+                      {num}
+                    </span>
+                  </div>
+                )}
+              </Link>
+            )
+          })}
+        </div>
+      </div>
+    </section>
+  )
+}

@@ -24,7 +24,7 @@ export default function NotFound() {
           className="inline-block text-sm uppercase px-8 py-3 font-semibold"
           style={{
             background: "var(--color-accent)",
-            color: "#000",
+            color: "var(--color-on-accent)",
             letterSpacing: "0.2em",
           }}
         >

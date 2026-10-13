@@ -123,7 +123,7 @@ export default async function ServicePage({ params }: Props) {
         )}
         <div style={{
           position: "absolute", inset: 0,
-          background: "linear-gradient(to top, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.3) 50%, transparent 100%)",
+          background: "linear-gradient(to top, rgba(5,27,46,0.85) 0%, rgba(5,27,46,0.3) 50%, transparent 100%)",
         }} />
         <div style={{
           position: "absolute", bottom: 0, left: 0, right: 0,
@@ -135,7 +135,7 @@ export default async function ServicePage({ params }: Props) {
               {categoryLabel}
             </p>
           )}
-          <h1 style={{ color: "#fff", fontSize: "clamp(2rem, 5vw, 3.5rem)", fontWeight: 800, lineHeight: 1.1, marginBottom: 16 }}>
+          <h1 style={{ color: "var(--color-text)", fontSize: "clamp(2rem, 5vw, 3.5rem)", fontWeight: 800, lineHeight: 1.1, marginBottom: 16 }}>
             {service.title}
           </h1>
           {service.shortDescription && (
@@ -202,7 +202,7 @@ export default async function ServicePage({ params }: Props) {
                           width: 36, height: 36, borderRadius: "50%",
                           background: "var(--color-accent)",
                           display: "flex", alignItems: "center", justifyContent: "center",
-                          color: "#000", fontWeight: 800, fontSize: "0.8rem", flexShrink: 0,
+                          color: "var(--color-on-accent)", fontWeight: 800, fontSize: "0.8rem", flexShrink: 0,
                         }}>
                           {i + 1}
                         </div>
@@ -255,7 +255,7 @@ export default async function ServicePage({ params }: Props) {
                 display: "block",
                 padding: "14px 20px",
                 background: "var(--color-accent)",
-                color: "#000",
+                color: "var(--color-on-accent)",
                 fontWeight: 700,
                 fontSize: "0.78rem",
                 letterSpacing: "0.2em",
@@ -322,7 +322,7 @@ export default async function ServicePage({ params }: Props) {
 
             {/* Fichier uploadé */}
             {service.videoExample.videoType === "file" && service.videoExample.fileUrl ? (
-              <div style={{ position: "relative", aspectRatio: "16/9", background: "#000" }}>
+              <div style={{ position: "relative", aspectRatio: "16/9", background: "var(--color-bg)" }}>
                 <video
                   src={service.videoExample.fileUrl}
                   controls
@@ -336,7 +336,7 @@ export default async function ServicePage({ params }: Props) {
               (() => {
                 const src = embedUrl(service.videoExample)
                 return src ? (
-                  <div style={{ position: "relative", aspectRatio: "16/9", background: "#000" }}>
+                  <div style={{ position: "relative", aspectRatio: "16/9", background: "var(--color-bg)" }}>
                     <iframe
                       src={src}
                       allow="autoplay; fullscreen; picture-in-picture"
@@ -418,7 +418,7 @@ export default async function ServicePage({ params }: Props) {
             display: "inline-block",
             padding: "16px 48px",
             background: "var(--color-accent)",
-            color: "#000",
+            color: "var(--color-on-accent)",
             fontWeight: 700,
             fontSize: "0.82rem",
             letterSpacing: "0.2em",

@@ -93,7 +93,7 @@ export default function ProductViewer({ product, onClose }: Props) {
         display: "flex",
         alignItems: "flex-end",
         justifyContent: "center",
-        background: "rgba(0,0,0,0.85)",
+        background: "rgba(5,27,46,0.85)",
       }}
       onClick={onClose}
     >
@@ -262,7 +262,7 @@ export default function ProductViewer({ product, onClose }: Props) {
                           fontSize: "0.82rem",
                           border: `1px solid ${selected ? "var(--color-accent)" : avail ? "var(--color-border)" : "var(--color-border)"}`,
                           background: selected ? "var(--color-accent)" : "transparent",
-                          color: selected ? "#000" : avail ? "var(--color-text)" : "var(--color-muted)",
+                          color: selected ? "var(--color-on-accent)" : avail ? "var(--color-text)" : "var(--color-muted)",
                           textDecoration: avail ? "none" : "line-through",
                           cursor: avail ? "pointer" : "not-allowed",
                           fontWeight: selected ? 600 : 400,
@@ -342,7 +342,7 @@ export default function ProductViewer({ product, onClose }: Props) {
                   width: "100%",
                   padding: "16px",
                   background: "var(--color-accent)",
-                  color: "#000",
+                  color: "var(--color-on-accent)",
                   fontWeight: 700,
                   fontSize: "0.8rem",
                   letterSpacing: "0.2em",
@@ -419,7 +419,7 @@ export default function ProductViewer({ product, onClose }: Props) {
                     style={{
                       flex: 2, padding: "12px",
                       background: "var(--color-accent)",
-                      color: "#000",
+                      color: "var(--color-on-accent)",
                       fontWeight: 700,
                       fontSize: "0.75rem",
                       letterSpacing: "0.2em",

@@ -40,8 +40,8 @@ export default function Navigation() {
       className="fixed top-0 left-0 right-0 z-50 transition-all duration-500"
       style={{
         background: scrolled
-          ? "rgba(10,10,10,0.95)"
-          : "linear-gradient(to bottom, rgba(0,0,0,0.55), transparent)",
+          ? "rgba(5,27,46,0.95)"
+          : "linear-gradient(to bottom, rgba(5,27,46,0.55), transparent)",
         backdropFilter: scrolled ? "blur(14px)" : "none",
         borderBottom: scrolled ? "1px solid var(--color-border)" : "none",
       }}
@@ -50,8 +50,8 @@ export default function Navigation() {
         {/* Logo */}
         <Link
           href="/"
-          className="text-base font-bold uppercase"
-          style={{ color: "var(--color-text)", letterSpacing: "0.2em" }}
+          className="font-display text-2xl font-extrabold uppercase"
+          style={{ color: "var(--color-text)", letterSpacing: "0.06em" }}
         >
           Carlito Laf
           <span style={{ color: "var(--color-accent)" }}> Visuel</span>
@@ -77,7 +77,7 @@ export default function Navigation() {
           ))}
           <Link
             href="/devis"
-            className="text-xs uppercase px-5 py-2 border transition-all duration-200 hover:bg-[var(--color-accent)] hover:text-black hover:border-[var(--color-accent)]"
+            className="text-xs uppercase px-5 py-2 border transition-all duration-200 hover:bg-[var(--color-accent)] hover:text-[var(--color-on-accent)] hover:border-[var(--color-accent)]"
             style={{
               color: "var(--color-accent)",
               borderColor: "var(--color-accent)",
@@ -119,7 +119,7 @@ export default function Navigation() {
       {open && (
         <div
           className="md:hidden px-6 pb-8 flex flex-col gap-4"
-          style={{ background: "rgba(10,10,10,0.98)" }}
+          style={{ background: "rgba(5,27,46,0.98)" }}
         >
           {links.map((l) => (
             <Link

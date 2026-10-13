@@ -248,7 +248,7 @@ export default function ContactBlock(props: BlockProps<ContactBlockData>) {
               className="text-sm uppercase font-semibold px-10 py-4 self-start transition-opacity"
               style={{
                 background: "var(--color-accent)",
-                color: "#000",
+                color: "var(--color-on-accent)",
                 letterSpacing: "0.2em",
                 opacity: status === "sending" ? 0.6 : 1,
                 cursor: status === "sending" ? "wait" : "pointer",

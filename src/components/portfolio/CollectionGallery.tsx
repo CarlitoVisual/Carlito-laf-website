@@ -60,7 +60,7 @@ function Lightbox({
 
   return createPortal(
     <div
-      style={{ position: "fixed", inset: 0, zIndex: 100, background: "rgba(0,0,0,0.97)", display: "flex", flexDirection: "column" }}
+      style={{ position: "fixed", inset: 0, zIndex: 100, background: "rgba(5,27,46,0.97)", display: "flex", flexDirection: "column" }}
       onTouchStart={onTouchStart}
       onTouchEnd={onTouchEnd}
     >
@@ -71,7 +71,7 @@ function Lightbox({
         </span>
         <button
           onClick={onClose}
-          style={{ color: "#fff", background: "none", border: "none", fontSize: 28, cursor: "pointer", lineHeight: 1, padding: "0 4px" }}
+          style={{ color: "var(--color-text)", background: "none", border: "none", fontSize: 28, cursor: "pointer", lineHeight: 1, padding: "0 4px" }}
           aria-label="Fermer"
         >
           ×
@@ -88,7 +88,7 @@ function Lightbox({
               position: "absolute", left: 16, zIndex: 1,
               width: 48, height: 48, display: "flex", alignItems: "center", justifyContent: "center",
               background: "rgba(255,255,255,0.08)", border: "1px solid rgba(255,255,255,0.15)",
-              color: "#fff", fontSize: 22, cursor: "pointer", backdropFilter: "blur(4px)",
+              color: "var(--color-text)", fontSize: 22, cursor: "pointer", backdropFilter: "blur(4px)",
             }}
             aria-label="Précédente"
           >‹</button>
@@ -115,7 +115,7 @@ function Lightbox({
               position: "absolute", right: 16, zIndex: 1,
               width: 48, height: 48, display: "flex", alignItems: "center", justifyContent: "center",
               background: "rgba(255,255,255,0.08)", border: "1px solid rgba(255,255,255,0.15)",
-              color: "#fff", fontSize: 22, cursor: "pointer", backdropFilter: "blur(4px)",
+              color: "var(--color-text)", fontSize: 22, cursor: "pointer", backdropFilter: "blur(4px)",
             }}
             aria-label="Suivante"
           >›</button>
@@ -126,7 +126,7 @@ function Lightbox({
       <div style={{ flexShrink: 0, padding: "20px 24px", display: "flex", alignItems: "flex-end", justifyContent: "space-between", gap: 16, flexWrap: "wrap" }}>
         <div>
           {photo.title && (
-            <p style={{ color: "#fff", fontWeight: 600, fontSize: 15, marginBottom: 4 }}>{photo.title}</p>
+            <p style={{ color: "var(--color-text)", fontWeight: 600, fontSize: 15, marginBottom: 4 }}>{photo.title}</p>
           )}
           {photo.location && (
             <p style={{ color: "var(--color-accent)", fontSize: 12, letterSpacing: "0.1em", textTransform: "uppercase" }}>
@@ -140,7 +140,7 @@ function Lightbox({
             <a
               href={photo.productSlug ? `/boutique/${photo.productSlug}` : "/boutique"}
               style={{
-                padding: "10px 22px", background: "var(--color-accent)", color: "#000",
+                padding: "10px 22px", background: "var(--color-accent)", color: "var(--color-on-accent)",
                 fontWeight: 700, fontSize: 12, letterSpacing: "0.15em", textTransform: "uppercase",
                 textDecoration: "none", display: "inline-block",
               }}
@@ -213,7 +213,7 @@ function PrintRequestModal({ photo, onClose }: { photo: GalleryPhoto; onClose: (
 
   return createPortal(
     <div
-      style={{ position: "fixed", inset: 0, zIndex: 110, display: "flex", alignItems: "center", justifyContent: "center", background: "rgba(0,0,0,0.7)", padding: 24 }}
+      style={{ position: "fixed", inset: 0, zIndex: 110, display: "flex", alignItems: "center", justifyContent: "center", background: "rgba(5,27,46,0.7)", padding: 24 }}
       onClick={onClose}
     >
       <div
@@ -264,7 +264,7 @@ function PrintRequestModal({ photo, onClose }: { photo: GalleryPhoto; onClose: (
                 <p style={{ color: "#ef4444", fontSize: 12 }}>Erreur — contactez-moi : charleslaf.photo@gmail.com</p>
               )}
               <button type="submit" disabled={status === "sending"} style={{
-                padding: "14px", background: "var(--color-accent)", color: "#000",
+                padding: "14px", background: "var(--color-accent)", color: "var(--color-on-accent)",
                 fontWeight: 700, fontSize: 12, letterSpacing: "0.2em", textTransform: "uppercase",
                 border: "none", cursor: "pointer", opacity: status === "sending" ? 0.6 : 1,
               }}>
@@ -331,7 +331,7 @@ export default function CollectionGallery({ photos }: { photos: GalleryPhoto[] }
             {/* Hover overlay */}
             <div
               className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-250 flex flex-col justify-between p-4"
-              style={{ background: "linear-gradient(to top, rgba(0,0,0,0.75) 0%, rgba(0,0,0,0.1) 50%, transparent 100%)" }}
+              style={{ background: "linear-gradient(to top, rgba(5,27,46,0.75) 0%, rgba(5,27,46,0.1) 50%, transparent 100%)" }}
             >
               {/* Print badge */}
               {!photo.availableAsPrint && (
@@ -341,7 +341,7 @@ export default function CollectionGallery({ photos }: { photos: GalleryPhoto[] }
                     style={{
                       padding: "5px 10px", fontSize: 10, fontWeight: 700,
                       letterSpacing: "0.1em", textTransform: "uppercase",
-                      background: "rgba(0,0,0,0.6)", border: "1px solid rgba(255,255,255,0.3)",
+                      background: "rgba(5,27,46,0.6)", border: "1px solid rgba(255,255,255,0.3)",
                       color: "rgba(255,255,255,0.85)", cursor: "pointer", backdropFilter: "blur(4px)",
                     }}
                   >
@@ -353,7 +353,7 @@ export default function CollectionGallery({ photos }: { photos: GalleryPhoto[] }
                 <div style={{ alignSelf: "flex-end" }}>
                   <span style={{
                     padding: "4px 8px", fontSize: 10, fontWeight: 700, letterSpacing: "0.1em",
-                    textTransform: "uppercase", background: "var(--color-accent)", color: "#000",
+                    textTransform: "uppercase", background: "var(--color-accent)", color: "var(--color-on-accent)",
                   }}>
                     En boutique
                   </span>
@@ -362,7 +362,7 @@ export default function CollectionGallery({ photos }: { photos: GalleryPhoto[] }
 
               {/* Info */}
               <div>
-                {photo.title && <p style={{ color: "#fff", fontWeight: 600, fontSize: 13 }}>{photo.title}</p>}
+                {photo.title && <p style={{ color: "var(--color-text)", fontWeight: 600, fontSize: 13 }}>{photo.title}</p>}
                 {photo.location && <p style={{ color: "var(--color-accent)", fontSize: 11, marginTop: 2 }}>{photo.location}</p>}
               </div>
             </div>

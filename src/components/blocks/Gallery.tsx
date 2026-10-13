@@ -231,7 +231,7 @@ function CarouselLayout({ items, showCaptions, onOpen }: LayoutProps) {
         {showCaptions && item.title && (
           <div
             className="absolute bottom-0 left-0 right-0 p-4 pointer-events-none"
-            style={{ background: "linear-gradient(to top, rgba(0,0,0,0.65), transparent)" }}
+            style={{ background: "linear-gradient(to top, rgba(5,27,46,0.65), transparent)" }}
           >
             <p className="text-white text-sm">{item.title}</p>
           </div>
@@ -241,14 +241,14 @@ function CarouselLayout({ items, showCaptions, onOpen }: LayoutProps) {
         <button
           onClick={(e) => { e.stopPropagation(); prev() }}
           className="absolute left-4 top-1/2 -translate-y-1/2 w-10 h-10 flex items-center justify-center transition-all"
-          style={{ background: "rgba(0,0,0,0.45)", color: "#fff", border: "1px solid rgba(255,255,255,0.2)" }}
+          style={{ background: "rgba(5,27,46,0.45)", color: "var(--color-text)", border: "1px solid rgba(255,255,255,0.2)" }}
         >
           ‹
         </button>
         <button
           onClick={(e) => { e.stopPropagation(); next() }}
           className="absolute right-4 top-1/2 -translate-y-1/2 w-10 h-10 flex items-center justify-center transition-all"
-          style={{ background: "rgba(0,0,0,0.45)", color: "#fff", border: "1px solid rgba(255,255,255,0.2)" }}
+          style={{ background: "rgba(5,27,46,0.45)", color: "var(--color-text)", border: "1px solid rgba(255,255,255,0.2)" }}
         >
           ›
         </button>
@@ -353,7 +353,7 @@ function Caption({ title }: { title: string }) {
   return (
     <div
       className="absolute bottom-0 left-0 right-0 p-3 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
-      style={{ background: "linear-gradient(to top, rgba(0,0,0,0.7), transparent)" }}
+      style={{ background: "linear-gradient(to top, rgba(5,27,46,0.7), transparent)" }}
     >
       <p className="text-sm text-white">{title}</p>
     </div>

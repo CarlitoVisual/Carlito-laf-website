@@ -35,7 +35,7 @@ export default function VideoBlock(props: BlockProps<VideoBlockData>) {
     <section
       className="relative"
       style={{
-        background: isImmersive ? "#000" : "var(--color-surface)",
+        background: isImmersive ? "var(--color-bg)" : "var(--color-surface)",
         paddingTop: isImmersive ? 0 : undefined,
         paddingBottom: isImmersive ? 0 : undefined,
       }}
@@ -80,7 +80,7 @@ export default function VideoBlock(props: BlockProps<VideoBlockData>) {
         {overlay && (overlayTitle || overlayText) && (
           <div
             className="absolute inset-0 flex flex-col items-center justify-center text-center px-6 pointer-events-none"
-            style={{ background: "rgba(0,0,0,0.45)" }}
+            style={{ background: "rgba(5,27,46,0.45)" }}
           >
             {isImmersive && title && (
               <p className="text-xs uppercase font-semibold mb-4" style={{ color: "var(--color-accent)", letterSpacing: "0.3em" }}>
@@ -93,7 +93,7 @@ export default function VideoBlock(props: BlockProps<VideoBlockData>) {
               </h2>
             )}
             {overlayText && (
-              <p className="text-lg max-w-xl" style={{ color: "rgba(240,237,232,0.8)" }}>
+              <p className="text-lg max-w-xl" style={{ color: "rgba(244,239,230,0.8)" }}>
                 {overlayText}
               </p>
             )}
@@ -116,7 +116,7 @@ export default function VideoBlock(props: BlockProps<VideoBlockData>) {
               className="text-sm uppercase px-6 py-3 font-semibold flex-shrink-0"
               style={{
                 background: button.style === "outline" ? "transparent" : "var(--color-accent)",
-                color: button.style === "outline" ? "var(--color-accent)" : "#000",
+                color: button.style === "outline" ? "var(--color-accent)" : "var(--color-on-accent)",
                 border: button.style === "outline" ? "1px solid var(--color-accent)" : "none",
                 letterSpacing: "0.15em",
               }}

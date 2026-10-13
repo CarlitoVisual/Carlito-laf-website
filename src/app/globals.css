@@ -1,13 +1,23 @@
 @import "tailwindcss";
 
 :root {
-  --color-bg: #0a0a0a;
-  --color-surface: #111111;
-  --color-border: #1e1e1e;
-  --color-text: #f0ede8;
-  --color-muted: #888880;
-  --color-accent: #c8a96e;
-  --color-accent-dark: #9a7d4a;
+  /* Charte « Swell Sable » */
+  --color-bg: #051B2E;          /* Fosse */
+  --color-surface: #0B3352;     /* Houle */
+  --color-surface-2: #0F4A75;   /* Large */
+  --color-wave: #136093;        /* Bleu vague */
+  --color-border: #16456B;
+  --color-text: #F4EFE6;        /* Écume */
+  --color-muted: #A8C4DC;       /* Brume */
+  --color-accent: #E3C79B;      /* Sable */
+  --color-accent-dark: #C9A970;
+  --color-on-accent: #051B2E;
+  --color-data: #5EC4E8;        /* Lagon clair */
+  --gradient-depth: linear-gradient(180deg, #136093 0%, #0F4A75 35%, #0B3352 70%, #051B2E 100%);
+
+  --font-display: var(--font-big-shoulders), "Arial Narrow", sans-serif;
+  --font-body: var(--font-dm-sans), system-ui, sans-serif;
+  --font-mono: var(--font-dm-mono), ui-monospace, monospace;
 }
 
 * {
@@ -21,13 +31,28 @@ html {
 body {
   background: var(--color-bg);
   color: var(--color-text);
+  font-family: var(--font-body);
   -webkit-font-smoothing: antialiased;
 }
 
 ::selection {
   background: var(--color-accent);
-  color: #000;
+  color: var(--color-on-accent);
 }
+
+/* Titres : capitales condensées façon affiche de compétition */
+h1, h2, h3 {
+  font-family: var(--font-display);
+  letter-spacing: 0.01em;
+  line-height: 0.95;
+}
+h1, h2 {
+  text-transform: uppercase;
+  font-weight: 900;
+}
+
+.font-display { font-family: var(--font-display); }
+.font-mono-data { font-family: var(--font-mono); }
 
 ::-webkit-scrollbar {
   width: 4px;
@@ -38,14 +63,4 @@ body {
 ::-webkit-scrollbar-thumb {
   background: var(--color-accent);
   border-radius: 2px;
-}
-
-.skills-bento-tile {
-  grid-column: span min(var(--tile-w), 2);
-  grid-row: span var(--tile-h);
-}
-@media (min-width: 768px) {
-  .skills-bento-tile {
-    grid-column: span var(--tile-w);
-  }
 }

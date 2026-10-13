@@ -120,6 +120,9 @@ export interface SkillsBentoTile {
   href?: string
   width?: number
   height?: number
+  meta?: string
+  description?: string
+  cta?: string
 }
 
 export interface SkillsBentoBlock extends BlockBase {

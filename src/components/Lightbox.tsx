@@ -21,7 +21,7 @@ export default function Lightbox({ item, onClose }: { item: GalleryItem; onClose
   return (
     <div
       className="fixed inset-0 z-[100] flex items-center justify-center p-6 md:p-12"
-      style={{ background: "rgba(0,0,0,0.95)" }}
+      style={{ background: "rgba(5,27,46,0.95)" }}
       onClick={onClose}
     >
       <div

@@ -13,8 +13,8 @@ export default function Footer() {
           {/* Brand */}
           <div className="md:col-span-2">
             <p
-              className="text-xl font-bold tracking-widest uppercase mb-4"
-              style={{ letterSpacing: "0.2em", color: "var(--color-text)" }}
+              className="font-display text-3xl font-black uppercase mb-4"
+              style={{ letterSpacing: "0.06em", color: "var(--color-text)" }}
             >
               Carlito Laf
               <span style={{ color: "var(--color-accent)" }}> Visuel</span>

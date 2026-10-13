@@ -49,7 +49,7 @@ function Lightbox({ products, index, onClose, onNav, onShowViewer }: {
 
   return createPortal(
     <div
-      style={{ position: "fixed", inset: 0, zIndex: 100, background: "rgba(0,0,0,0.97)", display: "flex", flexDirection: "column" }}
+      style={{ position: "fixed", inset: 0, zIndex: 100, background: "rgba(5,27,46,0.97)", display: "flex", flexDirection: "column" }}
       onTouchStart={onTouchStart}
       onTouchEnd={onTouchEnd}
     >
@@ -60,7 +60,7 @@ function Lightbox({ products, index, onClose, onNav, onShowViewer }: {
         </span>
         <button
           onClick={onClose}
-          style={{ color: "#fff", background: "none", border: "none", fontSize: 28, cursor: "pointer", lineHeight: 1, padding: "0 4px" }}
+          style={{ color: "var(--color-text)", background: "none", border: "none", fontSize: 28, cursor: "pointer", lineHeight: 1, padding: "0 4px" }}
           aria-label="Fermer"
         >×</button>
       </div>
@@ -74,7 +74,7 @@ function Lightbox({ products, index, onClose, onNav, onShowViewer }: {
               position: "absolute", left: 16, zIndex: 1,
               width: 48, height: 48, display: "flex", alignItems: "center", justifyContent: "center",
               background: "rgba(255,255,255,0.08)", border: "1px solid rgba(255,255,255,0.15)",
-              color: "#fff", fontSize: 22, cursor: "pointer", backdropFilter: "blur(4px)",
+              color: "var(--color-text)", fontSize: 22, cursor: "pointer", backdropFilter: "blur(4px)",
             }}
             aria-label="Précédent"
           >‹</button>
@@ -101,7 +101,7 @@ function Lightbox({ products, index, onClose, onNav, onShowViewer }: {
               position: "absolute", right: 16, zIndex: 1,
               width: 48, height: 48, display: "flex", alignItems: "center", justifyContent: "center",
               background: "rgba(255,255,255,0.08)", border: "1px solid rgba(255,255,255,0.15)",
-              color: "#fff", fontSize: 22, cursor: "pointer", backdropFilter: "blur(4px)",
+              color: "var(--color-text)", fontSize: 22, cursor: "pointer", backdropFilter: "blur(4px)",
             }}
             aria-label="Suivant"
           >›</button>
@@ -111,7 +111,7 @@ function Lightbox({ products, index, onClose, onNav, onShowViewer }: {
       {/* Bottom bar */}
       <div style={{ flexShrink: 0, padding: "20px 24px", display: "flex", alignItems: "flex-end", justifyContent: "space-between", gap: 16, flexWrap: "wrap" }}>
         <div>
-          <p style={{ color: "#fff", fontWeight: 600, fontSize: 15, marginBottom: 4 }}>{product.title}</p>
+          <p style={{ color: "var(--color-text)", fontWeight: 600, fontSize: 15, marginBottom: 4 }}>{product.title}</p>
           {price !== null && (
             <p style={{ color: "var(--color-accent)", fontSize: 13, fontWeight: 700 }}>
               À partir de {formatPrice(price, product.currency || "EUR")}
@@ -130,7 +130,7 @@ function Lightbox({ products, index, onClose, onNav, onShowViewer }: {
           style={{
             padding: "12px 28px",
             background: available ? "var(--color-accent)" : "var(--color-border)",
-            color: available ? "#000" : "var(--color-muted)",
+            color: available ? "var(--color-on-accent)" : "var(--color-muted)",
             fontWeight: 700, fontSize: 12, letterSpacing: "0.15em", textTransform: "uppercase",
             border: "none", cursor: available ? "pointer" : "not-allowed",
             opacity: available ? 1 : 0.6,
@@ -206,13 +206,13 @@ export default function BoutiqueCollectionGallery({ products }: { products: Bout
                 )}
 
                 {!available && (
-                  <div style={{ position: "absolute", inset: 0, display: "flex", alignItems: "center", justifyContent: "center", background: "rgba(10,10,10,0.65)" }}>
+                  <div style={{ position: "absolute", inset: 0, display: "flex", alignItems: "center", justifyContent: "center", background: "rgba(5,27,46,0.65)" }}>
                     <span style={{ color: "var(--color-muted)", fontSize: 11, letterSpacing: "0.2em", textTransform: "uppercase" }}>Épuisé</span>
                   </div>
                 )}
 
                 {product.edition?.limited && (
-                  <div style={{ position: "absolute", top: 12, left: 12, padding: "4px 8px", background: "var(--color-accent)", color: "#000", fontSize: 10, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.1em" }}>
+                  <div style={{ position: "absolute", top: 12, left: 12, padding: "4px 8px", background: "var(--color-accent)", color: "var(--color-on-accent)", fontSize: 10, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.1em" }}>
                     Édition limitée
                   </div>
                 )}
@@ -220,7 +220,7 @@ export default function BoutiqueCollectionGallery({ products }: { products: Bout
                 {/* Hover zoom hint */}
                 <div
                   className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-200 flex items-center justify-center"
-                  style={{ background: "rgba(0,0,0,0.18)" }}
+                  style={{ background: "rgba(5,27,46,0.18)" }}
                 >
                   <span style={{ color: "rgba(255,255,255,0.9)", fontSize: 11, letterSpacing: "0.2em", textTransform: "uppercase" }}>
                     Agrandir
@@ -280,7 +280,7 @@ export default function BoutiqueCollectionGallery({ products }: { products: Bout
                     className="text-xs uppercase px-5 py-2.5 font-semibold transition-all duration-200"
                     style={{
                       background: !available ? "var(--color-border)" : "var(--color-accent)",
-                      color: !available ? "var(--color-muted)" : "#000",
+                      color: !available ? "var(--color-muted)" : "var(--color-on-accent)",
                       letterSpacing: "0.15em",
                       cursor: !available ? "not-allowed" : "pointer",
                       opacity: !available ? 0.6 : 1,

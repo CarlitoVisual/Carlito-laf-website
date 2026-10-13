@@ -118,7 +118,7 @@ export default function VideoIntro({ videoUrl, posterUrl, title, subtitle }: Pro
         style={{
           position: "absolute",
           inset: 0,
-          background: "rgba(0,0,0,0.45)",
+          background: "rgba(5,27,46,0.45)",
           opacity: transitioning ? 0 : 1,
           transition: "opacity 0.4s ease",
         }}
@@ -146,7 +146,7 @@ export default function VideoIntro({ videoUrl, posterUrl, title, subtitle }: Pro
             fontSize: "0.65rem",
             textTransform: "uppercase",
             letterSpacing: "0.4em",
-            color: "rgba(200,169,110,0.9)",
+            color: "rgba(227,199,155,0.9)",
             marginBottom: "2rem",
             fontWeight: 600,
           }}
@@ -159,10 +159,10 @@ export default function VideoIntro({ videoUrl, posterUrl, title, subtitle }: Pro
             style={{
               fontSize: "clamp(2.5rem, 8vw, 7rem)",
               fontWeight: 700,
-              color: "#fff",
+              color: "var(--color-text)",
               lineHeight: 1,
               marginBottom: subtitle ? "1.5rem" : "3rem",
-              textShadow: "0 4px 60px rgba(0,0,0,0.4)",
+              textShadow: "0 4px 60px rgba(5,27,46,0.4)",
               letterSpacing: "-0.02em",
             }}
           >
@@ -174,7 +174,7 @@ export default function VideoIntro({ videoUrl, posterUrl, title, subtitle }: Pro
           <p
             style={{
               fontSize: "clamp(0.9rem, 2vw, 1.2rem)",
-              color: "rgba(240,237,232,0.75)",
+              color: "rgba(244,239,230,0.75)",
               maxWidth: "36rem",
               lineHeight: 1.6,
               marginBottom: "3rem",
@@ -252,8 +252,8 @@ function ScrollArrow() {
           50% { transform: translateY(6px); }
         }
       `}</style>
-      <rect x="9" y="0" width="2" height="18" rx="1" fill="rgba(200,169,110,0.7)" />
-      <path d="M10 26 L3 18 L17 18 Z" fill="rgba(200,169,110,0.7)" />
+      <rect x="9" y="0" width="2" height="18" rx="1" fill="rgba(227,199,155,0.7)" />
+      <path d="M10 26 L3 18 L17 18 Z" fill="rgba(227,199,155,0.7)" />
     </svg>
   )
 }

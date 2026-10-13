@@ -20,7 +20,7 @@ export default function ProductViewerTrigger({ product, disabled }: Props) {
         className="text-xs uppercase px-5 py-2.5 font-semibold transition-all duration-200"
         style={{
           background: disabled ? "var(--color-border)" : "var(--color-accent)",
-          color: disabled ? "var(--color-muted)" : "#000",
+          color: disabled ? "var(--color-muted)" : "var(--color-on-accent)",
           letterSpacing: "0.15em",
           cursor: disabled ? "not-allowed" : "pointer",
           opacity: disabled ? 0.6 : 1,

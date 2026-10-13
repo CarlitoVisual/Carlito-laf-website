@@ -113,7 +113,7 @@ export default async function ServicesBlock(props: BlockProps<ServicesBlockData>
                     />
                     {s.category && (
                       <span className="absolute top-3 left-3 text-xs uppercase px-2 py-1"
-                        style={{ background: "var(--color-accent)", color: "#000", letterSpacing: "0.1em" }}>
+                        style={{ background: "var(--color-accent)", color: "var(--color-on-accent)", letterSpacing: "0.1em" }}>
                         {s.category}
                       </span>
                     )}
@@ -139,7 +139,7 @@ export default async function ServicesBlock(props: BlockProps<ServicesBlockData>
                       {priceLabel(s) && <p className="font-bold text-sm" style={{ color: "var(--color-accent)" }}>{priceLabel(s)}</p>}
                       {!s.price && <p className="text-xs" style={{ color: "var(--color-muted)" }}>Sur devis</p>}
                     </div>
-                    <span className="text-xs uppercase px-4 py-2 border text-[var(--color-accent)] border-[var(--color-accent)] transition-all group-hover:bg-[var(--color-accent)] group-hover:text-black"
+                    <span className="text-xs uppercase px-4 py-2 border text-[var(--color-accent)] border-[var(--color-accent)] transition-all group-hover:bg-[var(--color-accent)] group-hover:text-[var(--color-on-accent)]"
                       style={{ letterSpacing: "0.15em" }}>
                       {buttonLabel} →
                     </span>

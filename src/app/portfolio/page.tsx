@@ -97,7 +97,7 @@ export default async function PortfolioPage() {
                     <div
                       className="absolute inset-0"
                       style={{
-                        background: "linear-gradient(to top, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.1) 55%, transparent 100%)",
+                        background: "linear-gradient(to top, rgba(5,27,46,0.8) 0%, rgba(5,27,46,0.1) 55%, transparent 100%)",
                       }}
                     />
 
@@ -113,7 +113,7 @@ export default async function PortfolioPage() {
                         </p>
                       )}
                       <span
-                        className="inline-block text-xs uppercase px-4 py-2 border border-white/35 text-white/75 transition-all duration-300 group-hover:bg-white group-hover:text-black group-hover:border-white"
+                        className="inline-block text-xs uppercase px-4 py-2 border border-white/35 text-white/75 transition-all duration-300 group-hover:bg-white group-hover:text-[var(--color-on-accent)] group-hover:border-white"
                         style={{ letterSpacing: "0.15em" }}
                       >
                         Voir la collection →

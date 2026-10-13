@@ -19,7 +19,7 @@ export const pageQuery = `
 
     _type == "skillsBentoBlock" => {
       ...,
-      tiles[] { _key, keyword, image, href, width, height }
+      tiles[] { _key, keyword, image, href, width, height, meta, description, cta }
     },
 
     _type == "gallery" => {

@@ -66,14 +66,14 @@ export default function ServiceCarousel({ services, buttonLabel = "Découvrir" }
           style={{
             position: "absolute",
             inset: 0,
-            background: "linear-gradient(to right, rgba(0,0,0,0.75) 0%, rgba(0,0,0,0.2) 60%, transparent 100%)",
+            background: "linear-gradient(to right, rgba(5,27,46,0.75) 0%, rgba(5,27,46,0.2) 60%, transparent 100%)",
           }}
         />
         <div
           style={{
             position: "absolute",
             inset: 0,
-            background: "linear-gradient(to top, rgba(0,0,0,0.6) 0%, transparent 40%)",
+            background: "linear-gradient(to top, rgba(5,27,46,0.6) 0%, transparent 40%)",
           }}
         />
 
@@ -103,7 +103,7 @@ export default function ServiceCarousel({ services, buttonLabel = "Découvrir" }
 
           <h3
             style={{
-              color: "#fff",
+              color: "var(--color-text)",
               fontSize: "clamp(2rem, 5vw, 3.5rem)",
               fontWeight: 800,
               lineHeight: 1.1,
@@ -133,7 +133,7 @@ export default function ServiceCarousel({ services, buttonLabel = "Découvrir" }
                   display: "inline-block",
                   padding: "14px 32px",
                   background: "var(--color-accent)",
-                  color: "#000",
+                  color: "var(--color-on-accent)",
                   fontWeight: 700,
                   fontSize: "0.78rem",
                   letterSpacing: "0.2em",
@@ -177,9 +177,9 @@ export default function ServiceCarousel({ services, buttonLabel = "Découvrir" }
             height: 48,
             alignItems: "center",
             justifyContent: "center",
-            background: "rgba(0,0,0,0.4)",
+            background: "rgba(5,27,46,0.4)",
             border: "1px solid rgba(255,255,255,0.2)",
-            color: "#fff",
+            color: "var(--color-text)",
             fontSize: "1.2rem",
             cursor: "pointer",
             backdropFilter: "blur(4px)",
@@ -200,9 +200,9 @@ export default function ServiceCarousel({ services, buttonLabel = "Découvrir" }
             height: 48,
             alignItems: "center",
             justifyContent: "center",
-            background: "rgba(0,0,0,0.4)",
+            background: "rgba(5,27,46,0.4)",
             border: "1px solid rgba(255,255,255,0.2)",
-            color: "#fff",
+            color: "var(--color-text)",
             fontSize: "1.2rem",
             cursor: "pointer",
             backdropFilter: "blur(4px)",
@@ -233,9 +233,9 @@ export default function ServiceCarousel({ services, buttonLabel = "Découvrir" }
               height: 32,
               alignItems: "center",
               justifyContent: "center",
-              background: "rgba(0,0,0,0.4)",
+              background: "rgba(5,27,46,0.4)",
               border: "1px solid rgba(255,255,255,0.2)",
-              color: "#fff",
+              color: "var(--color-text)",
               fontSize: "1rem",
               cursor: "pointer",
               padding: 0,
@@ -280,9 +280,9 @@ export default function ServiceCarousel({ services, buttonLabel = "Découvrir" }
               height: 32,
               alignItems: "center",
               justifyContent: "center",
-              background: "rgba(0,0,0,0.4)",
+              background: "rgba(5,27,46,0.4)",
               border: "1px solid rgba(255,255,255,0.2)",
-              color: "#fff",
+              color: "var(--color-text)",
               fontSize: "1rem",
               cursor: "pointer",
               padding: 0,
@@ -335,7 +335,7 @@ export default function ServiceCarousel({ services, buttonLabel = "Découvrir" }
               style={{
                 position: "absolute",
                 inset: 0,
-                background: "rgba(0,0,0,0.4)",
+                background: "rgba(5,27,46,0.4)",
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",

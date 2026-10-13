@@ -62,7 +62,7 @@ export default function ImageBlock(props: BlockProps<ImageBlockData>) {
       {overlay && (
         <div
           className="absolute inset-0 flex items-center justify-center"
-          style={{ background: "rgba(0,0,0,0.45)" }}
+          style={{ background: "rgba(5,27,46,0.45)" }}
         >
           {overlayText && (
             <p className="text-white text-2xl font-bold text-center px-6">
@@ -105,7 +105,7 @@ export default function ImageBlock(props: BlockProps<ImageBlockData>) {
       {zoomed && (
         <div
           className="fixed inset-0 z-[100] flex items-center justify-center p-4"
-          style={{ background: "rgba(0,0,0,0.95)" }}
+          style={{ background: "rgba(5,27,46,0.95)" }}
           onClick={() => setZoomed(false)}
         >
           <div className="relative w-full h-full max-w-6xl">

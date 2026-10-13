@@ -54,7 +54,7 @@ export default function CTABlock(props: BlockProps<CTABlockData>) {
                     }
                   : {
                       background: "var(--color-accent)",
-                      color: "#000",
+                      color: "var(--color-on-accent)",
                       letterSpacing: "0.2em",
                     }
               }
@@ -69,7 +69,7 @@ export default function CTABlock(props: BlockProps<CTABlockData>) {
               className="inline-block text-sm uppercase px-8 py-4 font-semibold"
               style={{
                 background: "var(--color-accent)",
-                color: "#000",
+                color: "var(--color-on-accent)",
                 letterSpacing: "0.2em",
               }}
             >

@@ -1,13 +1,25 @@
 import type { Metadata } from "next"
-import { Geist } from "next/font/google"
+import { Big_Shoulders, DM_Sans, DM_Mono } from "next/font/google"
 import "./globals.css"
 import Navigation from "@/components/Navigation"
 import Footer from "@/components/Footer"
 import { IntroProvider } from "@/context/IntroContext"
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+const display = Big_Shoulders({
+  variable: "--font-big-shoulders",
   subsets: ["latin"],
+  weight: ["700", "800", "900"],
+})
+
+const body = DM_Sans({
+  variable: "--font-dm-sans",
+  subsets: ["latin"],
+})
+
+const mono = DM_Mono({
+  variable: "--font-dm-mono",
+  subsets: ["latin"],
+  weight: ["400", "500"],
 })
 
 export const metadata: Metadata = {
@@ -30,7 +42,7 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="fr" className={geistSans.variable}>
+    <html lang="fr" className={`${display.variable} ${body.variable} ${mono.variable}`}>
       <body className="flex flex-col min-h-screen">
         <IntroProvider>
           <Navigation />

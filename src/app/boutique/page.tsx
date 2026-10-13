@@ -97,7 +97,7 @@ export default async function BoutiquePage() {
                   <div
                     className="absolute inset-0 transition-opacity duration-500"
                     style={{
-                      background: "linear-gradient(to top, rgba(0,0,0,0.75) 0%, rgba(0,0,0,0.1) 60%)",
+                      background: "linear-gradient(to top, rgba(5,27,46,0.75) 0%, rgba(5,27,46,0.1) 60%)",
                     }}
                   />
 
@@ -110,7 +110,7 @@ export default async function BoutiquePage() {
                       {col.name}
                     </h2>
                     <span
-                      className="inline-block text-xs uppercase px-4 py-2 border border-white/30 text-white/70 transition-all duration-300 group-hover:bg-[var(--color-accent)] group-hover:text-black group-hover:border-[var(--color-accent)]"
+                      className="inline-block text-xs uppercase px-4 py-2 border border-white/30 text-white/70 transition-all duration-300 group-hover:bg-[var(--color-accent)] group-hover:text-[var(--color-on-accent)] group-hover:border-[var(--color-accent)]"
                       style={{ letterSpacing: "0.15em" }}
                     >
                       Voir la collection →
