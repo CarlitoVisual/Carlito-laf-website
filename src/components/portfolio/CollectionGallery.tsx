@@ -126,9 +126,6 @@ function Lightbox({
       {/* Bottom bar */}
       <div style={{ flexShrink: 0, padding: "20px 24px", display: "flex", alignItems: "flex-end", justifyContent: "space-between", gap: 16, flexWrap: "wrap" }}>
         <div>
-          {photo.title && (
-            <p style={{ color: "var(--color-text)", fontWeight: 600, fontSize: 15, marginBottom: 4 }}>{photo.title}</p>
-          )}
           {photo.location && (
             <p style={{ color: "var(--color-accent)", fontSize: 12, letterSpacing: "0.1em", textTransform: "uppercase" }}>
               {photo.location}
