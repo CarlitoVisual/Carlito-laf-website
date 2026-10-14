@@ -6,6 +6,7 @@ export const pageQuery = `
 *[_type == "page" && slug.current == $slug][0] {
   title,
   seo,
+  backgroundVideo { ..., file { asset->{ url } } },
   sections[] {
     ...,
 
@@ -40,7 +41,21 @@ export const pageQuery = `
     },
 
     _type == "videoBlock" => {
-      ...
+      ...,
+      file { asset->{ url } }
+    },
+
+    _type == "ambientVideoBlock" => {
+      ...,
+      video { asset->{ url } }
+    },
+
+    _type == "compositionBlock" => {
+      ...,
+      items[] {
+        ...,
+        _type == "compoVideo" => { file { asset->{ url } } }
+      }
     },
 
     _type == "servicesBlock" => {

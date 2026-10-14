@@ -1,6 +1,7 @@
 import { client } from "@/lib/sanity.client"
 import { pageQuery, allSlugsQuery } from "@/lib/queries"
 import PageBuilder from "@/components/PageBuilder"
+import PageShell from "@/components/PageShell"
 import { notFound } from "next/navigation"
 import type { Metadata } from "next"
 
@@ -33,5 +34,9 @@ export default async function DynamicPage({ params }: Props) {
 
   if (!page) notFound()
 
-  return <PageBuilder sections={page.sections ?? []} />
+  return (
+    <PageShell backgroundVideo={page.backgroundVideo}>
+      <PageBuilder sections={page.sections ?? []} />
+    </PageShell>
+  )
 }

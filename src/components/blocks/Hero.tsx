@@ -72,9 +72,9 @@ export default function Hero(props: BlockProps<HeroBlockData>) {
           </p>
         )}
 
-        {!!props.buttons?.length && (
+        {!!props.buttons?.some((b) => b.label) && (
           <div className="flex flex-wrap gap-4 mt-10 justify-center">
-            {props.buttons.map((btn, i) => (
+            {props.buttons.filter((b) => b.label).map((btn, i) => (
               <Link
                 key={i}
                 href={safeHref(btn.link?.href || btn.url)}

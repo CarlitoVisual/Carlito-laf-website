@@ -253,6 +253,65 @@ export interface TimelineBlock extends BlockBase {
   items?: { year?: string; title?: string; description?: string }[]
 }
 
+export interface AmbientVideoBlock extends BlockBase {
+  _type: "ambientVideoBlock"
+  video?: SanityFile
+  poster?: SanityImage
+  height?: "screen" | "large" | "medium" | "band"
+  fixed?: boolean
+  overlay?: "none" | "light" | "medium" | "strong"
+  title?: string
+  text?: string
+}
+
+interface CompositionItemBase {
+  _key?: string
+  width?: "full" | "threeQuarters" | "twoThirds" | "half" | "third" | "quarter"
+  verticalAlign?: "top" | "center" | "bottom"
+  newLine?: boolean
+  aspectRatio?: string
+}
+
+export interface CompositionText extends CompositionItemBase {
+  _type: "compoText"
+  content?: PortableTextBlock[]
+  textAlign?: "left" | "center"
+}
+
+export interface CompositionImage extends CompositionItemBase {
+  _type: "compoImage"
+  image?: SanityImage
+  caption?: string
+}
+
+export interface CompositionVideo extends CompositionItemBase {
+  _type: "compoVideo"
+  mode?: "ambient" | "player" | "embed"
+  file?: SanityFile
+  url?: string
+  poster?: SanityImage
+  caption?: string
+}
+
+export type CompositionItem = CompositionText | CompositionImage | CompositionVideo
+
+export interface CompositionBlock extends BlockBase {
+  _type: "compositionBlock"
+  title?: string
+  subtitle?: string
+  items?: CompositionItem[]
+  container?: "narrow" | "normal" | "wide" | "full"
+  gap?: "small" | "medium" | "large"
+  background?: "default" | "surface"
+}
+
+/** Champ « Vidéo de fond de page » du document Page. */
+export interface PageBackgroundVideo {
+  file?: SanityFile
+  poster?: SanityImage
+  overlay?: "none" | "light" | "medium" | "strong"
+}
+
 export type PageSection =
   | HeroBlock
   | SkillsBentoBlock
@@ -268,6 +327,8 @@ export type PageSection =
   | CTABlock
   | ContactBlock
   | TimelineBlock
+  | AmbientVideoBlock
+  | CompositionBlock
 
 /** Props received by a block component (the `_type` discriminator is not needed inside the block). */
 export type BlockProps<T extends { _type: string }> = Omit<T, "_type">

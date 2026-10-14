@@ -12,6 +12,8 @@ import TestimonialsBlock from "./blocks/TestimonialsBlock"
 import QuoteBlock from "./blocks/QuoteBlock"
 import ImageBlock from "./blocks/ImageBlock"
 import TimelineBlock from "./blocks/TimelineBlock"
+import AmbientVideoBlock from "./blocks/AmbientVideoBlock"
+import CompositionBlock from "./blocks/CompositionBlock"
 import type { PageSection } from "@/types/sanity"
 
 type Props = { sections?: PageSection[] }
@@ -36,6 +38,8 @@ export default function PageBuilder({ sections }: Props) {
           case "ctaBlock":         return <CTABlock key={key} {...s} />
           case "contactBlock":     return <ContactBlock key={key} {...s} />
           case "timelineBlock":    return <TimelineBlock key={key} {...s} />
+          case "ambientVideoBlock":return <AmbientVideoBlock key={key} {...s} />
+          case "compositionBlock": return <CompositionBlock key={key} {...s} />
           default:                 return null
         }
       })}

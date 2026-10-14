@@ -52,6 +52,9 @@ h1, h2 {
 }
 
 .font-display { font-family: var(--font-display); }
+
+/* « Vidéo de fond de page » (PageShell) : les sections laissent apparaître la vidéo fixée derrière */
+.ambient-page section { background: transparent !important; }
 .font-mono-data { font-family: var(--font-mono); }
 
 ::-webkit-scrollbar {

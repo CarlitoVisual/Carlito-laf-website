@@ -1,6 +1,7 @@
 import { client } from "@/lib/sanity.client"
 import { pageQuery } from "@/lib/queries"
 import PageBuilder from "@/components/PageBuilder"
+import PageShell from "@/components/PageShell"
 import VideoIntroWrapper from "@/components/VideoIntroWrapper"
 import { urlFor } from "@/lib/image"
 
@@ -51,7 +52,7 @@ export default async function Home() {
   const remainingSections = videoUrl ? sections.slice(1) : sections
 
   return (
-    <>
+    <PageShell backgroundVideo={page.backgroundVideo}>
       {videoUrl && (
         <VideoIntroWrapper
           videoUrl={videoUrl}
@@ -65,6 +66,6 @@ export default async function Home() {
           <PageBuilder sections={remainingSections} />
         </div>
       )}
-    </>
+    </PageShell>
   )
 }

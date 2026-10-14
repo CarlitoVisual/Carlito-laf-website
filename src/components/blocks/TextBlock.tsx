@@ -4,7 +4,7 @@ import { urlFor } from "@/lib/image"
 import { safeHref } from "@/lib/safe"
 import type { BlockProps, TextBlock as TextBlockData } from "@/types/sanity"
 
-const ptComponents: PortableTextComponents = {
+export const ptComponents: PortableTextComponents = {
   block: {
     normal: ({ children }) => (
       <p className="text-base leading-relaxed mb-5" style={{ color: "var(--color-muted)" }}>{children}</p>

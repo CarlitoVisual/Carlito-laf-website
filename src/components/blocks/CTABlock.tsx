@@ -41,7 +41,7 @@ export default function CTABlock(props: BlockProps<CTABlockData>) {
         )}
 
         <div className="flex flex-wrap gap-4 justify-center">
-          {props.buttons?.map((btn, i) => (
+          {props.buttons?.filter((b) => b.label).map((btn, i) => (
             <Link
               key={i}
               href={safeHref(btn.link?.href || btn.url)}
@@ -65,7 +65,7 @@ export default function CTABlock(props: BlockProps<CTABlockData>) {
             </Link>
           ))}
 
-          {!props.buttons?.length && (
+          {!props.buttons?.some((b) => b.label) && (
             <Link
               href="/devis"
               className="inline-block text-sm uppercase px-8 py-4 font-semibold rounded-full"
