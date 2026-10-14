@@ -73,5 +73,11 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     entry(`/boutique/${slugifyCollection(name)}`, updatedAt, 0.8, "weekly")
   )
 
-  return [...staticRoutes, ...pages, ...collections, ...services, ...shopCollections]
+  // Une page Sanity peut porter le slug d'une route du site (« portfolio », « boutique ») : on garde une seule entrée par URL
+  const seen = new Set<string>()
+  return [...staticRoutes, ...pages, ...collections, ...services, ...shopCollections].filter((e) => {
+    if (seen.has(e.url)) return false
+    seen.add(e.url)
+    return true
+  })
 }
