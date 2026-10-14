@@ -37,7 +37,17 @@ export async function POST(req: Request) {
     const name = str(body.name, 120)
     const email = str(body.email, 200)
     const phone = str(body.phone, 40)
-    const projectType = str(body.projectType, 60)
+    const PROJECT_LABELS: Record<string, string> = {
+      "photo-aventure": "Reportage photo aventure",
+      "video-aventure": "Film vidéo aventure",
+      "sports-nautiques": "Sports nautiques",
+      evenement: "Couverture d’événement",
+      commercial: "Contenu commercial / marque",
+      "fine-art": "Tirage Fine Art",
+      autre: "Autre",
+    }
+    const projectTypeRaw = str(body.projectType, 60)
+    const projectType = PROJECT_LABELS[projectTypeRaw] ?? projectTypeRaw
     const location = str(body.location, 160)
     const date = str(body.date, 80)
     const budget = str(body.budget, 40)
