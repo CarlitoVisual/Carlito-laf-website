@@ -367,8 +367,7 @@ export default function CollectionGallery({ photos }: { photos: GalleryPhoto[] }
 
               {/* Info */}
               <div>
-                {photo.title && <p style={{ color: "var(--color-text)", fontWeight: 600, fontSize: 13 }}>{photo.title}</p>}
-                {photo.location && <p style={{ color: "var(--color-accent)", fontSize: 11, marginTop: 2 }}>{photo.location}</p>}
+                {photo.location && <p style={{ color: "var(--color-accent)", fontSize: 11 }}>{photo.location}</p>}
               </div>
             </div>
           </div>
