@@ -71,6 +71,10 @@ export default function ConfidentialitePage() {
         </table>
       </div>
       <p>
+        <strong>Essai virtuel « Voir un tirage chez moi » :</strong> la photo de votre pièce est traitée uniquement dans
+        votre navigateur. Elle n’est jamais envoyée ni enregistrée sur un serveur, et disparaît quand vous fermez la page.
+      </p>
+      <p>
         Aucune décision automatisée ni aucun profilage n’est réalisé. Aucun compte client n’est créé sur le site et aucune
         donnée bancaire n’y transite : le paiement se fait via un lien sécurisé du prestataire de paiement, soumis à sa
         propre politique de confidentialité.

@@ -65,6 +65,13 @@ export default async function BoutiquePage() {
           Des tirages Fine Art sur papier Hahnemühle, encadrables, numérotés et signés.
           Chaque image raconte une aventure vécue. 
         </p>
+        <Link
+          href="/boutique/visualiser"
+          className="inline-flex items-center gap-2 mt-8 min-h-12 px-7 rounded-full text-sm font-bold uppercase"
+          style={{ background: "var(--color-accent)", color: "var(--color-on-accent)", letterSpacing: "0.1em" }}
+        >
+          Voir un tirage chez moi →
+        </Link>
       </div>
 
       {/* Collections grid */}

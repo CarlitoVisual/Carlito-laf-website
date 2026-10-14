@@ -11,15 +11,21 @@ import FormPrivacyNotice from "@/components/legal/FormPrivacyNotice"
 type Props = {
   product: Product
   onClose: () => void
+  /** Format présélectionné (ex. depuis l'essai virtuel « Voir chez moi ») */
+  initialFormatName?: string
+  /** Masque le lien « Voir chez moi » (quand on est déjà dans l'outil) */
+  hideVisualizerLink?: boolean
 }
 
 type OrderStatus = "idle" | "sending" | "sent" | "error"
 
-export default function ProductViewer({ product, onClose }: Props) {
+export default function ProductViewer({ product, onClose, initialFormatName, hideVisualizerLink }: Props) {
   const formats = product.formats ?? []
   const availableFormats = formats.filter(isFormatAvailable)
 
-  const [selectedFormat, setSelectedFormat] = useState<ProductFormat | null>(availableFormats[0] ?? null)
+  const [selectedFormat, setSelectedFormat] = useState<ProductFormat | null>(
+    availableFormats.find((f) => f.name === initialFormatName) ?? availableFormats[0] ?? null
+  )
   const [qty, setQty] = useState(1)
   const [activeImage, setActiveImage] = useState<SanityImage | undefined>(product.image)
   const [showOrder, setShowOrder] = useState(false)
@@ -244,6 +250,16 @@ export default function ProductViewer({ product, onClose }: Props) {
             </div>
 
             <div style={{ height: 1, background: "var(--color-border)", flexShrink: 0 }} />
+
+            {!hideVisualizerLink && (
+              <a
+                href={`/boutique/visualiser?product=${encodeURIComponent(product._id)}${selectedFormat ? `&format=${encodeURIComponent(selectedFormat.name)}` : ""}`}
+                style={{ display: "inline-flex", alignItems: "center", gap: 8, alignSelf: "flex-start", color: "var(--color-accent)", fontSize: "0.85rem", textDecoration: "underline", textUnderlineOffset: 3 }}
+              >
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" aria-hidden="true"><path d="M3 10.5 12 3l9 7.5V21H3z" /><rect x="8" y="10" width="8" height="6" /></svg>
+                Voir ce tirage chez moi
+              </a>
+            )}
 
             {/* Format selector */}
             {formats.length > 0 && (
