@@ -1,17 +1,17 @@
 /**
  * Informations légales de l'éditeur, utilisées par toutes les pages juridiques.
- * Les valeurs entre crochets sont À COMPLÉTER avant la mise en ligne.
+ * Modifier ici pour mettre à jour toutes les pages juridiques.
  */
 export const LEGAL = {
   brand: "Carlito Laf Visuel",
   ownerName: "Charles Lafiandra",
-  status: "[À COMPLÉTER : statut — ex. Entrepreneur individuel (micro-entreprise) / artiste-auteur]",
-  siret: "[À COMPLÉTER : n° SIRET]",
-  address: "[À COMPLÉTER : adresse postale professionnelle ou de domiciliation]",
+  status: "Entrepreneur individuel (micro-entreprise)",
+  siret: "131 152 183 00011",
+  address: "Avenue de Biarritz, 64210 Bidart, France",
   email: "contact@carlitolafvisuel.com",
   contactEmail: "charleslaf.photo@gmail.com",
-  phone: "[À COMPLÉTER : téléphone]",
-  vat: "TVA non applicable, article 293 B du Code général des impôts",
+  phone: "06 51 29 50 12",
+  vat: "TVA non applicable, article 293 B du Code général des impôts (micro-entreprise)",
   publicationDirector: "Charles Lafiandra",
   website: "https://carlitolafvisuel.com",
 
@@ -21,10 +21,19 @@ export const LEGAL = {
     website: "https://vercel.com",
   },
 
+  /**
+   * Médiateur de la consommation (obligatoire, art. L612-1 C. conso). Laisser `name` vide tant qu'aucun
+   * médiateur n'est désigné : les pages affichent alors un texte d'attente.
+   */
   mediator: {
-    name: "[À COMPLÉTER : nom du médiateur de la consommation]",
-    address: "[À COMPLÉTER : adresse du médiateur]",
-    website: "[À COMPLÉTER : site internet du médiateur]",
+    name: "",
+    address: "",
+    website: "",
+  },
+
+  shipping: {
+    zone: "France métropolitaine",
+    delay: "10 jours",
   },
 
   /** Date de dernière mise à jour des documents juridiques */
@@ -49,8 +58,22 @@ export const PROCESSORS = [
     safeguard: "Clauses contractuelles types / Data Privacy Framework UE–États-Unis.",
   },
   {
+    name: "Stripe Payments Europe (Irlande)",
+    role: "Paiement en ligne des tirages via un lien de paiement sécurisé. Vos données bancaires sont saisies chez Stripe et ne transitent jamais par ce site.",
+    safeguard: "Prestataire établi dans l’Union européenne, agréé comme établissement de paiement.",
+  },
+  {
     name: "Sanity AS (Norvège)",
     role: "Gestion du contenu du site (textes, photos). Aucune donnée des visiteurs n'y est stockée.",
     safeguard: "Pays reconnu adéquat (Espace économique européen).",
   },
 ] as const
+
+/** Phrase sur la médiation, adaptée selon qu'un médiateur est désigné ou non. */
+export function mediatorSentence(): string {
+  const m = LEGAL.mediator
+  if (m.name) {
+    return `vous pouvez recourir gratuitement au médiateur de la consommation : ${m.name}, ${m.address}, ${m.website}.`
+  }
+  return "vous pourrez recourir gratuitement à un médiateur de la consommation, dont les coordonnées seront indiquées ici dès sa désignation. En attendant, écrivez-moi : je m’engage à rechercher une solution amiable."
+}

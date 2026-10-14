@@ -1,7 +1,7 @@
 import type { Metadata } from "next"
 import Link from "next/link"
 import LegalPage from "@/components/legal/LegalPage"
-import { LEGAL } from "@/lib/legal"
+import { LEGAL, mediatorSentence } from "@/lib/legal"
 
 export const metadata: Metadata = {
   title: "Retours et remboursements",
@@ -44,8 +44,7 @@ export default function RemboursementPage() {
 
       <h2>Un désaccord ?</h2>
       <p>
-        Écrivez-moi d’abord : je cherche toujours une solution amiable. À défaut, vous pouvez saisir gratuitement le
-        médiateur de la consommation : {LEGAL.mediator.name} ({LEGAL.mediator.website}).
+        Écrivez-moi d’abord : je cherche toujours une solution amiable. À défaut, {mediatorSentence()}
       </p>
     </LegalPage>
   )

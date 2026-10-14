@@ -1,7 +1,7 @@
 import type { Metadata } from "next"
 import Link from "next/link"
 import LegalPage from "@/components/legal/LegalPage"
-import { LEGAL } from "@/lib/legal"
+import { LEGAL, mediatorSentence } from "@/lib/legal"
 
 export const metadata: Metadata = {
   title: "Conditions générales de vente",
@@ -31,16 +31,16 @@ export default function CgvPage() {
       <h2>A. Tirages photographiques</h2>
 
       <h3>A1. Commande</h3>
-      <p>Le Client choisit un tirage, son format et la quantité, puis envoie sa demande de commande depuis la boutique. Le Vendeur lui confirme par e-mail la disponibilité, le prix total (frais de livraison compris) et lui transmet un lien de paiement sécurisé. <strong>Le contrat est conclu au moment du paiement.</strong> Une confirmation de commande récapitulant ces informations est envoyée par e-mail.</p>
+      <p>Le Client choisit un tirage, son format et la quantité depuis la boutique, accepte les présentes CGV, puis règle sa commande via le lien de paiement sécurisé Stripe. <strong>Le contrat est conclu au moment du paiement.</strong> Une confirmation de commande récapitulant le produit, le prix total et le délai de livraison est envoyée par e-mail.</p>
 
       <h3>A2. Paiement</h3>
-      <p>Le paiement s’effectue en ligne par le lien sécurisé du prestataire de paiement. Aucune donnée bancaire ne transite par le site. La commande est préparée après encaissement.</p>
+      <p>Le prix est payable <strong>en totalité à la commande</strong>, par carte bancaire via le service de paiement sécurisé Stripe. Aucune donnée bancaire ne transite par le site. La commande est préparée après encaissement.</p>
 
       <h3>A3. Livraison</h3>
       <p>
-        Livraison en France métropolitaine [À COMPLÉTER : autres pays éventuels]. Délai indicatif : [À COMPLÉTER : ex. 7 à
-        15 jours ouvrés] après le paiement, le tirage étant réalisé à la commande. À défaut d’indication, la livraison
-        intervient au plus tard 30 jours après la conclusion du contrat (art. L216-1 du Code de la consommation). En cas
+        Livraison en {LEGAL.shipping.zone} uniquement. Le tirage étant réalisé à la commande, il est expédié et livré
+        dans un délai de <strong>{LEGAL.shipping.delay}</strong> à compter du paiement (art. L216-1 du Code de la
+        consommation). En cas
         de retard, le Client peut résoudre le contrat dans les conditions des articles L216-6 et suivants. Le Client
         vérifie le colis à réception et signale toute avarie au transporteur et au Vendeur dans les meilleurs délais.
       </p>
@@ -131,11 +131,13 @@ export default function CgvPage() {
 
       <h2>B. Prestations photo et vidéo</h2>
       <h3>B1. Devis et commande</h3>
-      <p>Chaque prestation fait l’objet d’un devis gratuit et détaillé (date, lieu, durée, livrables, délais de livraison, prix, conditions d’utilisation des images). La prestation est commandée par l’acceptation écrite du devis (signature ou e-mail) [À COMPLÉTER : et le versement d’un acompte de …% le cas échéant].</p>
+      <p>Chaque prestation fait l’objet d’un devis gratuit et détaillé (date, lieu, durée, livrables, délais de livraison, prix, conditions d’utilisation des images). La prestation est commandée par l’acceptation écrite du devis (signature ou e-mail). <strong>Aucun acompte n’est demandé.</strong></p>
+      <h3>B1 bis. Facturation et paiement</h3>
+      <p>Une facture est émise à la livraison des fichiers. Elle est payable à réception, par virement ou par lien de paiement sécurisé. Pour les clients professionnels uniquement, tout retard de paiement entraîne des pénalités au taux d’intérêt légal majoré de 10 points et une indemnité forfaitaire de 40 € pour frais de recouvrement (art. L441-10 du Code de commerce).</p>
       <h3>B2. Conditions et report</h3>
       <p>Les prises de vue en mer, à l’eau ou en extérieur dépendent des conditions météorologiques et de sécurité. En cas de conditions impropres ou dangereuses appréciées par le Vendeur, la séance est reportée à une date convenue d’un commun accord, sans frais pour le Client.</p>
       <h3>B3. Annulation par le Client</h3>
-      <p>Hors exercice du droit de rétractation, [À COMPLÉTER : conditions d’annulation — ex. acompte conservé en cas d’annulation moins de X jours avant la date prévue].</p>
+      <p>Hors exercice du droit de rétractation, le Client peut annuler une prestation avant sa réalisation en prévenant le Vendeur le plus tôt possible. Aucun acompte n’ayant été versé, l’annulation est sans frais, à l’exception des dépenses déjà engagées à sa demande et prévues au devis (transport, hébergement, location de matériel), qui lui sont alors facturées sur justificatif.</p>
       <h3>B4. Livrables et droits d’utilisation</h3>
       <p>Les fichiers sont livrés par lien de téléchargement dans le délai prévu au devis. Le Vendeur reste titulaire des droits d’auteur ; le Client bénéficie d’une licence d’utilisation dont l’étendue (usages, supports, durée, territoire) est précisée dans le devis. Toute autre utilisation nécessite un accord écrit. Sauf refus exprès du Client, le Vendeur peut présenter les images dans son portfolio et sur ses réseaux.</p>
 
@@ -145,8 +147,7 @@ export default function CgvPage() {
       <h2>6. Réclamations et médiation</h2>
       <p>
         Toute réclamation peut être adressée à <a href={`mailto:${LEGAL.contactEmail}`}>{LEGAL.contactEmail}</a>. À défaut
-        de solution amiable, le Client consommateur peut recourir gratuitement au médiateur de la consommation :{" "}
-        {LEGAL.mediator.name}, {LEGAL.mediator.address}, {LEGAL.mediator.website}.
+        de solution amiable, {mediatorSentence()}
       </p>
 
       <h2>7. Droit applicable</h2>

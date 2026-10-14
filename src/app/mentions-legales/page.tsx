@@ -1,7 +1,7 @@
 import type { Metadata } from "next"
 import Link from "next/link"
 import LegalPage from "@/components/legal/LegalPage"
-import { LEGAL } from "@/lib/legal"
+import { LEGAL, mediatorSentence } from "@/lib/legal"
 
 export const metadata: Metadata = {
   title: "Mentions légales",
@@ -49,9 +49,8 @@ export default function MentionsLegalesPage() {
 
       <h2>Médiation de la consommation</h2>
       <p>
-        Conformément aux articles L612-1 et suivants du Code de la consommation, en cas de litige non résolu, vous pouvez
-        recourir gratuitement au médiateur de la consommation : {LEGAL.mediator.name}, {LEGAL.mediator.address},{" "}
-        {LEGAL.mediator.website}.
+        Conformément aux articles L612-1 et suivants du Code de la consommation, en cas de litige non résolu,{" "}
+        {mediatorSentence()}
       </p>
 
       <h2>Documents contractuels</h2>
