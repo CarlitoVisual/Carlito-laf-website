@@ -1,6 +1,7 @@
 import Image from "next/image"
 import { PortableText, type PortableTextComponents } from "next-sanity"
 import { urlFor } from "@/lib/image"
+import { safeHref } from "@/lib/safe"
 import type { BlockProps, TextBlock as TextBlockData } from "@/types/sanity"
 
 const ptComponents: PortableTextComponents = {
@@ -35,7 +36,7 @@ const ptComponents: PortableTextComponents = {
     ),
     link: ({ children, value }) => (
       <a
-        href={value?.href}
+        href={safeHref(value?.href)}
         target={value?.href?.startsWith("http") ? "_blank" : undefined}
         rel="noopener noreferrer"
         style={{ color: "var(--color-accent)", textDecoration: "underline" }}

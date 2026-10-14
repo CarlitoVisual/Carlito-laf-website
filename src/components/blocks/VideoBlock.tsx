@@ -1,4 +1,5 @@
 import Link from "next/link"
+import { safeHref } from "@/lib/safe"
 import ConsentEmbed from "@/components/legal/ConsentEmbed"
 import type { BlockProps, VideoBlock as VideoBlockData } from "@/types/sanity"
 
@@ -107,7 +108,7 @@ export default function VideoBlock(props: BlockProps<VideoBlockData>) {
           )}
           {button?.label && (
             <Link
-              href={button.link?.href || button.url || "/contact"}
+              href={safeHref(button.link?.href || button.url, "/contact")}
               className="text-sm uppercase px-6 py-3 font-semibold flex-shrink-0 rounded-full"
               style={{
                 background: button.style === "outline" ? "transparent" : "var(--color-accent)",

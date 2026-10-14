@@ -1,4 +1,5 @@
 import Link from "next/link"
+import { LEGAL } from "@/lib/legal"
 
 export default function Footer() {
   return (
@@ -81,7 +82,7 @@ export default function Footer() {
               Contact
             </p>
             <div className="flex flex-col gap-3 text-sm" style={{ color: "var(--color-muted)" }}>
-              <p>charleslaf.photo@gmail.com</p>
+              <p>{LEGAL.contactEmail}</p>
               <p>Disponible sur devis</p>
               <p>France</p>
               <Link

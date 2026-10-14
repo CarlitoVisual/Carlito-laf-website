@@ -1,6 +1,7 @@
 import Image from "next/image"
 import { client } from "@/lib/sanity.client"
 import { urlFor } from "@/lib/image"
+import { safeHref } from "@/lib/safe"
 import type { BlockProps, Product, ProductsBlock as ProductsBlockData } from "@/types/sanity"
 
 type ProductDisplayProps = {
@@ -200,7 +201,7 @@ function ProductCard({ product, showPrice, showDescription, showButton, buttonLa
           )}
           {showButton && (
             <a
-              href={available ? (product.paymentUrl || "/contact") : undefined}
+              href={available ? safeHref(product.paymentUrl, "/contact") : undefined}
               target={product.paymentUrl ? "_blank" : undefined}
               rel="noopener noreferrer"
               className="text-xs uppercase px-4 py-2 transition-opacity rounded-full"
@@ -278,7 +279,7 @@ function FeaturedProduct({ product, reverse, showPrice, showButton, buttonLabel 
           )}
           {showButton && (
             <a
-              href={available ? (product.paymentUrl || "/contact") : undefined}
+              href={available ? safeHref(product.paymentUrl, "/contact") : undefined}
               className="text-sm uppercase px-8 py-3 font-semibold rounded-full"
               style={{ background: available ? "var(--color-accent)" : "var(--color-border)", color: available ? "var(--color-on-accent)" : "var(--color-muted)", letterSpacing: "0.2em" }}
             >
@@ -318,7 +319,7 @@ function ListProduct({ product, showPrice, showButton, buttonLabel }: ProductDis
         )}
         {showButton && (
           <a
-            href={available ? (product.paymentUrl || "/contact") : undefined}
+            href={available ? safeHref(product.paymentUrl, "/contact") : undefined}
             className="text-xs uppercase px-4 py-2 rounded-full"
             style={{ background: available ? "var(--color-accent)" : "var(--color-border)", color: available ? "var(--color-on-accent)" : "var(--color-muted)", letterSpacing: "0.12em" }}
           >

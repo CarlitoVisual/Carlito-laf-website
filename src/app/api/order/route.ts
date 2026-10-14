@@ -3,6 +3,7 @@ import { rateLimit, getClientIp, isValidEmail } from "@/lib/apiSecurity"
 import { sendEmail } from "@/lib/email"
 import { client } from "@/lib/sanity.client"
 import { isFormatAvailable } from "@/lib/shop"
+import { cleanText } from "@/lib/safe"
 import type { ProductFormat } from "@/types/sanity"
 
 const MAX_QTY = 5
@@ -30,14 +31,18 @@ export async function POST(req: Request) {
     }
 
     const body = await req.json()
-    const { productId, format, qty: rawQty, name, email, phone, message, company, acceptCgv } = body
+    const { productId, format, qty: rawQty, company, acceptCgv } = body
+    const name = cleanText(body.name, 120)
+    const email = cleanText(body.email, 200)
+    const phone = cleanText(body.phone, 40)
+    const message = cleanText(body.message, 3000)
 
     // Honeypot: real users never fill this hidden field
     if (company) {
       return NextResponse.json({ ok: true })
     }
 
-    if (!name || !email || typeof productId !== "string" || !productId) {
+    if (!name || !email || typeof productId !== "string" || !productId || productId.length > 120) {
       return NextResponse.json({ error: "Champs requis manquants" }, { status: 400 })
     }
 

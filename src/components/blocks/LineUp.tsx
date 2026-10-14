@@ -3,6 +3,7 @@
 import { useRef, useState } from "react"
 import Image from "next/image"
 import Link from "next/link"
+import { safeHref } from "@/lib/safe"
 
 export type LineUpPanel = {
   key: string
@@ -90,7 +91,7 @@ export default function LineUp({ eyebrow, title, panels }: Props) {
 
                 {/* Lien principal étiré sur tout le panneau (évite les liens imbriqués) */}
                 <Link
-                href={p.href || "#"}
+                href={safeHref(p.href)}
                 aria-label={p.title}
                 onPointerDown={(e) => {
                   touchedWhileClosed.current = e.pointerType !== "mouse" && !open
@@ -132,7 +133,7 @@ export default function LineUp({ eyebrow, title, panels }: Props) {
                     <div className="flex flex-wrap items-center gap-3">
                       {p.secondary && (
                         <Link
-                          href={p.secondary.href}
+                          href={safeHref(p.secondary.href)}
                           className="pointer-events-auto inline-flex items-center gap-2 min-h-12 px-6 rounded-full text-xs font-bold uppercase border transition-colors hover:bg-[var(--color-accent)] hover:text-[var(--color-on-accent)]"
                           style={{ borderColor: "var(--color-accent)", color: "var(--color-accent)", letterSpacing: "0.12em" }}
                         >

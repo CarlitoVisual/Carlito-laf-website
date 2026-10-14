@@ -1,6 +1,7 @@
 import Image from "next/image"
 import Link from "next/link"
 import { urlFor } from "@/lib/image"
+import { safeHref } from "@/lib/safe"
 import type { BlockProps, HeroBlock as HeroBlockData } from "@/types/sanity"
 
 export default function Hero(props: BlockProps<HeroBlockData>) {
@@ -76,7 +77,7 @@ export default function Hero(props: BlockProps<HeroBlockData>) {
             {props.buttons.map((btn, i) => (
               <Link
                 key={i}
-                href={btn.link?.href || btn.url || "#"}
+                href={safeHref(btn.link?.href || btn.url)}
                 className="inline-block text-sm uppercase px-8 py-4 transition-all duration-300 font-semibold rounded-full"
                 style={
                   btn.style === "outline"

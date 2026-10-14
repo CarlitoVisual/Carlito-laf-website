@@ -2,6 +2,7 @@ import { NextResponse } from "next/server"
 import { rateLimit, getClientIp, isValidEmail } from "@/lib/apiSecurity"
 import { sendEmail } from "@/lib/email"
 import { LEGAL } from "@/lib/legal"
+import { stripLinks } from "@/lib/safe"
 
 const MAX = 500
 
@@ -23,7 +24,8 @@ export async function POST(req: Request) {
     const name = clean(body.name, 120)
     const email = clean(body.email, 200)
     const order = clean(body.order, 300)
-    const orderDate = clean(body.orderDate, 40)
+    const rawDate = clean(body.orderDate, 10)
+    const orderDate = /^\d{4}-\d{2}-\d{2}$/.test(rawDate) ? rawDate : ""
     const comment = clean(body.comment, 1000)
 
     if (!name || !email || !order) {
@@ -53,25 +55,50 @@ export async function POST(req: Request) {
       .filter((l) => l !== "")
       .join("\n")
 
+    // Limite anti-abus sur l'accusé de réception envoyé à l'adresse saisie (voir plus bas)
+    const recipientOk =
+      rateLimit(`withdrawal-ack:${email.toLowerCase()}`, 2, 24 * 60 * 60 * 1000) &&
+      rateLimit(`withdrawal-ack:global`, 30, 24 * 60 * 60 * 1000)
+
     // 1. Notification au vendeur
     await sendEmail({
       replyTo: email,
       subject: `[RÉTRACTATION] ${order} — ${name}`,
-      text: declaration,
+      text: recipientOk
+        ? declaration
+        : `⚠️ Accusé de réception automatique NON envoyé (limite anti-abus atteinte) : si la demande est légitime, répondez à cet e-mail pour en accuser réception.\n\n${declaration}`,
     })
 
-    // 2. Accusé de réception au consommateur, sur support durable (e-mail)
+    // 2. Accusé de réception au consommateur, sur support durable (e-mail).
+    // Sécurité : ce message part vers une adresse saisie par l'internaute. Pour qu'il ne puisse pas
+    // servir de relais de spam, il ne reprend aucun lien ni le commentaire libre, et chaque adresse
+    // ne peut recevoir qu'un nombre limité d'accusés (la notification au vendeur, elle, part toujours).
+    if (!recipientOk) {
+      return NextResponse.json({ ok: true, submittedAt })
+    }
+    const safeName = stripLinks(name).slice(0, 60)
+    const ackDeclaration = [
+      `Je notifie par la présente ma rétractation du contrat suivant :`,
+      ``,
+      `Commande / contrat : ${stripLinks(order)}`,
+      `Date de commande : ${orderDate || "non précisée"}`,
+      `Nom : ${safeName}`,
+      `E-mail : ${email}`,
+      ``,
+      `Déclaration envoyée le ${submittedAt} (heure de Paris) via ${LEGAL.website}/retractation.`,
+    ].join("\n")
+
     await sendEmail({
       to: email,
       replyTo: LEGAL.contactEmail,
       subject: `Accusé de réception de votre rétractation — ${LEGAL.brand}`,
       text: [
-        `Bonjour ${name},`,
+        `Bonjour ${safeName},`,
         ``,
-        `J’accuse réception de votre déclaration de rétractation, reproduite ci-dessous.`,
+        `J’accuse réception de votre déclaration de rétractation, résumée ci-dessous.`,
         ``,
         `────────────────────────`,
-        declaration,
+        ackDeclaration,
         `────────────────────────`,
         ``,
         `Prochaines étapes :`,

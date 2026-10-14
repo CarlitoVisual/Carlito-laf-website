@@ -1,4 +1,5 @@
 import Link from "next/link"
+import { safeHref } from "@/lib/safe"
 import type { BlockProps, CTABlock as CTABlockData } from "@/types/sanity"
 
 export default function CTABlock(props: BlockProps<CTABlockData>) {
@@ -43,7 +44,7 @@ export default function CTABlock(props: BlockProps<CTABlockData>) {
           {props.buttons?.map((btn, i) => (
             <Link
               key={i}
-              href={btn.link?.href || btn.url || "#"}
+              href={safeHref(btn.link?.href || btn.url)}
               className="inline-block text-sm uppercase px-8 py-4 font-semibold transition-all duration-300 rounded-full"
               style={
                 btn.style === "outline"

@@ -4,6 +4,7 @@ import Image from "next/image"
 import Link from "next/link"
 import { useState } from "react"
 import { urlFor } from "@/lib/image"
+import { safeHref } from "@/lib/safe"
 import type { BlockProps, ImageBlock as ImageBlockData } from "@/types/sanity"
 
 const sizeMap: Record<string, string> = {
@@ -75,7 +76,7 @@ export default function ImageBlock(props: BlockProps<ImageBlockData>) {
   )
 
   const content = link?.href || link?.internalReference ? (
-    <Link href={link.href || "#"} target={link.openInNewTab ? "_blank" : undefined}>
+    <Link href={safeHref(link.href)} target={link.openInNewTab ? "_blank" : undefined}>
       {imgEl}
     </Link>
   ) : imgEl

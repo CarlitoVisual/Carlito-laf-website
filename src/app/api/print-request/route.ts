@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server"
 import { rateLimit, getClientIp, isValidEmail } from "@/lib/apiSecurity"
 import { sendEmail } from "@/lib/email"
+import { cleanText } from "@/lib/safe"
 
 export async function POST(req: Request) {
   try {
@@ -9,7 +10,13 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "Trop de requêtes, réessayez plus tard." }, { status: 429 })
     }
 
-    const { photoTitle, photoId, name, email, message, company } = await req.json()
+    const body = await req.json()
+    const company = body.company
+    const photoTitle = cleanText(body.photoTitle, 200) || undefined
+    const photoId = cleanText(body.photoId, 120) || undefined
+    const name = cleanText(body.name, 120)
+    const email = cleanText(body.email, 200)
+    const message = cleanText(body.message, 3000)
 
     // Honeypot: real users never fill this hidden field
     if (company) {
@@ -25,7 +32,7 @@ export async function POST(req: Request) {
     }
 
     const subject = `[TIRAGE SOUHAITÉ] ${photoTitle ?? photoId}`
-    const body = [
+    const text = [
       `━━━ DEMANDE DE TIRAGE ━━━`,
       ``,
       `Photo      : ${photoTitle ?? "Sans titre"}`,
@@ -37,7 +44,7 @@ export async function POST(req: Request) {
       message ? `\nMessage :\n${message}` : "",
     ].filter(s => s !== undefined).join("\n")
 
-    await sendEmail({ replyTo: email, subject, text: body })
+    await sendEmail({ replyTo: email, subject, text })
 
     return NextResponse.json({ ok: true })
   } catch (err) {

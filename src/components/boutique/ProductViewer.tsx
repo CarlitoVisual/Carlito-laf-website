@@ -7,6 +7,7 @@ import { urlFor } from "@/lib/image"
 import { formatPrice, isFormatAvailable } from "@/lib/shop"
 import type { Product, ProductFormat, SanityImage } from "@/types/sanity"
 import FormPrivacyNotice from "@/components/legal/FormPrivacyNotice"
+import { LEGAL } from "@/lib/legal"
 
 type Props = {
   product: Product
@@ -431,7 +432,7 @@ export default function ProductViewer({ product, onClose, initialFormatName, hid
                 <FormPrivacyNotice small purpose="traiter votre commande et vous envoyer le lien de paiement" />
                 {status === "error" && (
                   <p style={{ color: "#ef4444", fontSize: "0.8rem" }}>
-                    Erreur — contactez-moi directement : charleslaf.photo@gmail.com
+                    Erreur — contactez-moi directement : {LEGAL.contactEmail}
                   </p>
                 )}
                 <div style={{ display: "flex", gap: 10 }}>

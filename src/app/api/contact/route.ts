@@ -24,6 +24,24 @@ const esc = (s: string) => s.replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&l
 const SITE = process.env.NEXT_PUBLIC_SITE_URL || LEGAL.website
 const STUDIO = process.env.SANITY_STUDIO_URL || "https://www.sanity.io/@oJeBtuZVP/studio/q8qecvlyvss306uhjfo40wmb"
 
+/**
+ * Numéro de devis séquentiel par année, attribué de façon atomique (compteur Sanity incrémenté
+ * côté serveur) : deux demandes simultanées ne peuvent plus recevoir le même numéro.
+ * Le compteur a un identifiant « à point » (document privé, invisible dans le Studio).
+ */
+async function nextDevisSeq(year: number): Promise<number> {
+  if (!writeClient) throw new Error("writeClient manquant")
+  const id = `counter.devis-${year}`
+  const existing = await writeClient.getDocument(id)
+  if (!existing) {
+    // Initialisation avec les devis déjà numérotés cette année
+    const count = await writeClient.fetch<number>(`count(*[_type == "devis" && number match $p])`, { p: `D-${year}-*` })
+    await writeClient.createIfNotExists({ _id: id, _type: "counter", seq: count })
+  }
+  const doc = await writeClient.patch(id).inc({ seq: 1 }).commit<{ seq: number }>()
+  return doc.seq
+}
+
 export async function POST(req: Request) {
   try {
     const ip = getClientIp(req)
@@ -93,8 +111,7 @@ export async function POST(req: Request) {
     let number = ""
     if (writeClient && draft) {
       const year = now.getFullYear()
-      const count = await writeClient.fetch<number>(`count(*[_type == "devis" && number match $p])`, { p: `D-${year}-*` })
-      number = `D-${year}-${String(count + 1).padStart(4, "0")}`
+      number = `D-${year}-${String(await nextDevisSeq(year)).padStart(4, "0")}`
       const validity = grid?.validityDays ?? 30
       const validUntil = new Date(now.getTime() + validity * 86400000)
       const doc = await writeClient.create({
