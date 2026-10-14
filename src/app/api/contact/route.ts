@@ -126,7 +126,7 @@ export async function POST(req: Request) {
     const requestLines = [
       `Client : ${name} <${email}>${phone ? ` — ${phone}` : ""}`,
       `Projet : ${projectType}`,
-      `Durée : ${duration ?? "non précisée"}`,
+      `Durée : ${(duration && grid?.durations?.find((d) => d.key === duration)?.label) || duration || "non précisée"}`,
       `Prestations : ${services.map((s) => SERVICE_LABELS[s]).join(", ") || "—"}`,
       `Usage : ${usage === "commercial" ? "commercial" : "privé"}${express ? " · livraison express" : ""}`,
       `Lieu : ${location || "—"}${geo ? ` (≈ ${geo.km} km de Bidart)` : location ? " (non localisé)" : ""}`,
