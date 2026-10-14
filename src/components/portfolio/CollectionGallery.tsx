@@ -3,6 +3,7 @@
 import { useState, useEffect, useCallback, useRef } from "react"
 import { createPortal } from "react-dom"
 import Image from "next/image"
+import FormPrivacyNotice from "@/components/legal/FormPrivacyNotice"
 
 export type GalleryPhoto = {
   _id: string
@@ -261,6 +262,7 @@ function PrintRequestModal({ photo, onClose }: { photo: GalleryPhoto; onClose: (
                 onChange={e => setForm(f => ({ ...f, message: e.target.value }))}
                 style={{ ...inputStyle, resize: "vertical" }} />
 
+              <FormPrivacyNotice small purpose="vous prévenir quand ce tirage sera disponible" />
               {status === "error" && (
                 <p style={{ color: "#ef4444", fontSize: 12 }}>Erreur — contactez-moi : charleslaf.photo@gmail.com</p>
               )}

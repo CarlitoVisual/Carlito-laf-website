@@ -4,6 +4,7 @@ import Image from "next/image"
 import Link from "next/link"
 import { client } from "@/lib/sanity.client"
 import { urlFor } from "@/lib/image"
+import ConsentEmbed from "@/components/legal/ConsentEmbed"
 import type { PortableTextBlock, SanityImage, Service } from "@/types/sanity"
 
 export const revalidate = 60
@@ -338,11 +339,10 @@ export default async function ServicePage({ params }: Props) {
                 const src = embedUrl(service.videoExample)
                 return src ? (
                   <div style={{ position: "relative", aspectRatio: "16/9", background: "var(--color-bg)" }}>
-                    <iframe
-                      src={src}
-                      allow="autoplay; fullscreen; picture-in-picture"
-                      allowFullScreen
-                      style={{ position: "absolute", inset: 0, width: "100%", height: "100%", border: "none" }}
+                    <ConsentEmbed
+                      url={service.videoExample?.url ?? ""}
+                      title={service.videoExample?.caption ?? service.title}
+                      style={{ position: "absolute", inset: 0, width: "100%", height: "100%" }}
                     />
                   </div>
                 ) : null

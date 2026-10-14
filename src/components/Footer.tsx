@@ -107,7 +107,22 @@ export default function Footer() {
           }}
         >
           <p>© {new Date().getFullYear()} Carlito Laf Visuel. Tous droits réservés.</p>
-          <p>Photos &amp; vidéos — Droits d&apos;auteur protégés.</p>
+          <nav aria-label="Informations légales" className="flex flex-wrap justify-center gap-x-5 gap-y-2">
+            {[
+              { href: "/mentions-legales", label: "Mentions légales" },
+              { href: "/confidentialite", label: "Confidentialité & cookies" },
+              { href: "/cgu", label: "CGU" },
+              { href: "/cgv", label: "CGV" },
+              { href: "/remboursement", label: "Retours & remboursements" },
+            ].map((l) => (
+              <Link key={l.href} href={l.href} className="hover:underline" style={{ color: "var(--color-muted)" }}>
+                {l.label}
+              </Link>
+            ))}
+            <Link href="/retractation" className="font-semibold hover:underline" style={{ color: "var(--color-accent)" }}>
+              Renoncer au contrat ici
+            </Link>
+          </nav>
         </div>
       </div>
     </footer>

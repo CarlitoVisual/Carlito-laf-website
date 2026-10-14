@@ -64,3 +64,17 @@ h1, h2 {
   background: var(--color-accent);
   border-radius: 2px;
 }
+
+/* Pages juridiques */
+.legal-prose { color: var(--color-muted); line-height: 1.75; font-size: 1rem; }
+.legal-prose h2 { color: var(--color-text); font-size: 2rem; margin: 3rem 0 1rem; }
+.legal-prose h3 { color: var(--color-text); font-size: 1.35rem; margin: 2rem 0 0.75rem; text-transform: uppercase; }
+.legal-prose p { margin: 0 0 1rem; }
+.legal-prose ul { margin: 0 0 1rem; padding-left: 1.25rem; list-style: disc; }
+.legal-prose li { margin: 0.35rem 0; }
+.legal-prose a { color: var(--color-accent); text-decoration: underline; text-underline-offset: 3px; }
+.legal-prose strong { color: var(--color-text); }
+.legal-prose table { width: 100%; border-collapse: collapse; margin: 0 0 1.5rem; font-size: 0.9rem; }
+.legal-prose th, .legal-prose td { border: 1px solid var(--color-border); padding: 0.6rem 0.75rem; text-align: left; vertical-align: top; }
+.legal-prose th { color: var(--color-text); background: var(--color-surface); }
+.legal-prose .table-scroll { overflow-x: auto; }

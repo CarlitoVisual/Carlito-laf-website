@@ -30,7 +30,7 @@ export async function POST(req: Request) {
     }
 
     const body = await req.json()
-    const { productId, format, qty: rawQty, name, email, phone, message, company } = body
+    const { productId, format, qty: rawQty, name, email, phone, message, company, acceptCgv } = body
 
     // Honeypot: real users never fill this hidden field
     if (company) {
@@ -39,6 +39,10 @@ export async function POST(req: Request) {
 
     if (!name || !email || typeof productId !== "string" || !productId) {
       return NextResponse.json({ error: "Champs requis manquants" }, { status: 400 })
+    }
+
+    if (acceptCgv !== true) {
+      return NextResponse.json({ error: "Veuillez accepter les conditions générales de vente" }, { status: 400 })
     }
 
     if (!isValidEmail(email)) {
@@ -93,6 +97,7 @@ export async function POST(req: Request) {
       `Quantité   : ${qty}`,
       `Prix unit. : ${unitPrice}${curr}`,
       `TOTAL      : ${total}${curr}`,
+      `CGV        : acceptées le ${new Date().toLocaleString("fr-FR", { timeZone: "Europe/Paris" })}`,
       ``,
       `━━━ CLIENT ━━━`,
       `Nom        : ${name}`,

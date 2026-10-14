@@ -2,10 +2,12 @@ type SendEmailParams = {
   replyTo: string
   subject: string
   text: string
+  /** Destinataire ; par défaut, l'adresse de contact du site (CONTACT_EMAIL) */
+  to?: string
 }
 
 /** Sends via Resend if RESEND_API_KEY is set, otherwise logs to console (dev fallback). */
-export async function sendEmail({ replyTo, subject, text }: SendEmailParams): Promise<void> {
+export async function sendEmail({ replyTo, subject, text, to: toOverride }: SendEmailParams): Promise<void> {
   const resendKey = process.env.RESEND_API_KEY
 
   if (!resendKey) {
@@ -14,7 +16,7 @@ export async function sendEmail({ replyTo, subject, text }: SendEmailParams): Pr
   }
 
   const from = process.env.EMAIL_FROM || "onboarding@resend.dev"
-  const to = process.env.CONTACT_EMAIL || "charleslaf.photo@gmail.com"
+  const to = toOverride || process.env.CONTACT_EMAIL || "charleslaf.photo@gmail.com"
 
   const res = await fetch("https://api.resend.com/emails", {
     method: "POST",

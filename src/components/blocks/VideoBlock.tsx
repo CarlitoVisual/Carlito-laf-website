@@ -1,4 +1,5 @@
 import Link from "next/link"
+import ConsentEmbed from "@/components/legal/ConsentEmbed"
 import type { BlockProps, VideoBlock as VideoBlockData } from "@/types/sanity"
 
 function getEmbedUrl(url: string | undefined, autoplay = false) {
@@ -57,13 +58,7 @@ export default function VideoBlock(props: BlockProps<VideoBlockData>) {
         }}
       >
         {embedUrl ? (
-          <iframe
-            src={embedUrl}
-            className="absolute inset-0 w-full h-full"
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-            allowFullScreen
-            title={title || "Vidéo"}
-          />
+          <ConsentEmbed url={url ?? ""} title={title || "Vidéo"} className="absolute inset-0 w-full h-full" />
         ) : fileUrl ? (
           <video
             src={fileUrl}

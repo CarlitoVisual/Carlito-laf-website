@@ -6,6 +6,7 @@ import Image from "next/image"
 import { urlFor } from "@/lib/image"
 import { formatPrice, isFormatAvailable } from "@/lib/shop"
 import type { Product, ProductFormat, SanityImage } from "@/types/sanity"
+import FormPrivacyNotice from "@/components/legal/FormPrivacyNotice"
 
 type Props = {
   product: Product
@@ -23,6 +24,7 @@ export default function ProductViewer({ product, onClose }: Props) {
   const [activeImage, setActiveImage] = useState<SanityImage | undefined>(product.image)
   const [showOrder, setShowOrder] = useState(false)
   const [status, setStatus] = useState<OrderStatus>("idle")
+  const [acceptCgv, setAcceptCgv] = useState(false)
   const [form, setForm] = useState({ name: "", email: "", phone: "", message: "", company: "" })
 
   const currency = product.currency || "EUR"
@@ -62,6 +64,7 @@ export default function ProductViewer({ product, onClose }: Props) {
           productId: product._id,
           format: selectedFormat?.name,
           qty,
+          acceptCgv,
           ...form,
         }),
       })
@@ -393,6 +396,23 @@ export default function ProductViewer({ product, onClose }: Props) {
                   onChange={changeField}
                   style={{ ...inputStyle, resize: "vertical" }}
                 />
+                <label style={{ display: "flex", gap: 10, alignItems: "flex-start", color: "var(--color-muted)", fontSize: "0.8rem", lineHeight: 1.5, cursor: "pointer" }}>
+                  <input
+                    type="checkbox"
+                    required
+                    checked={acceptCgv}
+                    onChange={(e) => setAcceptCgv(e.target.checked)}
+                    style={{ marginTop: 3, width: 18, height: 18, accentColor: "var(--color-accent)", flexShrink: 0 }}
+                  />
+                  <span>
+                    J’ai lu et j’accepte les{" "}
+                    <a href="/cgv" target="_blank" rel="noopener noreferrer" style={{ color: "var(--color-accent)", textDecoration: "underline" }}>conditions générales de vente</a>{" "}
+                    et la{" "}
+                    <a href="/remboursement" target="_blank" rel="noopener noreferrer" style={{ color: "var(--color-accent)", textDecoration: "underline" }}>politique de retour</a>{" "}
+                    (droit de rétractation de 14 jours). *
+                  </span>
+                </label>
+                <FormPrivacyNotice small purpose="traiter votre commande et vous envoyer le lien de paiement" />
                 {status === "error" && (
                   <p style={{ color: "#ef4444", fontSize: "0.8rem" }}>
                     Erreur — contactez-moi directement : charleslaf.photo@gmail.com
@@ -404,6 +424,7 @@ export default function ProductViewer({ product, onClose }: Props) {
                     onClick={() => setShowOrder(false)}
                     style={{
                       flex: 1, padding: "12px",
+                      borderRadius: 999,
                       color: "var(--color-muted)",
                       border: "1px solid var(--color-border)",
                       background: "transparent",

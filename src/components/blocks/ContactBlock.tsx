@@ -2,6 +2,7 @@
 
 import { useState } from "react"
 import type { BlockProps, ContactBlock as ContactBlockData } from "@/types/sanity"
+import FormPrivacyNotice from "@/components/legal/FormPrivacyNotice"
 
 export default function ContactBlock(props: BlockProps<ContactBlockData>) {
   const isDevis = props.formType === "devis"
@@ -235,6 +236,8 @@ export default function ContactBlock(props: BlockProps<ContactBlockData>) {
                 }
               />
             </div>
+
+            <FormPrivacyNotice purpose={isDevis ? "établir votre devis et vous recontacter" : "répondre à votre message"} />
 
             {status === "error" && (
               <p className="text-sm" style={{ color: "#ef4444" }}>
