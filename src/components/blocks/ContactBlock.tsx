@@ -3,6 +3,17 @@
 import { useState } from "react"
 import type { BlockProps, ContactBlock as ContactBlockData } from "@/types/sanity"
 import FormPrivacyNotice from "@/components/legal/FormPrivacyNotice"
+import { SERVICE_LABELS, type ServiceKey } from "@/lib/quote"
+
+const DURATIONS = [
+  { key: "1h", label: "1 heure" },
+  { key: "2h", label: "2 heures" },
+  { key: "half", label: "Demi-journée (≈ 4 h)" },
+  { key: "day", label: "Journée (≈ 8 h)" },
+  { key: "week", label: "Plusieurs jours / semaine" },
+]
+const SHOOT_SERVICES: ServiceKey[] = ["photo", "video", "drone", "actionCam"]
+const POST_SERVICES: ServiceKey[] = ["clipSocial", "filmCourt", "filmAventure", "retoucheAvancee"]
 
 export default function ContactBlock(props: BlockProps<ContactBlockData>) {
   const isDevis = props.formType === "devis"
@@ -17,7 +28,15 @@ export default function ContactBlock(props: BlockProps<ContactBlockData>) {
     budget: "",
     message: "",
     company: "",
+    duration: "",
+    usage: "private",
+    express: false,
   })
+  const [services, setServices] = useState<ServiceKey[]>(["photo"])
+
+  function toggleService(k: ServiceKey) {
+    setServices((list) => (list.includes(k) ? list.filter((x) => x !== k) : [...list, k]))
+  }
   const [status, setStatus] = useState<"idle" | "sending" | "sent" | "error">(
     "idle"
   )
@@ -37,7 +56,7 @@ export default function ContactBlock(props: BlockProps<ContactBlockData>) {
       const res = await fetch("/api/contact", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ ...form, isDevis }),
+        body: JSON.stringify({ ...form, services, isDevis }),
       })
       if (!res.ok) throw new Error()
       setStatus("sent")
@@ -182,7 +201,7 @@ export default function ContactBlock(props: BlockProps<ContactBlockData>) {
                     value={form.location}
                     onChange={handleChange}
                     style={fieldStyle}
-                    placeholder="Ville, Région, Pays ..."
+                    placeholder="Ville (ex. Hossegor, Biarritz…)"
                   />
                 </div>
                 <div>
@@ -195,6 +214,51 @@ export default function ContactBlock(props: BlockProps<ContactBlockData>) {
                     style={fieldStyle}
                     placeholder="Mois / Année"
                   />
+                </div>
+              </div>
+            )}
+
+            {isDevis && (
+              <div className="flex flex-col gap-6 p-6 rounded-xl" style={{ background: "var(--color-surface)", border: "1px solid var(--color-border)" }}>
+                <div>
+                  <label style={labelStyle} htmlFor="duration">Durée estimée sur place *</label>
+                  <select id="duration" name="duration" required value={form.duration} onChange={handleChange} style={fieldStyle}>
+                    <option value="">Sélectionner…</option>
+                    {DURATIONS.map((d) => (
+                      <option key={d.key} value={d.key}>{d.label}</option>
+                    ))}
+                  </select>
+                </div>
+                <fieldset>
+                  <legend style={labelStyle}>Prestations souhaitées</legend>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-2 mt-2">
+                    {[...SHOOT_SERVICES, ...POST_SERVICES].map((k) => (
+                      <label key={k} className="flex items-center gap-3 text-sm cursor-pointer" style={{ color: "var(--color-text)" }}>
+                        <input type="checkbox" checked={services.includes(k)} onChange={() => toggleService(k)} style={{ width: 18, height: 18, accentColor: "var(--color-accent)" }} />
+                        {SERVICE_LABELS[k]}
+                      </label>
+                    ))}
+                  </div>
+                </fieldset>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <fieldset>
+                    <legend style={labelStyle}>Utilisation des images</legend>
+                    <div className="flex flex-col gap-2 mt-2">
+                      {[
+                        { v: "private", l: "Usage personnel / privé" },
+                        { v: "commercial", l: "Usage commercial (marque, pub, site pro)" },
+                      ].map((o) => (
+                        <label key={o.v} className="flex items-center gap-3 text-sm cursor-pointer" style={{ color: "var(--color-text)" }}>
+                          <input type="radio" name="usage" value={o.v} checked={form.usage === o.v} onChange={handleChange} style={{ width: 18, height: 18, accentColor: "var(--color-accent)" }} />
+                          {o.l}
+                        </label>
+                      ))}
+                    </div>
+                  </fieldset>
+                  <label className="flex items-center gap-3 text-sm cursor-pointer self-end" style={{ color: "var(--color-text)" }}>
+                    <input type="checkbox" checked={form.express} onChange={(e) => setForm((f) => ({ ...f, express: e.target.checked }))} style={{ width: 18, height: 18, accentColor: "var(--color-accent)" }} />
+                    Livraison express (moins de 72 h)
+                  </label>
                 </div>
               </div>
             )}

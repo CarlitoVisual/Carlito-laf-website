@@ -78,3 +78,12 @@ h1, h2 {
 .legal-prose th, .legal-prose td { border: 1px solid var(--color-border); padding: 0.6rem 0.75rem; text-align: left; vertical-align: top; }
 .legal-prose th { color: var(--color-text); background: var(--color-surface); }
 .legal-prose .table-scroll { overflow-x: auto; }
+
+/* Impression des devis */
+@media print {
+  header.fixed, footer, .no-print { display: none !important; }
+  body { background: #fff !important; }
+  .devis-print { padding: 0 !important; background: #fff !important; }
+  .devis-print article { box-shadow: none !important; padding: 0 !important; max-width: none !important; }
+  @page { margin: 14mm; }
+}
