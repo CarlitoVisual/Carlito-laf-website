@@ -1,4 +1,5 @@
 import type { Metadata } from "next"
+import { pageMeta } from "@/lib/seo"
 import Image from "next/image"
 import Link from "next/link"
 import { client } from "@/lib/sanity.client"
@@ -9,10 +10,11 @@ import TryAtHomeBanner from "@/components/boutique/TryAtHomeBanner"
 
 export const revalidate = 60
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMeta({
   title: "Boutique Fine Art",
-  description: "Tirages Fine Art d'aventure et de sports nautiques. Éditions limitées, certificat d'authenticité.",
-}
+  description: "Tirages photo Fine Art de surf, d'océan, d'aventure et de paysages du Pays basque. Éditions limitées, certificat d'authenticité.",
+  path: "/boutique",
+})
 
 const QUERY = `
 *[_type == "product" && (defined(collection) || defined(photo))] | order(_createdAt asc) {

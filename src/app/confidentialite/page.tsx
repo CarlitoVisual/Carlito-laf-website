@@ -1,12 +1,14 @@
 import type { Metadata } from "next"
+import { pageMeta } from "@/lib/seo"
 import Link from "next/link"
 import LegalPage from "@/components/legal/LegalPage"
 import { LEGAL, PROCESSORS } from "@/lib/legal"
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMeta({
   title: "Politique de confidentialité et cookies",
   description: "Quelles données sont collectées sur Carlito Laf Visuel, pourquoi, combien de temps, et vos droits.",
-}
+  path: "/confidentialite",
+})
 
 const TREATMENTS = [
   {

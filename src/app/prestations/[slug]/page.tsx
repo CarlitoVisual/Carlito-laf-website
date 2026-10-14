@@ -5,6 +5,8 @@ import Link from "next/link"
 import { client } from "@/lib/sanity.client"
 import { urlFor } from "@/lib/image"
 import ConsentEmbed from "@/components/legal/ConsentEmbed"
+import JsonLd from "@/components/seo/JsonLd"
+import { pageMeta, absoluteUrl, breadcrumbJsonLd, BUSINESS_ID } from "@/lib/seo"
 import type { PortableTextBlock, SanityImage, Service } from "@/types/sanity"
 
 export const revalidate = 60
@@ -67,10 +69,14 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params
   const service = await client.fetch<ServiceDetail | null>(SERVICE_QUERY, { slug })
   if (!service) return {}
-  return {
+  return pageMeta({
     title: service.title,
-    description: service.shortDescription ?? undefined,
-  }
+    description:
+      service.shortDescription ||
+      `${service.title} : prestation photo et vidéo de Carlito Laf Visuel au Pays basque et partout en France. Devis personnalisé.`,
+    path: `/prestations/${slug}`,
+    image: service.coverImage,
+  })
 }
 
 function embedUrl(video: ServiceVideo | undefined): string | null {
@@ -108,8 +114,49 @@ export default async function ServicePage({ params }: Props) {
   const label = priceLabel(service)
   const categoryLabel = service.category ? (CATEGORY_LABELS[service.category] ?? service.category) : null
 
+  const pageUrl = absoluteUrl(`/prestations/${slug}`)
+  const coverUrl = urlFor(service.coverImage).width(1600).quality(85).url()
+  const serviceLd = {
+    "@context": "https://schema.org",
+    "@type": "Service",
+    "@id": `${pageUrl}#service`,
+    name: service.title,
+    url: pageUrl,
+    ...(service.shortDescription ? { description: service.shortDescription } : {}),
+    ...(categoryLabel ? { serviceType: categoryLabel } : {}),
+    ...(coverUrl ? { image: coverUrl } : {}),
+    provider: { "@id": BUSINESS_ID },
+    areaServed: [
+      { "@type": "AdministrativeArea", name: "Pays basque" },
+      { "@type": "Country", name: "France" },
+    ],
+    ...(service.price && (service.priceType === "fixed" || service.priceType === "starting")
+      ? {
+          offers: {
+            "@type": "Offer",
+            priceCurrency: service.currency || "EUR",
+            priceSpecification: {
+              "@type": "PriceSpecification",
+              priceCurrency: service.currency || "EUR",
+              ...(service.priceType === "fixed" ? { price: service.price } : { minPrice: service.price }),
+            },
+            url: absoluteUrl("/devis"),
+          },
+        }
+      : {}),
+  }
+
   return (
     <>
+      <JsonLd
+        data={[
+          serviceLd,
+          breadcrumbJsonLd([
+            ["Accueil", "/"],
+            [service.title, `/prestations/${slug}`],
+          ]),
+        ]}
+      />
       {/* ── Hero ────────────────────────────────────────────────── */}
       <div style={{ position: "relative", height: "75vh", minHeight: 480, background: "var(--color-bg)" }}>
         {service.coverImage && (

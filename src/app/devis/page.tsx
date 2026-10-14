@@ -1,11 +1,12 @@
 import type { Metadata } from "next"
+import { pageMeta } from "@/lib/seo"
 import ContactBlock from "@/components/blocks/ContactBlock"
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMeta({
   title: "Demande de devis",
-  description:
-    "Décrivez votre projet photo ou vidéo aventure et recevez un devis personnalisé sous 48h.",
-}
+  description: "Photographe et vidéaste au Pays basque : décrivez votre projet (sport nautique, aventure, marque) et recevez un devis personnalisé sous 48h.",
+  path: "/devis",
+})
 
 export default function DevisPage() {
   return (

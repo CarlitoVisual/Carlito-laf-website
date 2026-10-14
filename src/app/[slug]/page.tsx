@@ -4,6 +4,7 @@ import PageBuilder from "@/components/PageBuilder"
 import PageShell from "@/components/PageShell"
 import { notFound } from "next/navigation"
 import type { Metadata } from "next"
+import { sanityPageMeta } from "@/lib/seo"
 
 export const revalidate = 60
 
@@ -22,10 +23,12 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params
   const page = await client.fetch(pageQuery, { slug })
   if (!page) return {}
-  return {
-    title: page.seo?.metaTitle || page.title,
-    description: page.seo?.metaDescription,
-  }
+  const hero = page.sections?.find((s: { _type?: string }) => s._type === "hero")
+  return sanityPageMeta(page.seo, {
+    title: page.title,
+    path: `/${slug}`,
+    image: hero?.image ?? hero?.videoPoster,
+  })
 }
 
 export default async function DynamicPage({ params }: Props) {

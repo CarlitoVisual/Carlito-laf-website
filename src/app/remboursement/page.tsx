@@ -1,12 +1,14 @@
 import type { Metadata } from "next"
+import { pageMeta } from "@/lib/seo"
 import Link from "next/link"
 import LegalPage from "@/components/legal/LegalPage"
 import { LEGAL, mediatorSentence } from "@/lib/legal"
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMeta({
   title: "Retours et remboursements",
   description: "Comment retourner un tirage, se rétracter ou être remboursé chez Carlito Laf Visuel.",
-}
+  path: "/remboursement",
+})
 
 export default function RemboursementPage() {
   return (

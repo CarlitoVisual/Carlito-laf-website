@@ -1,12 +1,14 @@
 import type { Metadata } from "next"
+import { pageMeta } from "@/lib/seo"
 import Link from "next/link"
 import LegalPage from "@/components/legal/LegalPage"
 import WithdrawalForm from "./WithdrawalForm"
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMeta({
   title: "Renoncer au contrat",
   description: "Fonction de rétractation en ligne : exercez votre droit de rétractation de 14 jours.",
-}
+  path: "/retractation",
+})
 
 export default function RetractationPage() {
   return (

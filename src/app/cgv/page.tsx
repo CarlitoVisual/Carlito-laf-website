@@ -1,12 +1,14 @@
 import type { Metadata } from "next"
+import { pageMeta } from "@/lib/seo"
 import Link from "next/link"
 import LegalPage from "@/components/legal/LegalPage"
 import { LEGAL, mediatorSentence } from "@/lib/legal"
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMeta({
   title: "Conditions générales de vente",
   description: "Conditions de vente des tirages Fine Art et des prestations photo et vidéo de Carlito Laf Visuel.",
-}
+  path: "/cgv",
+})
 
 export default function CgvPage() {
   return (

@@ -4,8 +4,20 @@ import PageBuilder from "@/components/PageBuilder"
 import PageShell from "@/components/PageShell"
 import VideoIntroWrapper from "@/components/VideoIntroWrapper"
 import { urlFor } from "@/lib/image"
+import { sanityPageMeta } from "@/lib/seo"
+import type { Metadata } from "next"
 
 export const revalidate = 60
+
+export async function generateMetadata(): Promise<Metadata> {
+  const page = await client.fetch(pageQuery, { slug: "accueil" })
+  const hero = page?.sections?.[0]
+  return sanityPageMeta(page?.seo, {
+    absoluteTitle: "Carlito Laf Visuel — Photographe & Vidéaste Aventure",
+    path: "/",
+    image: hero?._type === "hero" ? (hero.image ?? hero.videoPoster) : undefined,
+  })
+}
 
 export default async function Home() {
   const page = await client.fetch(pageQuery, { slug: "accueil" })

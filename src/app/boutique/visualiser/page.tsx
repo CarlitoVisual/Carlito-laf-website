@@ -1,14 +1,16 @@
 import type { Metadata } from "next"
+import { pageMeta } from "@/lib/seo"
 import { client } from "@/lib/sanity.client"
 import type { Product } from "@/types/sanity"
 import RoomVisualizer from "./RoomVisualizer"
 
 export const revalidate = 60
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMeta({
   title: "Voir un tirage chez moi",
   description: "Importez une photo de votre pièce et visualisez un tirage Fine Art à taille réelle sur votre mur.",
-}
+  path: "/boutique/visualiser",
+})
 
 const QUERY = `*[_type == "product" && defined(coalesce(image, photo->image))] | order(_createdAt asc) {
   _id, title, shortDescription,

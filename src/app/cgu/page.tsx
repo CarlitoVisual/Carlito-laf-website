@@ -1,12 +1,14 @@
 import type { Metadata } from "next"
+import { pageMeta } from "@/lib/seo"
 import Link from "next/link"
 import LegalPage from "@/components/legal/LegalPage"
 import { LEGAL } from "@/lib/legal"
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMeta({
   title: "Conditions générales d’utilisation",
   description: "Règles d’utilisation du site Carlito Laf Visuel.",
-}
+  path: "/cgu",
+})
 
 export default function CguPage() {
   return (

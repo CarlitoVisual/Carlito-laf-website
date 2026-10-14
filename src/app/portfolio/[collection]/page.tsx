@@ -6,6 +6,8 @@ import { urlFor } from "@/lib/image"
 import { sortByManualOrder } from "@/lib/photoOrder"
 import type { SanityImage } from "@/types/sanity"
 import CollectionGallery, { type GalleryPhoto } from "@/components/portfolio/CollectionGallery"
+import JsonLd from "@/components/seo/JsonLd"
+import { pageMeta, absoluteUrl, breadcrumbJsonLd, BUSINESS_ID, PERSON_ID, SITE_NAME } from "@/lib/seo"
 
 export const revalidate = 60
 
@@ -21,10 +23,10 @@ type RawPhoto = {
   productSlug?: string
 }
 
-type CollectionDoc = { _id: string; title: string; slug: string }
+type CollectionDoc = { _id: string; title: string; slug: string; description?: string; cover?: SanityImage }
 
 async function getAllCollectionDocs(): Promise<CollectionDoc[]> {
-  return client.fetch(`*[_type == "collection" && visible == true]{ _id, title, "slug": slug.current }`)
+  return client.fetch(`*[_type == "collection" && visible == true]{ _id, title, "slug": slug.current, description, "cover": coverPhoto->image }`)
 }
 
 async function getCollectionBySlug(slug: string): Promise<CollectionDoc | undefined> {
@@ -79,10 +81,14 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { collection: slug } = await params
   const doc = await getCollectionBySlug(slug)
   if (!doc) return {}
-  return {
-    title: `${doc.title} — Portfolio`,
-    description: `Collection photo ${doc.title} par Carlito Laf Visuel.`,
-  }
+  return pageMeta({
+    title: `${doc.title} — Portfolio photo`,
+    description:
+      doc.description?.trim().slice(0, 160) ||
+      `${doc.title} : collection photo de Carlito Laf Visuel, photographe aventure et sports nautiques au Pays basque.`,
+    path: `/portfolio/${doc.slug}`,
+    image: doc.cover,
+  })
 }
 
 export default async function CollectionPage({ params }: Props) {
@@ -92,8 +98,41 @@ export default async function CollectionPage({ params }: Props) {
 
   const photos = await getCollectionPhotos(doc._id)
 
+  const pageUrl = absoluteUrl(`/portfolio/${doc.slug}`)
+  const galleryLd = {
+    "@context": "https://schema.org",
+    "@type": "ImageGallery",
+    "@id": `${pageUrl}#galerie`,
+    name: doc.title,
+    url: pageUrl,
+    ...(doc.description ? { description: doc.description } : {}),
+    author: { "@id": PERSON_ID },
+    publisher: { "@id": BUSINESS_ID },
+    image: photos.slice(0, 50).map((p) => ({
+      "@type": "ImageObject",
+      contentUrl: p.srcFull,
+      ...(p.alt || p.title ? { name: p.alt || p.title } : {}),
+      ...(p.location ? { contentLocation: { "@type": "Place", name: p.location } } : {}),
+      creator: { "@type": "Person", name: "Charles Lafiandra" },
+      creditText: SITE_NAME,
+      copyrightNotice: `© ${SITE_NAME}`,
+      license: absoluteUrl("/mentions-legales"),
+      acquireLicensePage: p.availableAsPrint && p.productSlug ? absoluteUrl("/boutique") : absoluteUrl("/devis"),
+    })),
+  }
+
   return (
     <>
+      <JsonLd
+        data={[
+          galleryLd,
+          breadcrumbJsonLd([
+            ["Accueil", "/"],
+            ["Portfolio", "/portfolio"],
+            [doc.title, `/portfolio/${doc.slug}`],
+          ]),
+        ]}
+      />
       {/* Header */}
       <div className="pt-32 pb-12 px-6" style={{ borderBottom: "1px solid var(--color-border)" }}>
         <div className="max-w-7xl mx-auto">
@@ -110,6 +149,11 @@ export default async function CollectionPage({ params }: Props) {
           <p className="mt-3 text-sm" style={{ color: "var(--color-muted)" }}>
             {photos.length} photo{photos.length > 1 ? "s" : ""}
           </p>
+          {doc.description && (
+            <p className="mt-6 max-w-3xl text-base leading-relaxed whitespace-pre-line" style={{ color: "var(--color-text)" }}>
+              {doc.description}
+            </p>
+          )}
         </div>
       </div>
 

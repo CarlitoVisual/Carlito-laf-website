@@ -1,4 +1,5 @@
 import type { Metadata } from "next"
+import { pageMeta } from "@/lib/seo"
 import Image from "next/image"
 import Link from "next/link"
 import { client } from "@/lib/sanity.client"
@@ -7,10 +8,11 @@ import type { SanityImage } from "@/types/sanity"
 
 export const revalidate = 60
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMeta({
   title: "Portfolio",
-  description: "Collections photo et vidéo d'aventure et de sports nautiques par Carlito Laf Visuel.",
-}
+  description: "Collections photo et vidéo de surf, sports nautiques, aventure et paysages, au Pays basque et au-delà, par Carlito Laf Visuel.",
+  path: "/portfolio",
+})
 
 // Fetch configured collections first, then fall back to ungrouped photos
 const COLLECTIONS_QUERY = `

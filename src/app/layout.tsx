@@ -4,6 +4,8 @@ import "./globals.css"
 import Navigation from "@/components/Navigation"
 import Footer from "@/components/Footer"
 import { IntroProvider } from "@/context/IntroContext"
+import JsonLd from "@/components/seo/JsonLd"
+import { SITE_URL, SITE_NAME, businessJsonLd } from "@/lib/seo"
 
 const display = Big_Shoulders({
   variable: "--font-big-shoulders",
@@ -23,17 +25,32 @@ const mono = DM_Mono({
 })
 
 export const metadata: Metadata = {
+  metadataBase: new URL(SITE_URL),
   title: {
     default: "Carlito Laf Visuel — Photographe & Vidéaste Aventure",
     template: "%s | Carlito Laf Visuel",
   },
   description:
-    "Photographe et vidéaste spécialisé dans l'aventure et les sports nautiques. Portfolio, fine art prints et prestations professionnelles.",
+    "Photographe et vidéaste au Pays basque, spécialisé dans l'aventure, les sports nautiques et les paysages. Portfolio, tirages Fine Art et prestations sur devis.",
+  applicationName: SITE_NAME,
+  authors: [{ name: "Charles Lafiandra", url: SITE_URL }],
+  creator: "Charles Lafiandra",
+  publisher: SITE_NAME,
+  formatDetection: { telephone: false, email: false, address: false },
   openGraph: {
-    siteName: "Carlito Laf Visuel",
+    siteName: SITE_NAME,
     locale: "fr_FR",
     type: "website",
   },
+  twitter: { card: "summary_large_image" },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: { index: true, follow: true, "max-image-preview": "large", "max-snippet": -1, "max-video-preview": -1 },
+  },
+  ...(process.env.GOOGLE_SITE_VERIFICATION
+    ? { verification: { google: process.env.GOOGLE_SITE_VERIFICATION } }
+    : {}),
 }
 
 export default function RootLayout({
@@ -44,6 +61,7 @@ export default function RootLayout({
   return (
     <html lang="fr" className={`${display.variable} ${body.variable} ${mono.variable}`}>
       <body className="flex flex-col min-h-screen">
+        <JsonLd data={businessJsonLd()} />
         <IntroProvider>
           <Navigation />
           <main className="flex-1">{children}</main>
