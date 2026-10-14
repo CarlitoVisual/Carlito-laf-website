@@ -5,7 +5,7 @@ import LineUp, { type LineUpPanel } from "./LineUp"
 type Props = BlockProps<SkillsBentoBlockData>
 
 /** Textes par défaut quand les champs « info », « accroche » et « bouton » ne sont pas remplis dans Sanity. */
-const DEFAULTS: Record<string, Pick<LineUpPanel, "meta" | "description" | "cta">> = {
+const DEFAULTS: Record<string, Pick<LineUpPanel, "meta" | "description" | "cta" | "secondary">> = {
   "/portfolio": {
     meta: "Surf · océan · aventures",
     description: "Le surf en tête, puis l’océan, la montagne, la jungle et la rue : toutes les collections.",
@@ -20,6 +20,7 @@ const DEFAULTS: Record<string, Pick<LineUpPanel, "meta" | "description" | "cta">
     meta: "Tirages Fine Art",
     description: "Papier Hahnemühle, éditions numérotées et signées. Ramenez la vague à la maison.",
     cta: "Voir les tirages",
+    secondary: { label: "Voir un tirage chez moi", href: "/boutique/visualiser" },
   },
   "/contact": {
     meta: "Réponse sous 48 h",
@@ -42,6 +43,7 @@ export default function SkillsBentoBlock({ eyebrow, title, tiles }: Props) {
       meta: t.meta || d.meta,
       description: t.description || d.description,
       cta: t.cta || d.cta,
+      secondary: d.secondary,
     }
   })
 

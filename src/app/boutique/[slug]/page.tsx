@@ -4,6 +4,7 @@ import Link from "next/link"
 import { client } from "@/lib/sanity.client"
 import { slugifyCollection, matchCollection } from "@/lib/shop"
 import BoutiqueCollectionGallery from "@/components/boutique/BoutiqueCollectionGallery"
+import TryAtHomeBanner from "@/components/boutique/TryAtHomeBanner"
 
 export const revalidate = 60
 
@@ -73,6 +74,8 @@ export default async function CollectionPage({ params }: Props) {
           </p>
         </div>
       </div>
+
+      <TryAtHomeBanner compact />
 
       {/* Products grid */}
       <section className="py-16 px-6">

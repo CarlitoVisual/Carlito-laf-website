@@ -275,6 +275,18 @@ export default function BoutiqueCollectionGallery({ products }: { products: Bout
                       À partir de {formatPrice(price, currency)}
                     </p>
                   )}
+                  <div className="flex items-center gap-2">
+                  {available && (
+                    <a
+                      href={`/boutique/visualiser?product=${encodeURIComponent(product._id)}`}
+                      title="Essayer ce tirage chez moi"
+                      aria-label={`Essayer ${product.title} chez moi`}
+                      className="inline-flex items-center justify-center w-10 h-10 rounded-full border transition-colors hover:bg-[var(--color-accent)] hover:text-[var(--color-on-accent)]"
+                      style={{ borderColor: "var(--color-accent)", color: "var(--color-accent)" }}
+                    >
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" aria-hidden="true"><path d="M3 10.5 12 3l9 7.5V21H3z" /><rect x="8" y="10" width="8" height="6" /></svg>
+                    </a>
+                  )}
                   <button
                     onClick={() => openViewer(product)}
                     disabled={!available}
@@ -290,6 +302,7 @@ export default function BoutiqueCollectionGallery({ products }: { products: Bout
                   >
                     {!available ? "Épuisé" : "Voir le tirage"}
                   </button>
+                  </div>
                 </div>
               </div>
             </div>

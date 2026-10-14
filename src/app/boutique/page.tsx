@@ -5,6 +5,7 @@ import { client } from "@/lib/sanity.client"
 import { urlFor } from "@/lib/image"
 import { slugifyCollection } from "@/lib/shop"
 import type { SanityImage } from "@/types/sanity"
+import TryAtHomeBanner from "@/components/boutique/TryAtHomeBanner"
 
 export const revalidate = 60
 
@@ -47,6 +48,8 @@ export default async function BoutiquePage() {
     map.get(p.collection)!.count++
   }
   const collections = Array.from(map.values())
+  const surfCover = collections.find((c) => c.slug === "surf")?.cover ?? collections[0]?.cover
+  const tryImage = surfCover ? urlFor(surfCover).width(700).quality(85).url() : undefined
 
   return (
     <>
@@ -70,9 +73,11 @@ export default async function BoutiquePage() {
           className="inline-flex items-center gap-2 mt-8 min-h-12 px-7 rounded-full text-sm font-bold uppercase"
           style={{ background: "var(--color-accent)", color: "var(--color-on-accent)", letterSpacing: "0.1em" }}
         >
-          Voir un tirage chez moi →
+          Essayer un tirage chez moi →
         </Link>
       </div>
+
+      <TryAtHomeBanner imageUrl={tryImage} />
 
       {/* Collections grid */}
       <section className="py-20 px-6">
