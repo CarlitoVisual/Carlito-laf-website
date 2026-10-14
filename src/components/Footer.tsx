@@ -21,7 +21,8 @@ export default function Footer() {
               <span style={{ color: "var(--color-accent)" }}> Visuel</span>
             </p>
             <p className="text-sm leading-relaxed mb-6" style={{ color: "var(--color-muted)" }}>
-              Photographe et vidéaste passionné depuis 10 ans, je vous accompagne dans vos aventures, 
+              Photographe et vidéaste passionné depuis 10 ans, basé à Bidart entre Pays basque et Landes,
+              je vous accompagne dans vos aventures, 
               événements et disciplines sportives afin de les figer 
               dans des capsules visuelles de haute qualité. 
               La passion au service de vos projets les plus ambitieux.
@@ -84,7 +85,8 @@ export default function Footer() {
             <div className="flex flex-col gap-3 text-sm" style={{ color: "var(--color-muted)" }}>
               <p>{LEGAL.contactEmail}</p>
               <p>Disponible sur devis</p>
-              <p>France</p>
+              <p>Bidart · Pays basque &amp; Landes</p>
+              <p>Déplacements partout en France</p>
               <Link
                 href="/devis"
                 className="inline-block mt-2 text-xs uppercase text-center px-4 py-2 border transition-all rounded-full"

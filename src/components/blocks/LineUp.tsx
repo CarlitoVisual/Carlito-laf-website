@@ -34,7 +34,7 @@ export default function LineUp({ eyebrow, title, panels }: Props) {
   const touchedWhileClosed = useRef(false)
 
   return (
-    <section className="px-6 pt-24 pb-16">
+    <section className="px-6 pt-10 md:pt-14 pb-16">
       <div className="max-w-7xl mx-auto">
         {(eyebrow || title) && (
           <div className="flex flex-wrap items-end justify-between gap-6 mb-10">

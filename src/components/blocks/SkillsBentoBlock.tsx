@@ -47,5 +47,5 @@ export default function SkillsBentoBlock({ eyebrow, title, tiles }: Props) {
     }
   })
 
-  return <LineUp eyebrow={eyebrow} title={title || "Choisis ta vague"} panels={panels} />
+  return <LineUp eyebrow={eyebrow} title={title || "Par où on commence ?"} panels={panels} />
 }
