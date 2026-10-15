@@ -26,17 +26,17 @@ export default function CgvPage() {
 
       <h2>2. Prix</h2>
       <p>
-        Les prix sont indiqués en euros, toutes taxes comprises. {LEGAL.vat}. Les frais de livraison éventuels sont
-        indiqués avant la validation de la commande. Le prix applicable est celui affiché au jour de la commande.
+        Les prix sont indiqués en euros, toutes taxes comprises. {LEGAL.vat}. La livraison des tirages en
+        France métropolitaine est offerte ; les frais éventuels d’autres prestations sont indiqués avant la validation de la commande. Le prix applicable est celui affiché au jour de la commande.
       </p>
 
       <h2>A. Tirages photographiques</h2>
 
       <h3>A1. Commande</h3>
-      <p>Le Client choisit un tirage, son format et la quantité depuis la boutique, accepte les présentes CGV, puis règle sa commande via le lien de paiement sécurisé Stripe. <strong>Le contrat est conclu au moment du paiement.</strong> Une confirmation de commande récapitulant le produit, le prix total et le délai de livraison est envoyée par e-mail.</p>
+      <p>Le Client choisit un tirage, son format et la quantité depuis la boutique, accepte les présentes CGV, puis règle sa commande sur la page de paiement sécurisée Stripe, où il indique son adresse de livraison. <strong>Le contrat est conclu au moment du paiement.</strong> Une confirmation de commande récapitulant le produit, le prix total et le délai de livraison est envoyée par e-mail.</p>
 
       <h3>A2. Paiement</h3>
-      <p>Le prix est payable <strong>en totalité à la commande</strong>, par carte bancaire via le service de paiement sécurisé Stripe. Aucune donnée bancaire ne transite par le site. La commande est préparée après encaissement.</p>
+      <p>Le prix est payable <strong>en totalité à la commande</strong>, par carte bancaire (ou Apple Pay / Google Pay) via le service de paiement sécurisé Stripe. Aucune donnée bancaire ne transite par le site. La commande est transmise au laboratoire après encaissement.</p>
 
       <h3>A3. Livraison</h3>
       <p>

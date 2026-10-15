@@ -33,6 +33,9 @@ export default function ProductViewer({ product, onClose, initialFormatName, hid
   const [status, setStatus] = useState<OrderStatus>("idle")
   const [acceptCgv, setAcceptCgv] = useState(false)
   const [form, setForm] = useState({ name: "", email: "", phone: "", message: "", company: "" })
+  // « stripe » : paiement en ligne ; « manual » : demande par e-mail (si le paiement en ligne n'est pas configuré)
+  const [payMode, setPayMode] = useState<"stripe" | "manual">("stripe")
+  const [checkoutError, setCheckoutError] = useState("")
 
   const currency = product.currency || "EUR"
   const unitPrice = selectedFormat?.price ?? product.price ?? 0
@@ -58,6 +61,34 @@ export default function ProductViewer({ product, onClose, initialFormatName, hid
 
   function changeField(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) {
     setForm(f => ({ ...f, [e.target.name]: e.target.value }))
+  }
+
+  async function handleCheckout(e: React.FormEvent) {
+    e.preventDefault()
+    setStatus("sending")
+    setCheckoutError("")
+    try {
+      const res = await fetch("/api/checkout", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ productId: product._id, format: selectedFormat?.name, qty, acceptCgv }),
+      })
+      const data = await res.json().catch(() => ({}))
+      if (res.status === 503 && data.fallback) {
+        setPayMode("manual")
+        setStatus("idle")
+        return
+      }
+      if (!res.ok || !data.url) {
+        setCheckoutError(data.error || "Le paiement n’a pas pu démarrer.")
+        setStatus("error")
+        return
+      }
+      window.location.assign(data.url)
+    } catch {
+      setCheckoutError("Le paiement n’a pas pu démarrer.")
+      setStatus("error")
+    }
   }
 
   async function handleOrder(e: React.FormEvent) {
@@ -379,6 +410,76 @@ export default function ProductViewer({ product, onClose, initialFormatName, hid
                   Je vous recontacte sous 48h avec les instructions de paiement.
                 </p>
               </div>
+            ) : payMode === "stripe" ? (
+              <form onSubmit={handleCheckout} style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+                <label style={{ display: "flex", gap: 10, alignItems: "flex-start", color: "var(--color-muted)", fontSize: "0.8rem", lineHeight: 1.5, cursor: "pointer" }}>
+                  <input
+                    type="checkbox"
+                    required
+                    checked={acceptCgv}
+                    onChange={(e) => setAcceptCgv(e.target.checked)}
+                    style={{ marginTop: 3, width: 18, height: 18, accentColor: "var(--color-accent)", flexShrink: 0 }}
+                  />
+                  <span>
+                    J’ai lu et j’accepte les{" "}
+                    <a href="/cgv" target="_blank" rel="noopener noreferrer" style={{ color: "var(--color-accent)", textDecoration: "underline" }}>conditions générales de vente</a>{" "}
+                    et la{" "}
+                    <a href="/remboursement" target="_blank" rel="noopener noreferrer" style={{ color: "var(--color-accent)", textDecoration: "underline" }}>politique de retour</a>{" "}
+                    (droit de rétractation de 14 jours). *
+                  </span>
+                </label>
+                <p style={{ color: "var(--color-muted)", fontSize: "0.75rem", lineHeight: 1.5 }}>
+                  Vous allez être redirigé vers la page de paiement sécurisée Stripe (carte bancaire, Apple Pay, Google Pay) pour indiquer
+                  votre adresse de livraison et régler. Livraison offerte en {LEGAL.shipping.zone}, sous {LEGAL.shipping.delay}.
+                </p>
+                <FormPrivacyNotice small purpose="traiter votre commande et la faire livrer par notre laboratoire partenaire" />
+                {status === "error" && (
+                  <p style={{ color: "#ef4444", fontSize: "0.8rem" }}>
+                    {checkoutError} Vous pouvez aussi m’écrire : {LEGAL.contactEmail}
+                  </p>
+                )}
+                <div style={{ display: "flex", gap: 10 }}>
+                  <button
+                    type="button"
+                    onClick={() => setShowOrder(false)}
+                    style={{
+                      flex: 1, padding: "12px",
+                      borderRadius: 999,
+                      color: "var(--color-muted)",
+                      border: "1px solid var(--color-border)",
+                      background: "transparent",
+                      fontSize: "0.75rem",
+                      letterSpacing: "0.15em",
+                      textTransform: "uppercase",
+                      cursor: "pointer",
+                    }}
+                  >
+                    Retour
+                  </button>
+                  <button
+                    type="submit"
+                    disabled={status === "sending" || !acceptCgv}
+                    style={{
+                      flex: 2, padding: "12px",
+                      borderRadius: 999,
+                      background: "var(--color-accent)",
+                      color: "var(--color-on-accent)",
+                      fontWeight: 700,
+                      fontSize: "0.75rem",
+                      letterSpacing: "0.2em",
+                      textTransform: "uppercase",
+                      border: "none",
+                      cursor: status === "sending" || !acceptCgv ? "not-allowed" : "pointer",
+                      opacity: status === "sending" || !acceptCgv ? 0.6 : 1,
+                    }}
+                  >
+                    {status === "sending" ? "Redirection…" : `Payer ${formatPrice(total, currency)}`}
+                  </button>
+                </div>
+                <p style={{ color: "var(--color-muted)", fontSize: "0.72rem", textAlign: "center" }}>
+                  🔒 Paiement sécurisé par Stripe — aucune donnée bancaire ne transite par ce site.
+                </p>
+              </form>
             ) : (
               <form onSubmit={handleOrder} style={{ display: "flex", flexDirection: "column", gap: 10 }}>
                 <input

@@ -59,7 +59,7 @@ export const PROCESSORS = [
   },
   {
     name: "Stripe Payments Europe (Irlande)",
-    role: "Paiement en ligne des tirages via un lien de paiement sécurisé. Vos données bancaires sont saisies chez Stripe et ne transitent jamais par ce site.",
+    role: "Paiement en ligne des tirages sur la page de paiement sécurisée Stripe (nom, e-mail, téléphone, adresse de livraison, données bancaires). Vos données bancaires sont saisies chez Stripe et ne transitent jamais par ce site.",
     safeguard: "Prestataire établi dans l’Union européenne, agréé comme établissement de paiement.",
   },
   {
@@ -69,7 +69,7 @@ export const PROCESSORS = [
   },
   {
     name: "Sanity AS (Norvège)",
-    role: "Gestion du contenu du site (textes, photos). Aucune donnée des visiteurs n'y est stockée.",
+    role: "Gestion du contenu du site (textes, photos) et enregistrement privé des demandes de devis et des commandes (coordonnées, adresse de livraison), accessible uniquement à l’éditeur.",
     safeguard: "Pays reconnu adéquat (Espace économique européen).",
   },
 ] as const

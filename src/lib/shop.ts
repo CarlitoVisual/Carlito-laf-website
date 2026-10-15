@@ -37,3 +37,14 @@ export function isProductAvailable(product: Pick<Product, "formats">): boolean {
   if (!product.formats?.length) return true
   return product.formats.some((f) => isFormatAvailable(f))
 }
+
+/** Papiers FineArt (valeurs du champ produit « paper » dans le Studio). */
+export const PAPER_LABELS: Record<string, string> = {
+  "photo-rag": "Hahnemühle Photo Rag®",
+  baryta: "Hahnemühle Baryta",
+  "museum-etching": "Hahnemühle Museum Etching",
+  bamboo: "Hahnemühle Bamboo",
+  hemp: "Hahnemühle Hemp",
+}
+
+export const paperLabel = (v: string | undefined) => (v ? PAPER_LABELS[v] ?? v : "Papier FineArt Hahnemühle")
