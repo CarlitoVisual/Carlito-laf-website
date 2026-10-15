@@ -3,6 +3,9 @@ import { writeClient } from "@/lib/sanity.write"
 import { sendEmail } from "@/lib/email"
 import { LEGAL } from "@/lib/legal"
 import { formatPrice, paperLabel } from "@/lib/shop"
+import { urlFor } from "@/lib/image"
+import { customerOrderEmail, esc } from "@/lib/orderEmail"
+import type { SanityImage } from "@/types/sanity"
 import {
   fromCents,
   paymentIntentId,
@@ -18,7 +21,13 @@ export const dynamic = "force-dynamic"
 
 const STUDIO = process.env.SANITY_STUDIO_URL || "https://www.sanity.io/@oJeBtuZVP/studio/q8qecvlyvss306uhjfo40wmb"
 
-type ProductInfo = { _id: string; title?: string; paper?: string; formats?: { _key: string; name?: string; stock?: number }[] }
+type ProductInfo = {
+  _id: string
+  title?: string
+  paper?: string
+  image?: SanityImage
+  formats?: { _key: string; name?: string; stock?: number }[]
+}
 
 /** Numéro de commande séquentiel par année (compteur atomique privé, même principe que les devis). */
 async function nextOrderSeq(year: number): Promise<number> {
@@ -63,7 +72,7 @@ async function handlePaidSession(session: CheckoutSession) {
   const total = fromCents(session.amount_total)
 
   const product = productId
-    ? await writeClient.fetch<ProductInfo | null>(`*[_id == $id][0]{ _id, title, paper, formats[]{ _key, name, stock } }`, { id: productId })
+    ? await writeClient.fetch<ProductInfo | null>(`*[_id == $id][0]{ _id, title, paper, "image": coalesce(image, photo->image), formats[]{ _key, name, stock } }`, { id: productId })
     : null
 
   const paidAt = new Date((session.created ?? Date.now() / 1000) * 1000)
@@ -120,9 +129,12 @@ async function handlePaidSession(session: CheckoutSession) {
 
   const title = product?.title ?? "Tirage"
   const fmtLine = formatName ? `${formatName} cm` : "—"
-  const addressLines = [ship?.name ?? customer.name, addr.line1, addr.line2, `${addr.postal_code ?? ""} ${addr.city ?? ""}`.trim(), addr.country]
-    .filter(Boolean)
-    .join("\n")
+  const addressList = [ship?.name ?? customer.name, addr.line1, addr.line2, `${addr.postal_code ?? ""} ${addr.city ?? ""}`.trim(), addr.country === "FR" ? "France" : addr.country].filter(
+    (l): l is string => Boolean(l),
+  )
+  const addressLines = addressList.join("\n")
+  // Photo commandée, en JPEG (format lu par tous les logiciels de messagerie)
+  const imageUrl = product?.image ? urlFor(product.image).width(1120).fit("max").format("jpg").quality(80).url() : undefined
   const studioLink = `${STUDIO}/intent/edit/id=${encodeURIComponent(orderId)};type=order`
 
   // E-mail pour Carlito : tout ce qu'il faut pour passer la commande chez Saal
@@ -147,38 +159,34 @@ async function handlePaidSession(session: CheckoutSession) {
       `Suivi dans le Studio : ${studioLink}`,
       `Paiement Stripe : https://dashboard.stripe.com/${session.id.startsWith("cs_test_") ? "test/" : ""}payments/${piId ?? ""}`,
     ].join("\n"),
+    html: `<div style="font-family:Helvetica,Arial,sans-serif;color:#051B2E;font-size:14px;line-height:1.6;max-width:600px">
+      <h2 style="margin:0 0 8px">Commande ${esc(number)} — payée</h2>
+      ${imageUrl ? `<img src="${esc(imageUrl)}" width="280" alt="${esc(title)}" style="display:block;width:280px;height:auto;border-radius:6px;margin:8px 0 12px">` : ""}
+      <p style="margin:0"><strong>${esc(title)}</strong><br>${esc(fmtLine)} · ${esc(paperLabel(product?.paper))} · × ${esc(qty)}<br>
+      Total payé : <strong>${esc(formatPrice(total))}</strong>${fee !== undefined ? ` (frais Stripe ${esc(formatPrice(fee))})` : ""}</p>
+      <h3 style="margin:18px 0 4px">À commander chez Saal — livraison à</h3>
+      <p style="margin:0">${addressList.map(esc).join("<br>")}<br>Tél. : ${esc(customer.phone ?? "—")}<br>E-mail : ${esc(customer.email ?? "—")}</p>
+      <p style="margin:18px 0 0"><a href="${esc(studioLink)}" style="color:#136093">Ouvrir la commande dans le Studio</a> ·
+      <a href="https://dashboard.stripe.com/${session.id.startsWith("cs_test_") ? "test/" : ""}payments/${esc(piId ?? "")}" style="color:#136093">Paiement Stripe</a></p>
+    </div>`,
   })
 
-  // Confirmation pour le client
+  // Confirmation pour le client, avec la photo commandée
   if (customer.email) {
-    const firstName = (customer.name ?? "").split(" ")[0]
-    await sendEmail({
-      to: customer.email,
-      replyTo: LEGAL.contactEmail,
-      subject: `Votre commande ${number} est confirmée — ${LEGAL.brand}`,
-      text: [
-        `Bonjour${firstName ? ` ${firstName}` : ""},`,
-        ``,
-        `Merci pour votre commande ! Le paiement est bien reçu.`,
-        ``,
-        `Commande ${number}`,
-        `${title} — ${fmtLine}, ${paperLabel(product?.paper)} × ${qty}`,
-        `Total payé : ${formatPrice(total)} (livraison offerte)`,
-        ``,
-        `Livraison à :`,
-        addressLines,
-        ``,
-        `Votre tirage est imprimé à la commande par notre laboratoire partenaire, qui vous l’expédie directement. Vous le recevrez sous ${LEGAL.shipping.delay} au plus ; je vous envoie le numéro de suivi dès l’expédition.`,
-        ``,
-        `Vous disposez de 14 jours après réception pour vous rétracter : ${LEGAL.website}/retractation`,
-        `Conditions générales de vente : ${LEGAL.website}/cgv`,
-        ``,
-        `Une question ? Répondez simplement à cet e-mail.`,
-        ``,
-        `${LEGAL.ownerName} — ${LEGAL.brand}`,
-        `${LEGAL.vat}`,
-      ].join("\n"),
-    }).catch((e) => console.error("Confirmation client non envoyée:", e))
+    const mail = customerOrderEmail({
+      number,
+      firstName: (customer.name ?? "").split(" ")[0] || undefined,
+      title,
+      formatLine: fmtLine,
+      paper: paperLabel(product?.paper),
+      qty,
+      total,
+      imageUrl,
+      addressLines: addressList,
+    })
+    await sendEmail({ to: customer.email, replyTo: LEGAL.contactEmail, ...mail }).catch((e) =>
+      console.error("Confirmation client non envoyée:", e),
+    )
   }
 }
 
