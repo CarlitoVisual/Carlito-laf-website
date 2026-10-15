@@ -242,12 +242,6 @@ export default function ProductViewer({ product, onClose, initialFormatName, hid
                   {product.shortDescription}
                 </p>
               )}
-              {product.edition?.number && (
-                <p style={{ color: "var(--color-muted)", fontSize: "0.75rem", marginTop: 6 }}>
-                  Tirage limité · {product.edition.number} ex.
-                  {product.edition.certificate ? " · Certificat d'authenticité" : ""}
-                </p>
-              )}
             </div>
 
             <div style={{ height: 1, background: "var(--color-border)", flexShrink: 0 }} />

@@ -12,7 +12,7 @@ export const revalidate = 60
 
 export const metadata: Metadata = pageMeta({
   title: "Boutique Fine Art",
-  description: "Tirages photo Fine Art de surf, d'océan, d'aventure et de paysages du Pays basque. Éditions limitées, certificat d'authenticité.",
+  description: "Tirages photo Fine Art de surf, d'océan, d'aventure et de paysages du Pays basque, sur papier Hahnemühle, imprimés à la demande.",
   path: "/boutique",
 })
 
@@ -64,7 +64,7 @@ export default async function BoutiquePage() {
           Boutique
         </h1>
         <p className="max-w-xl mx-auto text-base" style={{ color: "var(--color-muted)" }}>
-          Des tirages Fine Art sur papier Hahnemühle, encadrables, numérotés et signés.
+          Des tirages Fine Art sur papier Hahnemühle, prêts à encadrer, imprimés à la demande.
           Chaque image raconte une aventure vécue. 
         </p>
         <Link
@@ -139,8 +139,8 @@ export default async function BoutiquePage() {
         <div className="max-w-4xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
           {[
             { icon: "🖨️", label: "Papier Hahnemühle", desc: "Qualité Fine Art" },
-            { icon: "🔢", label: "Éditions numérotées", desc: "Tirages limités" },
-            { icon: "📜", label: "Certificat inclus", desc: "Authenticité garantie" },
+            { icon: "🏭", label: "Laboratoire professionnel", desc: "Impression à la demande" },
+            { icon: "🖼️", label: "Prêt à encadrer", desc: "Formats standards" },
             { icon: "🌊", label: "Livraison France", desc: "Emballage sécurisé" },
           ].map((item) => (
             <div key={item.label}>

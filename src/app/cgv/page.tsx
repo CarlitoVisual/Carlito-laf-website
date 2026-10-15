@@ -47,8 +47,8 @@ export default function CgvPage() {
         vérifie le colis à réception et signale toute avarie au transporteur et au Vendeur dans les meilleurs délais.
       </p>
 
-      <h3>A4. Éditions limitées</h3>
-      <p>Les tirages en édition limitée sont numérotés et signés ; le nombre d’exemplaires annoncé, tous formats confondus sauf mention contraire, ne sera jamais dépassé. Un certificat d’authenticité est joint lorsque le produit l’indique.</p>
+      <h3>A4. Fabrication</h3>
+      <p>Les tirages sont imprimés à la commande par un laboratoire photographique professionnel partenaire, qui les expédie directement au Client. Ils ne sont ni signés ni numérotés.</p>
 
       <h2 id="retractation">3. Droit de rétractation</h2>
       <p>

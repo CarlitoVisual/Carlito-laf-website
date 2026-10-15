@@ -117,11 +117,6 @@ function Lightbox({ products, index, onClose, onNav, onShowViewer }: {
               À partir de {formatPrice(price, product.currency || "EUR")}
             </p>
           )}
-          {product.edition?.limited && product.edition?.number && (
-            <p style={{ color: "rgba(255,255,255,0.4)", fontSize: 11, marginTop: 2 }}>
-              Édition limitée · {product.edition.number} ex.
-            </p>
-          )}
         </div>
 
         <button
@@ -212,12 +207,6 @@ export default function BoutiqueCollectionGallery({ products }: { products: Bout
                   </div>
                 )}
 
-                {product.edition?.limited && (
-                  <div style={{ borderRadius: 999, position: "absolute", top: 12, left: 12, padding: "4px 8px", background: "var(--color-accent)", color: "var(--color-on-accent)", fontSize: 10, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.1em" }}>
-                    Édition limitée
-                  </div>
-                )}
-
                 {/* Hover zoom hint */}
                 <div
                   className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-200 flex items-center justify-center"
@@ -261,12 +250,6 @@ export default function BoutiqueCollectionGallery({ products }: { products: Bout
                       )
                     })}
                   </div>
-                )}
-
-                {product.edition?.number && (
-                  <p className="text-xs mb-4" style={{ color: "var(--color-muted)" }}>
-                    {product.edition.number} ex.{product.edition.certificate ? " · Certifié" : ""}
-                  </p>
                 )}
 
                 <div className="flex items-center justify-between mt-auto pt-4" style={{ borderTop: "1px solid var(--color-border)" }}>

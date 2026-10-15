@@ -29,7 +29,7 @@ async function getCollectionProducts(collectionName: string): Promise<Product[]>
       "image": coalesce(image, photo->image),
       gallery[]{ _key, asset },
       price, currency, formats[]{ name, price, stock },
-      edition, "collection": coalesce(collection->title, photo->collection->title), paymentUrl, featured
+      "collection": coalesce(collection->title, photo->collection->title), paymentUrl, featured
     }`,
     { col: collectionName }
   )
@@ -48,7 +48,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const products = await getCollectionProducts(name)
   return pageMeta({
     title: `${name} — Tirages Fine Art`,
-    description: `Tirages photo Fine Art — ${name}. Éditions numérotées, papier Hahnemühle, certificat d'authenticité.`,
+    description: `Tirages photo Fine Art — ${name}. Papier Hahnemühle, imprimés à la demande par un laboratoire professionnel.`,
     path: `/boutique/${slug}`,
     image: products.find((p) => p.image?.asset)?.image,
   })

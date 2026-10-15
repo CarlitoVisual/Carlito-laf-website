@@ -17,7 +17,7 @@ const QUERY = `*[_type == "product" && defined(coalesce(image, photo->image))] |
   "image": coalesce(image, photo->image),
   gallery[]{ _key, asset },
   price, currency, formats[]{ name, price, stock },
-  edition, "collection": coalesce(collection->title, photo->collection->title), paymentUrl, featured
+  "collection": coalesce(collection->title, photo->collection->title), paymentUrl, featured
 }`
 
 type Props = { searchParams: Promise<{ product?: string; format?: string }> }

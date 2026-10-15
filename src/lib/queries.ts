@@ -1,4 +1,4 @@
-const PRODUCT_FIELDS = `_id, title, shortDescription, "image": coalesce(image, photo->image), price, currency, formats[]{ name, price, stock }, edition, featured, "collection": coalesce(collection->title, photo->collection->title), paymentUrl`
+const PRODUCT_FIELDS = `_id, title, shortDescription, "image": coalesce(image, photo->image), price, currency, formats[]{ name, price, stock }, featured, "collection": coalesce(collection->title, photo->collection->title), paymentUrl`
 const SERVICE_FIELDS = `_id, title, "slug": slug.current, category, shortDescription, coverImage, price, currency, priceType, deliverables, featured`
 const TESTIMONIAL_FIELDS = `_id, name, role, company, quote, avatar, rating`
 

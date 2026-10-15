@@ -39,11 +39,6 @@ export interface ProductFormat {
   stock?: number
 }
 
-export interface ProductEdition {
-  limited?: boolean
-  number?: number
-  certificate?: boolean
-}
 
 export interface Product {
   _id: string
@@ -54,7 +49,6 @@ export interface Product {
   price?: number
   currency?: string
   formats?: ProductFormat[]
-  edition?: ProductEdition
   featured?: boolean
   collection?: string
   paymentUrl?: string

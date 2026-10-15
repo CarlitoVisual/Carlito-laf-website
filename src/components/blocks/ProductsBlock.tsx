@@ -13,7 +13,7 @@ type ProductDisplayProps = {
   buttonLabel?: string
 }
 
-const PRODUCT_FIELDS = `_id, title, shortDescription, "image": coalesce(image, photo->image), price, currency, formats[]{ name, price, stock }, edition, featured, "collection": coalesce(collection->title, photo->collection->title), paymentUrl`
+const PRODUCT_FIELDS = `_id, title, shortDescription, "image": coalesce(image, photo->image), price, currency, formats[]{ name, price, stock }, featured, "collection": coalesce(collection->title, photo->collection->title), paymentUrl`
 
 async function resolveProducts(props: BlockProps<ProductsBlockData>): Promise<Product[]> {
   const { displayMode, collection, products } = props
@@ -149,11 +149,6 @@ function ProductCard({ product, showPrice, showDescription, showButton, buttonLa
               <span className="text-xs uppercase" style={{ color: "var(--color-muted)", letterSpacing: "0.2em" }}>Épuisé</span>
             </div>
           )}
-          {product.edition?.limited && (
-            <div className="absolute top-3 left-3 px-2 py-1 text-xs uppercase rounded-full" style={{ background: "var(--color-accent)", color: "var(--color-on-accent)", letterSpacing: "0.1em" }}>
-              Édition limitée
-            </div>
-          )}
         </div>
       )}
 
@@ -185,12 +180,6 @@ function ProductCard({ product, showPrice, showDescription, showButton, buttonLa
               </span>
             ))}
           </div>
-        )}
-
-        {product.edition?.limited && product.edition?.number && (
-          <p className="text-xs mb-3" style={{ color: "var(--color-muted)" }}>
-            {product.edition.number} exemplaires • {product.edition.certificate ? "Certificat inclus" : ""}
-          </p>
         )}
 
         <div className="flex items-center justify-between mt-auto pt-4" style={{ borderTop: "1px solid var(--color-border)" }}>
@@ -234,11 +223,6 @@ function FeaturedProduct({ product, reverse, showPrice, showButton, buttonLabel 
       {product.image && (
         <div className="w-full md:w-1/2 relative overflow-hidden" style={{ aspectRatio: "3/4" }}>
           <Image src={urlFor(product.image).width(900).quality(90).url()} alt={product.title} fill className="object-cover" sizes="50vw" />
-          {product.edition?.limited && (
-            <div className="absolute top-4 left-4 px-3 py-1 text-xs uppercase rounded-full" style={{ background: "var(--color-accent)", color: "var(--color-on-accent)", letterSpacing: "0.1em" }}>
-              Édition limitée
-            </div>
-          )}
         </div>
       )}
       <div className="flex-1 space-y-5">
@@ -264,12 +248,6 @@ function FeaturedProduct({ product, reverse, showPrice, showButton, buttonLabel 
               ))}
             </div>
           </div>
-        )}
-        {product.edition?.number && (
-          <p className="text-sm" style={{ color: "var(--color-muted)" }}>
-            Tirage limité à {product.edition.number} exemplaires
-            {product.edition.certificate ? " · Certificat d'authenticité inclus" : ""}
-          </p>
         )}
         <div className="flex items-center gap-6 pt-2">
           {showPrice && price !== null && (

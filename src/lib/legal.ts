@@ -37,7 +37,7 @@ export const LEGAL = {
   },
 
   /** Date de dernière mise à jour des documents juridiques */
-  updatedAt: "14 octobre 2026",
+  updatedAt: "15 octobre 2026",
 } as const
 
 /** Sous-traitants qui traitent des données personnelles pour le compte de l'éditeur */
@@ -61,6 +61,11 @@ export const PROCESSORS = [
     name: "Stripe Payments Europe (Irlande)",
     role: "Paiement en ligne des tirages via un lien de paiement sécurisé. Vos données bancaires sont saisies chez Stripe et ne transitent jamais par ce site.",
     safeguard: "Prestataire établi dans l’Union européenne, agréé comme établissement de paiement.",
+  },
+  {
+    name: "Saal Digital Fotoservice GmbH (Allemagne)",
+    role: "Impression des tirages commandés et livraison : reçoit vos nom et adresse de livraison.",
+    safeguard: "Prestataire établi dans l’Union européenne.",
   },
   {
     name: "Sanity AS (Norvège)",
