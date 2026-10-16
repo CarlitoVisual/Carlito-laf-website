@@ -193,7 +193,7 @@ export default function BoutiqueCollectionGallery({ products }: { products: Bout
               >
                 {product.image && (
                   <Image
-                    src={urlFor(product.image).width(700).quality(90).url()}
+                    src={urlFor(product.image).width(900).height(1200).fit("crop").quality(85).url()}
                     alt={product.title}
                     fill
                     className="object-cover transition-transform duration-700 group-hover:scale-[1.03]"

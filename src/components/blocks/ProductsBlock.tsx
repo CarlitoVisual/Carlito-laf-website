@@ -138,7 +138,7 @@ function ProductCard({ product, showPrice, showDescription, showButton, buttonLa
       {product.image && (
         <div className="relative overflow-hidden" style={{ aspectRatio: "3/4" }}>
           <Image
-            src={urlFor(product.image).width(600).quality(90).url()}
+            src={urlFor(product.image).width(900).height(1200).fit("crop").quality(85).url()}
             alt={product.title}
             fill
             className="object-cover transition-transform duration-700 group-hover:scale-105"
@@ -222,7 +222,7 @@ function FeaturedProduct({ product, reverse, showPrice, showButton, buttonLabel 
     <div className={`flex flex-col ${reverse ? "md:flex-row-reverse" : "md:flex-row"} gap-12 items-center`}>
       {product.image && (
         <div className="w-full md:w-1/2 relative overflow-hidden" style={{ aspectRatio: "3/4" }}>
-          <Image src={urlFor(product.image).width(900).quality(90).url()} alt={product.title} fill className="object-cover" sizes="50vw" />
+          <Image src={urlFor(product.image).width(1200).height(1600).fit("crop").quality(85).url()} alt={product.title} fill className="object-cover" sizes="50vw" />
         </div>
       )}
       <div className="flex-1 space-y-5">

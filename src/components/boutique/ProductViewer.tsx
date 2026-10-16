@@ -195,7 +195,7 @@ export default function ProductViewer({ product, onClose, initialFormatName, hid
             <div style={{ flex: 1, position: "relative", minHeight: 0 }}>
               {activeImage && (
                 <Image
-                  src={urlFor(activeImage).width(700).quality(92).url()}
+                  src={urlFor(activeImage).width(1600).quality(88).url()}
                   alt={product.title}
                   fill
                   className="object-cover"

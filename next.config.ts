@@ -38,6 +38,9 @@ const securityHeaders = [
 const nextConfig: NextConfig = {
   poweredByHeader: false,
   images: {
+    // Redimensionnement par le CDN Sanity (voir src/lib/sanityImageLoader.ts)
+    loader: "custom",
+    loaderFile: "./src/lib/sanityImageLoader.ts",
     remotePatterns: [{ protocol: "https", hostname: "cdn.sanity.io" }],
   },
   async headers() {

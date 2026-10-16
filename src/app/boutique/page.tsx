@@ -96,7 +96,7 @@ export default async function BoutiquePage() {
                 >
                   {col.cover && (
                     <Image
-                      src={urlFor(col.cover).width(800).quality(88).url()}
+                      src={urlFor(col.cover).width(960).height(1200).fit("crop").quality(85).url()}
                       alt={col.name}
                       fill
                       className="object-cover transition-transform duration-700 group-hover:scale-105"
