@@ -105,6 +105,8 @@ export function businessJsonLd() {
         "@id": BUSINESS_ID,
         name: SITE_NAME,
         url: SITE_URL,
+        logo: `${SITE_URL}/icon-512.png`,
+        image: `${SITE_URL}/icon-512.png`,
         description:
           "Photographe et vidéaste au Pays basque spécialisé dans les sports nautiques, l'aventure et les paysages : reportages, films, prestations sur devis et tirages Fine Art.",
         email: LEGAL.email,
