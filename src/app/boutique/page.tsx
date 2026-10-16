@@ -11,8 +11,8 @@ import TryAtHomeBanner from "@/components/boutique/TryAtHomeBanner"
 export const revalidate = 60
 
 export const metadata: Metadata = pageMeta({
-  title: "Boutique Fine Art",
-  description: "Tirages photo Fine Art de surf, d'océan, d'aventure et de paysages du Pays basque, sur papier Hahnemühle, imprimés à la demande.",
+  title: "Boutique — tirages photo",
+  description: "Tirages photo de surf, d’océan, d’aventure et de paysages du Pays basque, en Fine Art Hahnemühle ou papier photo mat / brillant, imprimés à la demande.",
   path: "/boutique",
 })
 
@@ -64,7 +64,7 @@ export default async function BoutiquePage() {
           Boutique
         </h1>
         <p className="max-w-xl mx-auto text-base" style={{ color: "var(--color-muted)" }}>
-          Des tirages Fine Art sur papier Hahnemühle, prêts à encadrer, imprimés à la demande.
+          Deux gammes de tirages, imprimés à la demande et prêts à encadrer : Fine Art sur papier d’art Hahnemühle, ou papier photo mat ou brillant à petit prix.
           Chaque image raconte une aventure vécue. 
         </p>
         <Link
@@ -138,7 +138,7 @@ export default async function BoutiquePage() {
       <div className="py-16 px-6" style={{ borderTop: "1px solid var(--color-border)", background: "var(--color-surface)" }}>
         <div className="max-w-4xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
           {[
-            { icon: "🖨️", label: "Papier Hahnemühle", desc: "Qualité Fine Art" },
+            { icon: "🖨️", label: "Deux gammes", desc: "Fine Art ou papier photo" },
             { icon: "🏭", label: "Laboratoire professionnel", desc: "Impression à la demande" },
             { icon: "🖼️", label: "Prêt à encadrer", desc: "Formats standards" },
             { icon: "🌊", label: "Livraison France", desc: "Emballage sécurisé" },

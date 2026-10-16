@@ -34,6 +34,9 @@ export interface CTAButton {
 // ─── Documents ───────────────────────────────────────────────────────────────
 
 export interface ProductFormat {
+  _key?: string
+  /** Gamme : « fineart » (Hahnemühle, par défaut) ou « photo » (papier photo mat / brillant) */
+  range?: "fineart" | "photo"
   name: string
   price?: number
   stock?: number
@@ -49,6 +52,8 @@ export interface Product {
   price?: number
   currency?: string
   formats?: ProductFormat[]
+  /** Papier de la gamme Fine Art (valeur du Studio, ex. « photo-rag ») */
+  paper?: string
   featured?: boolean
   collection?: string
   paymentUrl?: string

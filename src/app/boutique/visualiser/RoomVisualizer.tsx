@@ -3,10 +3,10 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react"
 import Image from "next/image"
 import { urlFor } from "@/lib/image"
-import { formatPrice, isFormatAvailable } from "@/lib/shop"
+import { formatPrice, hasBothRanges, isFormatAvailable } from "@/lib/shop"
 import { printSizeCm, sanityImageAspect } from "@/lib/printSize"
 import ProductViewer from "@/components/boutique/ProductViewer"
-import type { Product } from "@/types/sanity"
+import type { Product, ProductFormat } from "@/types/sanity"
 
 type Pt = { x: number; y: number }
 type Room = { url: string; w: number; h: number }
@@ -56,7 +56,18 @@ export default function RoomVisualizer({ products, initialProductId, initialForm
     products.find((p) => p._id === initialProductId)?._id ?? products[0]?._id ?? ""
   )
   const product = products.find((p) => p._id === productId)
-  const formats = useMemo(() => (product?.formats ?? []).filter((f) => printSizeCm(f.name, 1)), [product])
+  // Une seule entrée par taille (les gammes Fine Art / papier photo partagent les mêmes formats) : la moins chère disponible
+  const formats = useMemo(() => {
+    const bySize = new Map<string, ProductFormat>()
+    for (const f of product?.formats ?? []) {
+      if (!printSizeCm(f.name, 1)) continue
+      const cur = bySize.get(f.name)
+      const better = !cur || (isFormatAvailable(f) && (!isFormatAvailable(cur) || (f.price ?? Infinity) < (cur.price ?? Infinity)))
+      if (better) bySize.set(f.name, f)
+    }
+    return [...bySize.values()]
+  }, [product])
+  const severalRanges = hasBothRanges(product?.formats)
   const [formatName, setFormatName] = useState<string | undefined>(
     () => product?.formats?.find((f) => f.name === initialFormat)?.name ?? undefined
   )
@@ -317,7 +328,7 @@ export default function RoomVisualizer({ products, initialProductId, initialForm
               <div className="flex flex-wrap gap-2">
                 {formats.map((f) => (
                   <button key={f.name} type="button" onClick={() => setFormatName(f.name)} style={pill(f.name === activeFormat?.name)} disabled={!isFormatAvailable(f)}>
-                    {f.name} cm{f.price ? ` · ${formatPrice(f.price, product?.currency || "EUR")}` : ""}
+                    {f.name} cm{f.price ? ` · ${severalRanges ? "dès " : ""}${formatPrice(f.price, product?.currency || "EUR")}` : ""}
                   </button>
                 ))}
               </div>

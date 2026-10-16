@@ -4,7 +4,7 @@ import { useState, useEffect, useCallback, useRef } from "react"
 import { createPortal } from "react-dom"
 import Image from "next/image"
 import { urlFor } from "@/lib/image"
-import { formatPrice, startingPrice, isProductAvailable } from "@/lib/shop"
+import { formatPrice, startingPrice, isProductAvailable, sizeChips, hasBothRanges } from "@/lib/shop"
 import ProductViewer from "./ProductViewer"
 import type { Product } from "@/types/sanity"
 
@@ -232,11 +232,11 @@ export default function BoutiqueCollectionGallery({ products }: { products: Bout
 
                 {(product.formats?.length ?? 0) > 0 && (
                   <div className="flex flex-wrap gap-1.5 mb-4">
-                    {product.formats!.map((f, j) => {
-                      const avail = (f.stock ?? 1) > 0
+                    {sizeChips(product.formats).map((f) => {
+                      const avail = f.available
                       return (
                         <span
-                          key={j}
+                          key={f.name}
                           className="text-xs px-2.5 py-1 border"
                           style={{
                             borderColor: avail ? "var(--color-border)" : "transparent",
@@ -249,6 +249,9 @@ export default function BoutiqueCollectionGallery({ products }: { products: Bout
                         </span>
                       )
                     })}
+                    {hasBothRanges(product.formats) && (
+                      <span className="text-xs px-2.5 py-1" style={{ color: "var(--color-accent)" }}>Fine Art ou papier photo</span>
+                    )}
                   </div>
                 )}
 

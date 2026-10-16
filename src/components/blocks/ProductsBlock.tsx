@@ -2,6 +2,7 @@ import Image from "next/image"
 import { client } from "@/lib/sanity.client"
 import { urlFor } from "@/lib/image"
 import { safeHref } from "@/lib/safe"
+import { hasBothRanges, sizeChips } from "@/lib/shop"
 import type { BlockProps, Product, ProductsBlock as ProductsBlockData } from "@/types/sanity"
 
 type ProductDisplayProps = {
@@ -13,7 +14,7 @@ type ProductDisplayProps = {
   buttonLabel?: string
 }
 
-const PRODUCT_FIELDS = `_id, title, shortDescription, "image": coalesce(image, photo->image), price, currency, formats[]{ name, price, stock }, featured, "collection": coalesce(collection->title, photo->collection->title), paymentUrl`
+const PRODUCT_FIELDS = `_id, title, shortDescription, "image": coalesce(image, photo->image), price, currency, formats[]{ _key, range, name, price, stock }, paper, featured, "collection": coalesce(collection->title, photo->collection->title), paymentUrl`
 
 async function resolveProducts(props: BlockProps<ProductsBlockData>): Promise<Product[]> {
   const { displayMode, collection, products } = props
@@ -166,19 +167,22 @@ function ProductCard({ product, showPrice, showDescription, showButton, buttonLa
         {/* Formats */}
         {formats.length > 0 && (
           <div className="flex flex-wrap gap-1 mb-4">
-            {formats.map((f, i) => (
+            {sizeChips(formats).map((f) => (
               <span
-                key={i}
+                key={f.name}
                 className="text-xs px-2 py-0.5 border"
                 style={{
-                  borderColor: (f.stock ?? 1) > 0 ? "var(--color-border)" : "transparent",
-                  color: (f.stock ?? 1) > 0 ? "var(--color-muted)" : "var(--color-border)",
-                  textDecoration: (f.stock ?? 1) === 0 ? "line-through" : "none",
+                  borderColor: f.available ? "var(--color-border)" : "transparent",
+                  color: f.available ? "var(--color-muted)" : "var(--color-border)",
+                  textDecoration: f.available ? "none" : "line-through",
                 }}
               >
                 {f.name}
               </span>
             ))}
+            {hasBothRanges(formats) && (
+              <span className="text-xs px-2 py-0.5" style={{ color: "var(--color-accent)" }}>Fine Art ou papier photo</span>
+            )}
           </div>
         )}
 
@@ -235,15 +239,17 @@ function FeaturedProduct({ product, reverse, showPrice, showButton, buttonLabel 
         )}
         {!!product.formats?.length && (
           <div>
-            <p className="text-xs uppercase mb-2" style={{ color: "var(--color-muted)", letterSpacing: "0.15em" }}>Formats disponibles</p>
+            <p className="text-xs uppercase mb-2" style={{ color: "var(--color-muted)", letterSpacing: "0.15em" }}>
+              Formats disponibles{hasBothRanges(product.formats) ? " · Fine Art ou papier photo" : ""}
+            </p>
             <div className="flex flex-wrap gap-2">
-              {product.formats.map((f, i) => (
-                <span key={i} className="text-sm px-3 py-1 border" style={{
-                  borderColor: (f.stock ?? 1) > 0 ? "var(--color-border)" : "transparent",
-                  color: (f.stock ?? 1) > 0 ? "var(--color-text)" : "var(--color-border)",
-                  textDecoration: (f.stock ?? 1) === 0 ? "line-through" : "none",
+              {sizeChips(product.formats).map((f) => (
+                <span key={f.name} className="text-sm px-3 py-1 border" style={{
+                  borderColor: f.available ? "var(--color-border)" : "transparent",
+                  color: f.available ? "var(--color-text)" : "var(--color-border)",
+                  textDecoration: f.available ? "none" : "line-through",
                 }}>
-                  {f.name}{f.price ? ` — ${f.price}€` : ""}
+                  {f.name}
                 </span>
               ))}
             </div>

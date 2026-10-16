@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server"
 import { rateLimit, getClientIp } from "@/lib/apiSecurity"
 import { client } from "@/lib/sanity.client"
-import { isFormatAvailable, paperLabel } from "@/lib/shop"
+import { isFinish, isFormatAvailable, printPaperLabel, rangeOf } from "@/lib/shop"
 import { urlFor } from "@/lib/image"
 import { LEGAL } from "@/lib/legal"
 import { stripeApi, stripeEnabled, StripeError, type CheckoutSession } from "@/lib/stripe"
@@ -20,7 +20,7 @@ type CheckoutProduct = {
 }
 
 const PRODUCT_QUERY = `*[_type == "product" && _id == $id][0]{
-  _id, title, price, currency, paper, "image": coalesce(image, photo->image), formats[]{ name, price, stock }
+  _id, title, price, currency, paper, "image": coalesce(image, photo->image), formats[]{ _key, range, name, price, stock }
 }`
 
 /**
@@ -41,7 +41,7 @@ export async function POST(req: Request) {
     }
 
     const body = await req.json()
-    const { productId, format, qty: rawQty, acceptCgv } = body ?? {}
+    const { productId, format, formatKey, range: rawRange, finish: rawFinish, qty: rawQty, acceptCgv } = body ?? {}
 
     if (typeof productId !== "string" || !productId || productId.length > 120 || productId.startsWith("drafts.")) {
       return NextResponse.json({ error: "Produit invalide" }, { status: 400 })
@@ -55,15 +55,26 @@ export async function POST(req: Request) {
 
     let unitPrice: number | undefined = product.price
     let formatName: string | undefined
+    let selectedKey = ""
+    let range = rangeOf(typeof rawRange === "string" ? rawRange : undefined)
     let stockLimit = MAX_QTY
     if (product.formats?.length) {
-      const selected = product.formats.find((f) => f.name === format)
+      // Format identifié par sa clé (unique), sinon par sa taille dans la gamme demandée
+      const selected =
+        typeof formatKey === "string" && formatKey
+          ? product.formats.find((f) => f._key === formatKey)
+          : product.formats.find((f) => f.name === format && rangeOf(f.range) === range)
       if (!selected) return NextResponse.json({ error: "Format invalide" }, { status: 400 })
       if (!isFormatAvailable(selected)) return NextResponse.json({ error: "Ce format n’est plus disponible" }, { status: 409 })
       unitPrice = selected.price ?? product.price
       formatName = selected.name
+      selectedKey = selected._key ?? ""
+      range = rangeOf(selected.range)
       stockLimit = Math.min(selected.stock ?? MAX_QTY, MAX_QTY)
     }
+    // Papier photo : finition mat ou brillant (mat par défaut)
+    const finish = range === "photo" ? (isFinish(rawFinish) ? rawFinish : "mat") : ""
+    const paper = printPaperLabel(range, finish, product.paper)
 
     const qty = Number(rawQty)
     if (!Number.isInteger(qty) || qty < 1 || qty > stockLimit) {
@@ -74,7 +85,7 @@ export async function POST(req: Request) {
     }
 
     const origin = new URL(req.url).origin
-    const name = formatName ? `${product.title} — ${formatName} cm` : product.title
+    const name = formatName ? `${product.title} — ${formatName} cm, ${range === "photo" ? paper.toLowerCase() : "Fine Art"}` : product.title
     const imageUrl = product.image ? urlFor(product.image).width(800).quality(80).url() : undefined
 
     const session = await stripeApi<CheckoutSession>("POST", "/checkout/sessions", {
@@ -88,7 +99,10 @@ export async function POST(req: Request) {
             unit_amount: Math.round(unitPrice * 100),
             product_data: {
               name,
-              description: `Tirage photo Fine Art sur ${paperLabel(product.paper)}, imprimé à la commande`,
+              description:
+                range === "photo"
+                  ? `Tirage sur ${paper.toLowerCase()}, imprimé à la commande`
+                  : `Tirage photo Fine Art sur ${paper}, imprimé à la commande`,
               ...(imageUrl ? { images: [imageUrl] } : {}),
               metadata: { sanityId: product._id },
             },
@@ -111,7 +125,15 @@ export async function POST(req: Request) {
         shipping_address: { message: `Livraison en ${LEGAL.shipping.zone} uniquement (Corse comprise).` },
         submit: { message: `Conditions générales de vente acceptées sur le site. Droit de rétractation : 14 jours après réception.` },
       },
-      metadata: { productId: product._id, format: formatName ?? "", qty: String(qty), unitPrice: String(unitPrice) },
+      metadata: {
+        productId: product._id,
+        format: formatName ?? "",
+        formatKey: selectedKey,
+        range,
+        finish,
+        qty: String(qty),
+        unitPrice: String(unitPrice),
+      },
       payment_intent_data: { description: `${name} × ${qty}`, metadata: { productId: product._id, format: formatName ?? "" } },
       success_url: `${origin}/boutique/merci?session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${origin}/boutique`,

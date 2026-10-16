@@ -18,7 +18,7 @@ const DEFAULTS: Record<string, Pick<LineUpPanel, "meta" | "description" | "cta" 
   },
   "/boutique": {
     meta: "Tirages Fine Art",
-    description: "Papier Hahnemühle, impression Fine Art à la demande. Ramenez la vague à la maison.",
+    description: "Fine Art Hahnemühle ou papier photo, imprimés à la demande. Ramenez la vague à la maison.",
     cta: "Voir les tirages",
     secondary: { label: "Voir un tirage chez moi", href: "/boutique/visualiser" },
   },

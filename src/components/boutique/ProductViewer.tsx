@@ -4,7 +4,7 @@ import { useState, useEffect } from "react"
 import { createPortal } from "react-dom"
 import Image from "next/image"
 import { urlFor } from "@/lib/image"
-import { formatPrice, isFormatAvailable } from "@/lib/shop"
+import { FINISHES, RANGE_INFO, formatPrice, isFormatAvailable, paperLabel, rangeOf, type Finish, type PrintRange } from "@/lib/shop"
 import type { Product, ProductFormat, SanityImage } from "@/types/sanity"
 import FormPrivacyNotice from "@/components/legal/FormPrivacyNotice"
 import { LEGAL } from "@/lib/legal"
@@ -23,10 +23,25 @@ type OrderStatus = "idle" | "sending" | "sent" | "error"
 export default function ProductViewer({ product, onClose, initialFormatName, hideVisualizerLink }: Props) {
   const formats = product.formats ?? []
   const availableFormats = formats.filter(isFormatAvailable)
+  // Gammes présentes sur ce produit (Fine Art d'abord)
+  const ranges = (["fineart", "photo"] as PrintRange[]).filter((r) => formats.some((f) => rangeOf(f.range) === r))
+  const initialFormat =
+    availableFormats.find((f) => f.name === initialFormatName && rangeOf(f.range) === "fineart") ??
+    availableFormats.find((f) => f.name === initialFormatName) ??
+    availableFormats[0] ??
+    null
 
-  const [selectedFormat, setSelectedFormat] = useState<ProductFormat | null>(
-    availableFormats.find((f) => f.name === initialFormatName) ?? availableFormats[0] ?? null
-  )
+  const [selectedFormat, setSelectedFormat] = useState<ProductFormat | null>(initialFormat)
+  const [range, setRange] = useState<PrintRange>(rangeOf(initialFormat?.range ?? ranges[0]))
+  const [finish, setFinish] = useState<Finish>("mat")
+  const rangeFormats = formats.filter((f) => rangeOf(f.range) === range)
+  const isSelected = (f: ProductFormat) =>
+    !!selectedFormat &&
+    (f._key && selectedFormat._key ? f._key === selectedFormat._key : f.name === selectedFormat.name && rangeOf(f.range) === rangeOf(selectedFormat.range))
+  const minPrice = (r: PrintRange) => {
+    const prices = formats.filter((f) => rangeOf(f.range) === r && isFormatAvailable(f) && f.price).map((f) => f.price as number)
+    return prices.length ? Math.min(...prices) : null
+  }
   const [qty, setQty] = useState(1)
   const [activeImage, setActiveImage] = useState<SanityImage | undefined>(product.image)
   const [showOrder, setShowOrder] = useState(false)
@@ -59,6 +74,12 @@ export default function ProductViewer({ product, onClose, initialFormatName, hid
     setStatus("idle")
   }
 
+  function selectRange(r: PrintRange) {
+    setRange(r)
+    const inRange = availableFormats.filter((f) => rangeOf(f.range) === r)
+    selectFormat(inRange.find((f) => f.name === selectedFormat?.name) ?? inRange[0] ?? null)
+  }
+
   function changeField(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) {
     setForm(f => ({ ...f, [e.target.name]: e.target.value }))
   }
@@ -71,7 +92,15 @@ export default function ProductViewer({ product, onClose, initialFormatName, hid
       const res = await fetch("/api/checkout", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ productId: product._id, format: selectedFormat?.name, qty, acceptCgv }),
+        body: JSON.stringify({
+          productId: product._id,
+          formatKey: selectedFormat?._key,
+          format: selectedFormat?.name,
+          range,
+          finish: range === "photo" ? finish : undefined,
+          qty,
+          acceptCgv,
+        }),
       })
       const data = await res.json().catch(() => ({}))
       if (res.status === 503 && data.fallback) {
@@ -100,7 +129,10 @@ export default function ProductViewer({ product, onClose, initialFormatName, hid
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           productId: product._id,
+          formatKey: selectedFormat?._key,
           format: selectedFormat?.name,
+          range,
+          finish: range === "photo" ? finish : undefined,
           qty,
           acceptCgv,
           ...form,
@@ -287,25 +319,67 @@ export default function ProductViewer({ product, onClose, initialFormatName, hid
               </a>
             )}
 
-            {/* Format selector */}
-            {formats.length > 0 && (
+            {/* Range selector (Fine Art / papier photo) */}
+            {ranges.length > 1 && (
               <div>
                 <p style={{ color: "var(--color-muted)", fontSize: "0.7rem", letterSpacing: "0.15em", textTransform: "uppercase", fontWeight: 600, marginBottom: 10 }}>
-                  Format
+                  Gamme
                 </p>
-                <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
-                  {formats.map((f, i) => {
-                    const avail = isFormatAvailable(f)
-                    const selected = selectedFormat?.name === f.name
+                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 8 }}>
+                  {ranges.map((r) => {
+                    const on = r === range
+                    const from = minPrice(r)
                     return (
                       <button
-                        key={i}
+                        key={r}
+                        type="button"
+                        onClick={() => selectRange(r)}
+                        aria-pressed={on}
+                        style={{
+                          textAlign: "left",
+                          padding: "12px 14px",
+                          borderRadius: 14,
+                          border: `1px solid ${on ? "var(--color-accent)" : "var(--color-border)"}`,
+                          background: on ? "rgba(227,199,155,0.12)" : "transparent",
+                          color: "var(--color-text)",
+                          cursor: "pointer",
+                        }}
+                      >
+                        <span style={{ display: "block", fontWeight: 700, fontSize: "0.85rem" }}>{RANGE_INFO[r].label}</span>
+                        <span style={{ display: "block", color: "var(--color-muted)", fontSize: "0.72rem", marginTop: 2 }}>
+                          {r === "fineart" ? paperLabel(product.paper) : RANGE_INFO[r].detail}
+                        </span>
+                        {from !== null && (
+                          <span style={{ display: "block", color: "var(--color-accent)", fontSize: "0.75rem", marginTop: 6, fontWeight: 600 }}>
+                            dès {formatPrice(from, currency)}
+                          </span>
+                        )}
+                      </button>
+                    )
+                  })}
+                </div>
+              </div>
+            )}
+
+            {/* Format selector */}
+            {rangeFormats.length > 0 && (
+              <div>
+                <p style={{ color: "var(--color-muted)", fontSize: "0.7rem", letterSpacing: "0.15em", textTransform: "uppercase", fontWeight: 600, marginBottom: 10 }}>
+                  Format{ranges.length === 1 ? ` · ${range === "fineart" ? paperLabel(product.paper) : RANGE_INFO.photo.label}` : ""}
+                </p>
+                <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
+                  {rangeFormats.map((f, i) => {
+                    const avail = isFormatAvailable(f)
+                    const selected = isSelected(f)
+                    return (
+                      <button
+                        key={f._key ?? i}
                         disabled={!avail}
                         onClick={() => avail && selectFormat(f)}
                         style={{
                           padding: "10px 16px",
                           fontSize: "0.82rem",
-                          border: `1px solid ${selected ? "var(--color-accent)" : avail ? "var(--color-border)" : "var(--color-border)"}`,
+                          border: `1px solid ${selected ? "var(--color-accent)" : "var(--color-border)"}`,
                           borderRadius: 999,
                           background: selected ? "var(--color-accent)" : "transparent",
                           color: selected ? "var(--color-on-accent)" : avail ? "var(--color-text)" : "var(--color-muted)",
@@ -322,6 +396,43 @@ export default function ProductViewer({ product, onClose, initialFormatName, hid
                     )
                   })}
                 </div>
+              </div>
+            )}
+
+            {/* Finish selector (papier photo) */}
+            {range === "photo" && rangeFormats.length > 0 && (
+              <div>
+                <p style={{ color: "var(--color-muted)", fontSize: "0.7rem", letterSpacing: "0.15em", textTransform: "uppercase", fontWeight: 600, marginBottom: 10 }}>
+                  Finition
+                </p>
+                <div style={{ display: "flex", gap: 8 }}>
+                  {FINISHES.map((fi) => {
+                    const on = fi.value === finish
+                    return (
+                      <button
+                        key={fi.value}
+                        type="button"
+                        onClick={() => setFinish(fi.value)}
+                        aria-pressed={on}
+                        style={{
+                          padding: "10px 18px",
+                          fontSize: "0.82rem",
+                          borderRadius: 999,
+                          border: `1px solid ${on ? "var(--color-accent)" : "var(--color-border)"}`,
+                          background: on ? "var(--color-accent)" : "transparent",
+                          color: on ? "var(--color-on-accent)" : "var(--color-text)",
+                          fontWeight: on ? 600 : 400,
+                          cursor: "pointer",
+                        }}
+                      >
+                        {fi.label}
+                      </button>
+                    )
+                  })}
+                </div>
+                <p style={{ color: "var(--color-muted)", fontSize: "0.72rem", marginTop: 8 }}>
+                  {finish === "mat" ? "Sans reflets, rendu doux : idéal sous verre ou dans une pièce lumineuse." : "Couleurs éclatantes et noirs profonds, avec un léger reflet."}
+                </p>
               </div>
             )}
 

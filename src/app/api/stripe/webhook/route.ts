@@ -2,7 +2,7 @@ import { NextResponse } from "next/server"
 import { writeClient } from "@/lib/sanity.write"
 import { sendEmail } from "@/lib/email"
 import { LEGAL } from "@/lib/legal"
-import { formatPrice, paperLabel } from "@/lib/shop"
+import { formatPrice, printPaperLabel } from "@/lib/shop"
 import { urlFor } from "@/lib/image"
 import { customerOrderEmail, esc } from "@/lib/orderEmail"
 import type { SanityImage } from "@/types/sanity"
@@ -67,6 +67,7 @@ async function handlePaidSession(session: CheckoutSession) {
   const meta = session.metadata ?? {}
   const productId = meta.productId
   const formatName = meta.format || undefined
+  const formatKey = meta.formatKey || undefined
   const qty = Number(meta.qty) || 1
   const unitPrice = Number(meta.unitPrice) || fromCents(session.amount_total) / qty
   const total = fromCents(session.amount_total)
@@ -75,6 +76,7 @@ async function handlePaidSession(session: CheckoutSession) {
     ? await writeClient.fetch<ProductInfo | null>(`*[_id == $id][0]{ _id, title, paper, "image": coalesce(image, photo->image), formats[]{ _key, name, stock } }`, { id: productId })
     : null
 
+  const paper = printPaperLabel(meta.range, meta.finish, product?.paper)
   const paidAt = new Date((session.created ?? Date.now() / 1000) * 1000)
   const year = paidAt.getFullYear()
   const number = `C-${year}-${String(await nextOrderSeq(year)).padStart(4, "0")}`
@@ -97,7 +99,7 @@ async function handlePaidSession(session: CheckoutSession) {
         ...(product ? { product: { _type: "reference", _ref: product._id, _weak: true } } : {}),
         title: product?.title ?? "Tirage",
         format: formatName,
-        paper: paperLabel(product?.paper),
+        paper: paper,
         qty,
         unitPrice,
       },
@@ -118,7 +120,7 @@ async function handlePaidSession(session: CheckoutSession) {
   if (created.number !== number) return
 
   // Stock : seulement si le format a un stock chiffré (vide = tirage à la demande, illimité)
-  const fmt = product?.formats?.find((f) => f.name === formatName)
+  const fmt = product?.formats?.find((f) => (formatKey ? f._key === formatKey : f.name === formatName))
   if (product && fmt && typeof fmt.stock === "number") {
     await writeClient
       .patch(product._id)
@@ -147,7 +149,7 @@ async function handlePaidSession(session: CheckoutSession) {
       ``,
       `Tirage     : ${title}`,
       `Format     : ${fmtLine}`,
-      `Papier     : ${paperLabel(product?.paper)}`,
+      `Papier     : ${paper}`,
       `Quantité   : ${qty}`,
       `Total payé : ${formatPrice(total)}${fee !== undefined ? ` (frais Stripe ${formatPrice(fee)})` : ""}`,
       ``,
@@ -162,7 +164,7 @@ async function handlePaidSession(session: CheckoutSession) {
     html: `<div style="font-family:Helvetica,Arial,sans-serif;color:#051B2E;font-size:14px;line-height:1.6;max-width:600px">
       <h2 style="margin:0 0 8px">Commande ${esc(number)} — payée</h2>
       ${imageUrl ? `<img src="${esc(imageUrl)}" width="280" alt="${esc(title)}" style="display:block;width:280px;height:auto;border-radius:6px;margin:8px 0 12px">` : ""}
-      <p style="margin:0"><strong>${esc(title)}</strong><br>${esc(fmtLine)} · ${esc(paperLabel(product?.paper))} · × ${esc(qty)}<br>
+      <p style="margin:0"><strong>${esc(title)}</strong><br>${esc(fmtLine)} · ${esc(paper)} · × ${esc(qty)}<br>
       Total payé : <strong>${esc(formatPrice(total))}</strong>${fee !== undefined ? ` (frais Stripe ${esc(formatPrice(fee))})` : ""}</p>
       <h3 style="margin:18px 0 4px">À commander chez Saal — livraison à</h3>
       <p style="margin:0">${addressList.map(esc).join("<br>")}<br>Tél. : ${esc(customer.phone ?? "—")}<br>E-mail : ${esc(customer.email ?? "—")}</p>
@@ -178,7 +180,7 @@ async function handlePaidSession(session: CheckoutSession) {
       firstName: (customer.name ?? "").split(" ")[0] || undefined,
       title,
       formatLine: fmtLine,
-      paper: paperLabel(product?.paper),
+      paper: paper,
       qty,
       total,
       imageUrl,

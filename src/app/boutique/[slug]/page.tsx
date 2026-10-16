@@ -28,7 +28,7 @@ async function getCollectionProducts(collectionName: string): Promise<Product[]>
       _id, title, shortDescription,
       "image": coalesce(image, photo->image),
       gallery[]{ _key, asset },
-      price, currency, formats[]{ name, price, stock },
+      price, currency, formats[]{ _key, range, name, price, stock }, paper,
       "collection": coalesce(collection->title, photo->collection->title), paymentUrl, featured
     }`,
     { col: collectionName }
@@ -47,8 +47,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   if (!name) return {}
   const products = await getCollectionProducts(name)
   return pageMeta({
-    title: `${name} — Tirages Fine Art`,
-    description: `Tirages photo Fine Art — ${name}. Papier Hahnemühle, imprimés à la demande par un laboratoire professionnel.`,
+    title: `${name} — Tirages photo`,
+    description: `Tirages photo — ${name}. Fine Art Hahnemühle ou papier photo mat / brillant, imprimés à la demande par un laboratoire professionnel.`,
     path: `/boutique/${slug}`,
     image: products.find((p) => p.image?.asset)?.image,
   })
@@ -66,7 +66,7 @@ export default async function CollectionPage({ params }: Props) {
   const productsLd = {
     "@context": "https://schema.org",
     "@type": "ItemList",
-    name: `${collectionName} — Tirages Fine Art`,
+    name: `${collectionName} — Tirages photo`,
     url: pageUrl,
     itemListElement: products.map((p, i) => {
       const priced = (p.formats ?? []).filter((f) => typeof f.price === "number")
@@ -84,7 +84,7 @@ export default async function CollectionPage({ params }: Props) {
           url: pageUrl,
           ...(image ? { image } : {}),
           ...(p.shortDescription ? { description: p.shortDescription } : {}),
-          category: "Tirage photo Fine Art",
+          category: "Tirage photo",
           brand: { "@type": "Brand", name: SITE_NAME },
           ...(prices.length
             ? {

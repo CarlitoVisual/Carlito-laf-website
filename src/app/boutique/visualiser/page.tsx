@@ -16,7 +16,7 @@ const QUERY = `*[_type == "product" && defined(coalesce(image, photo->image))] |
   _id, title, shortDescription,
   "image": coalesce(image, photo->image),
   gallery[]{ _key, asset },
-  price, currency, formats[]{ name, price, stock },
+  price, currency, formats[]{ _key, range, name, price, stock }, paper,
   "collection": coalesce(collection->title, photo->collection->title), paymentUrl, featured
 }`
 

@@ -2,7 +2,7 @@ import { NextResponse } from "next/server"
 import { rateLimit, getClientIp, isValidEmail } from "@/lib/apiSecurity"
 import { sendEmail } from "@/lib/email"
 import { client } from "@/lib/sanity.client"
-import { isFormatAvailable } from "@/lib/shop"
+import { isFinish, isFormatAvailable, printPaperLabel, rangeOf } from "@/lib/shop"
 import { cleanText } from "@/lib/safe"
 import type { ProductFormat } from "@/types/sanity"
 
@@ -14,12 +14,13 @@ type OrderProduct = {
   price?: number
   currency?: string
   paymentUrl?: string
+  paper?: string
   collection?: string
   formats?: ProductFormat[]
 }
 
 const PRODUCT_QUERY = `*[_type == "product" && _id == $id][0]{
-  _id, title, price, currency, paymentUrl, formats[]{ name, price, stock },
+  _id, title, price, currency, paymentUrl, paper, formats[]{ _key, range, name, price, stock },
   "collection": coalesce(collection->title, photo->collection->title)
 }`
 
@@ -31,7 +32,7 @@ export async function POST(req: Request) {
     }
 
     const body = await req.json()
-    const { productId, format, qty: rawQty, company, acceptCgv } = body
+    const { productId, format, formatKey, range: rawRange, finish: rawFinish, qty: rawQty, company, acceptCgv } = body
     const name = cleanText(body.name, 120)
     const email = cleanText(body.email, 200)
     const phone = cleanText(body.phone, 40)
@@ -63,9 +64,13 @@ export async function POST(req: Request) {
     let unitPrice: number | undefined
     let formatName: string | undefined
     let stockLimit = MAX_QTY
+    let range = rangeOf(typeof rawRange === "string" ? rawRange : undefined)
 
     if (product.formats?.length) {
-      const selected = product.formats.find((f) => f.name === format)
+      const selected =
+        typeof formatKey === "string" && formatKey
+          ? product.formats.find((f) => f._key === formatKey)
+          : product.formats.find((f) => f.name === format && rangeOf(f.range) === range)
       if (!selected) {
         return NextResponse.json({ error: "Format invalide" }, { status: 400 })
       }
@@ -74,6 +79,7 @@ export async function POST(req: Request) {
       }
       unitPrice = selected.price ?? product.price
       formatName = selected.name
+      range = rangeOf(selected.range)
       stockLimit = Math.min(selected.stock ?? MAX_QTY, MAX_QTY)
     } else {
       unitPrice = product.price
@@ -99,6 +105,7 @@ export async function POST(req: Request) {
       `Produit    : ${product.title}`,
       `Collection : ${product.collection ?? "—"}`,
       `Format     : ${formatName ?? "—"}`,
+      `Papier     : ${printPaperLabel(range, isFinish(rawFinish) ? rawFinish : "mat", product.paper)}`,
       `Quantité   : ${qty}`,
       `Prix unit. : ${unitPrice}${curr}`,
       `TOTAL      : ${total}${curr}`,
