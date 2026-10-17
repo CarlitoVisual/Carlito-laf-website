@@ -155,7 +155,8 @@ export default function VideoIntro({ videoUrl, posterUrl, title, subtitle }: Pro
         </p>
 
         {title && (
-          <h1
+          <p
+            className="font-display uppercase"
             style={{
               fontSize: "clamp(2.5rem, 8vw, 7rem)",
               fontWeight: 700,
@@ -167,7 +168,7 @@ export default function VideoIntro({ videoUrl, posterUrl, title, subtitle }: Pro
             }}
           >
             {title}
-          </h1>
+          </p>
         )}
 
         {subtitle && (

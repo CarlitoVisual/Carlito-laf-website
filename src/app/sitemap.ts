@@ -44,6 +44,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     entry("/", home?.updatedAt, 1, "weekly"),
     entry("/portfolio", undefined, 0.9, "weekly"),
     entry("/boutique", undefined, 0.9, "weekly"),
+    entry("/photographe-surf-pays-basque-landes", undefined, 0.9),
+    entry("/tirages-photo-paysage", undefined, 0.9),
     entry("/devis", undefined, 0.8),
     entry("/boutique/visualiser", undefined, 0.5),
     entry("/mentions-legales", undefined, 0.1, "yearly"),

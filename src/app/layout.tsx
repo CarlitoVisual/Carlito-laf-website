@@ -27,11 +27,11 @@ const mono = DM_Mono({
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: {
-    default: "Carlito Laf Visuel — Photographe & Vidéaste Aventure",
+    default: "Photographe & vidéaste surf au Pays basque et dans les Landes | Carlito Laf Visuel",
     template: "%s | Carlito Laf Visuel",
   },
   description:
-    "Photographe et vidéaste au Pays basque, spécialisé dans l'aventure, les sports nautiques et les paysages. Portfolio, tirages Fine Art et prestations sur devis.",
+    "Photographe et vidéaste surf basé à Bidart : séances photo, vidéo et drone pour tous les niveaux, de Biarritz à Hossegor. Tirages Fine Art de paysages, livraison offerte.",
   applicationName: SITE_NAME,
   authors: [{ name: "Charles Lafiandra", url: SITE_URL }],
   creator: "Charles Lafiandra",

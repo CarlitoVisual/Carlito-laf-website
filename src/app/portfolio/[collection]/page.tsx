@@ -23,6 +23,16 @@ type RawPhoto = {
   productSlug?: string
 }
 
+/** Lien vers la page d'atterrissage correspondante (maillage interne pour le référencement). */
+const PRINTS_LINK = { href: "/tirages-photo-paysage", label: "Tirages photo de paysages" }
+const CROSS_LINKS: Record<string, { href: string; label: string }> = {
+  surf: { href: "/photographe-surf-pays-basque-landes", label: "Réserver une séance photo ou vidéo de surf" },
+  "ocean-and-waves": PRINTS_LINK,
+  "jungle-and-rocks": PRINTS_LINK,
+  "sun-and-autumn": PRINTS_LINK,
+  "winter-and-ice": PRINTS_LINK,
+}
+
 type CollectionDoc = { _id: string; title: string; slug: string; description?: string; cover?: SanityImage }
 
 async function getAllCollectionDocs(): Promise<CollectionDoc[]> {
@@ -153,6 +163,15 @@ export default async function CollectionPage({ params }: Props) {
             <p className="mt-6 max-w-3xl text-base leading-relaxed whitespace-pre-line" style={{ color: "var(--color-text)" }}>
               {doc.description}
             </p>
+          )}
+          {CROSS_LINKS[doc.slug] && (
+            <Link
+              href={CROSS_LINKS[doc.slug].href}
+              className="inline-block mt-6 text-xs uppercase px-5 py-2.5 rounded-full border"
+              style={{ color: "var(--color-accent)", borderColor: "var(--color-accent)", letterSpacing: "0.15em" }}
+            >
+              {CROSS_LINKS[doc.slug].label} →
+            </Link>
           )}
         </div>
       </div>

@@ -108,7 +108,7 @@ export function businessJsonLd() {
         logo: `${SITE_URL}/icon-512.png`,
         image: `${SITE_URL}/icon-512.png`,
         description:
-          "Photographe et vidéaste au Pays basque spécialisé dans les sports nautiques, l'aventure et les paysages : reportages, films, prestations sur devis et tirages Fine Art.",
+          "Photographe et vidéaste surf basé à Bidart, au Pays basque et dans les Landes : séances photo, vidéo et drone pour surfeurs de tous niveaux, du débutant au professionnel, et tirages Fine Art de paysages.",
         email: LEGAL.email,
         telephone: "+33 6 51 29 50 12",
         address: {
@@ -122,6 +122,13 @@ export function businessJsonLd() {
         geo: { "@type": "GeoCoordinates", latitude: 43.4372, longitude: -1.5925 },
         areaServed: [
           { "@type": "AdministrativeArea", name: "Pays basque" },
+          { "@type": "AdministrativeArea", name: "Landes" },
+          { "@type": "AdministrativeArea", name: "Pyrénées-Atlantiques" },
+          { "@type": "City", name: "Biarritz" },
+          { "@type": "City", name: "Bidart" },
+          { "@type": "City", name: "Anglet" },
+          { "@type": "City", name: "Hossegor" },
+          { "@type": "City", name: "Capbreton" },
           { "@type": "AdministrativeArea", name: "Nouvelle-Aquitaine" },
           { "@type": "Country", name: "France" },
         ],

@@ -61,6 +61,8 @@ export default function Footer() {
                 { href: "/boutique", label: "Boutique Fine Art" },
                 { href: "/contact", label: "Contact" },
                 { href: "/devis", label: "Demande de devis" },
+                { href: "/photographe-surf-pays-basque-landes", label: "Photographe surf Pays basque & Landes" },
+                { href: "/tirages-photo-paysage", label: "Tirages photo de paysages" },
               ].map((l) => (
                 <Link
                   key={l.href}

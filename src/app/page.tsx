@@ -6,6 +6,7 @@ import VideoIntroWrapper from "@/components/VideoIntroWrapper"
 import { urlFor } from "@/lib/image"
 import { sanityPageMeta } from "@/lib/seo"
 import type { Metadata } from "next"
+import HomeSeoIntro from "@/components/seo/HomeSeoIntro"
 
 export const revalidate = 60
 
@@ -13,7 +14,9 @@ export async function generateMetadata(): Promise<Metadata> {
   const page = await client.fetch(pageQuery, { slug: "accueil" })
   const hero = page?.sections?.[0]
   return sanityPageMeta(page?.seo, {
-    absoluteTitle: "Carlito Laf Visuel — Photographe & Vidéaste Aventure",
+    absoluteTitle: "Photographe & vidéaste surf au Pays basque et dans les Landes | Carlito Laf Visuel",
+    description:
+      "Photographe et vidéaste surf basé à Bidart : séances photo, vidéo et drone pour tous les niveaux, de Biarritz à Hossegor. Tirages Fine Art de paysages, livraison offerte.",
     path: "/",
     image: hero?._type === "hero" ? (hero.image ?? hero.videoPoster) : undefined,
   })
@@ -65,6 +68,8 @@ export default async function Home() {
 
   return (
     <PageShell backgroundVideo={page.backgroundVideo}>
+      {/* Titre principal pour Google et les lecteurs d’écran (l’intro vidéo n’est rendue que côté navigateur) */}
+      {videoUrl && <h1 className="sr-only">Photographe et vidéaste surf au Pays basque et dans les Landes</h1>}
       {videoUrl && (
         <VideoIntroWrapper
           videoUrl={videoUrl}
@@ -78,6 +83,7 @@ export default async function Home() {
           <PageBuilder sections={remainingSections} />
         </div>
       )}
+      <HomeSeoIntro />
     </PageShell>
   )
 }
